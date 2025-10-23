@@ -15,6 +15,8 @@ fun AppNavigation() {
         composable("mapa") { MapScreen(navController) }
         composable("filtrado") { FilterScreen(navController) }
         composable("lugares") { PlacesScreen(navController) }
-        composable("listado_detallado") { DetailedListScreen(navController) }
+        composable("monuments_list") { MonumentsListScreen(navController) }
+        composable("restaurants_list") { RestaurantsListScreen(navController) }
+        composable("shops_list") { ShopsListScreen(navController) }
     }
 }

@@ -36,15 +36,15 @@ fun PlacesScreen(navController: NavController) {
             )
 
             CategoryCard(text = "🏛️ Monumentos históricos") {
-                navController.navigate("listado_detallado")
+                navController.navigate("monuments_list")
             }
             Spacer(modifier = Modifier.height(16.dp))
             CategoryCard(text = "☕ Restaurantes y cafeterías") {
-                navController.navigate("listado_detallado")
+                navController.navigate("restaurants_list")
             }
             Spacer(modifier = Modifier.height(16.dp))
             CategoryCard(text = "🛍️ Tiendas y souvenirs") {
-                navController.navigate("listado_detallado")
+                navController.navigate("shops_list")
             }
         }
     }
