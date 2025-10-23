@@ -14,10 +14,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun MapScreen(navController: NavController) {
     val verdeBandera = Color(0xFF007A33)
+    
+    // Coordenadas de Mérida y del Teatro Romano
+    val merida = LatLng(38.915, -6.345)
+    val teatroRomano = LatLng(38.9157, -6.3386)
+
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(merida, 14f)
+    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
@@ -25,12 +39,17 @@ fun MapScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Placeholder para el mapa de Google
-            Box(
+            // Mapa de Google
+            GoogleMap(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+                cameraPositionState = cameraPositionState
             ) {
-                Text(text = "(Aquí irá el mapa interactivo)", fontSize = 18.sp, color = Color.Gray)
+                // Marcador de ejemplo en el Teatro Romano
+                Marker(
+                    state = MarkerState(position = teatroRomano),
+                    title = "Teatro Romano",
+                    snippet = "Espectacular teatro del siglo I a.C."
+                )
             }
 
             // Botones flotantes (FABs)
