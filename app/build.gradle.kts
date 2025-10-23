@@ -51,10 +51,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    // Dependencias de Navegación y Google Maps (versiones degradadas para estabilidad)
+    // Dependencias de Navegación y OpenStreetMap (Librería oficial)
     implementation("androidx.navigation:navigation-compose:2.9.5")
-    implementation("com.google.maps.android:maps-compose:4.3.3")
-    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 
     // Dependencias de Test
     testImplementation(libs.junit)

@@ -13,25 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.maps.android.compose.GoogleMap
-import com.google.maps.android.compose.Marker
-import com.google.maps.android.compose.MarkerState
-import com.google.maps.android.compose.rememberCameraPositionState
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun MapScreen(navController: NavController) {
     val verdeBandera = Color(0xFF007A33)
-    
-    // Coordenadas de Mérida y del Teatro Romano
-    val merida = LatLng(38.915, -6.345)
-    val teatroRomano = LatLng(38.9157, -6.3386)
-
-    val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(merida, 14f)
-    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
@@ -39,18 +30,32 @@ fun MapScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Mapa de Google
-            GoogleMap(
+            // Usamos AndroidView para incrustar la vista de mapa clásica de osmdroid
+            AndroidView(
                 modifier = Modifier.fillMaxSize(),
-                cameraPositionState = cameraPositionState
-            ) {
-                // Marcador de ejemplo en el Teatro Romano
-                Marker(
-                    state = MarkerState(position = teatroRomano),
-                    title = "Teatro Romano",
-                    snippet = "Espectacular teatro del siglo I a.C."
-                )
-            }
+                factory = { context ->
+                    // El factory se usa solo para crear e inicializar la vista
+                    MapView(context).apply {
+                        setTileSource(TileSourceFactory.MAPNIK)
+                        setMultiTouchControls(true)
+                        controller.setZoom(15.0)
+                        controller.setCenter(GeoPoint(38.915, -6.345)) // Coordenadas de Mérida
+                    }
+                },
+                update = { mapView ->
+                    // El update se usa para modificar la vista, como añadir marcadores
+                    mapView.overlays.clear() // Limpia marcadores anteriores
+
+                    val teatroRomano = GeoPoint(38.9157, -6.3386)
+                    val marker = Marker(mapView)
+                    marker.position = teatroRomano
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    marker.title = "Teatro Romano"
+                    mapView.overlays.add(marker)
+
+                    mapView.invalidate() // Refresca el mapa
+                }
+            )
 
             // Botones flotantes (FABs)
             Column(
