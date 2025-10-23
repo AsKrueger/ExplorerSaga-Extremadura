@@ -13,7 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun MapScreen(navController: NavController) {
@@ -25,13 +30,32 @@ fun MapScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Placeholder para el mapa de Google
-            Box(
+            // Usamos AndroidView para incrustar la vista de mapa clásica de osmdroid
+            AndroidView(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "(Aquí irá el mapa interactivo)", fontSize = 18.sp, color = Color.Gray)
-            }
+                factory = { context ->
+                    // El factory se usa solo para crear e inicializar la vista
+                    MapView(context).apply {
+                        setTileSource(TileSourceFactory.MAPNIK)
+                        setMultiTouchControls(true)
+                        controller.setZoom(15.0)
+                        controller.setCenter(GeoPoint(38.915, -6.345)) // Coordenadas de Mérida
+                    }
+                },
+                update = { mapView ->
+                    // El update se usa para modificar la vista, como añadir marcadores
+                    mapView.overlays.clear() // Limpia marcadores anteriores
+
+                    val teatroRomano = GeoPoint(38.9157, -6.3386)
+                    val marker = Marker(mapView)
+                    marker.position = teatroRomano
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                    marker.title = "Teatro Romano"
+                    mapView.overlays.add(marker)
+
+                    mapView.invalidate() // Refresca el mapa
+                }
+            )
 
             // Botones flotantes (FABs)
             Column(

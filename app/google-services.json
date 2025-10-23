@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "706192280367",
+    "project_id": "explorersaga-extremadura",
+    "storage_bucket": "explorersaga-extremadura.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706192280367:android:88770f2512797cee012fda",
+        "android_client_info": {
+          "package_name": "com.alonso.explorersaga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCpPwpFpRpc83UpWJhli1jy4Q8D1MUvvZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
