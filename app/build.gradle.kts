@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
 }
 
 android {
@@ -38,6 +37,10 @@ android {
     }
     buildFeatures {
         compose = true
+    }
+    composeOptions {
+        // Use a literal string for compiler extension version to avoid unresolved accessor during static analysis
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
 }
 
