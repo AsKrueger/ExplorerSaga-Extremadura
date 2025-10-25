@@ -5,9 +5,8 @@ plugins {
 
 android {
     namespace = "com.alonso.explorersaga"
-    compileSdk {
-        version = release(36)
-    }
+    // Use a plain integer for compileSdk to avoid unresolved symbols during Gradle configuration
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.alonso.explorersaga"
@@ -39,8 +38,8 @@ android {
         compose = true
     }
     composeOptions {
-        // Use a literal string for compiler extension version to avoid unresolved accessor during static analysis
-        kotlinCompilerExtensionVersion = "1.5.3"
+        // Use the version from the version catalog so it's centralized and avoids mismatches
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 }
 
@@ -55,8 +54,9 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     // Dependencias de Navegación y OpenStreetMap (Librería oficial)
-    implementation("androidx.navigation:navigation-compose:2.9.5")
-    implementation("org.osmdroid:osmdroid-android:6.1.20")
+    // Use version catalog references to keep versions centralized
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.osmdroid.android)
 
     // Dependencias de Test
     testImplementation(libs.junit)
