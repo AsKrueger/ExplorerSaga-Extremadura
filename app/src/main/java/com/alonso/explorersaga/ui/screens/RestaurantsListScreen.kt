@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlin.Suppress
 
 @Composable
-fun RestaurantsListScreen(navController: NavController) {
+@Suppress("UNUSED_PARAMETER")
+fun RestaurantsListScreen(_navController: NavController) {
     val restaurants = listOf(
         Place("Restaurante A de Arco", "Cocina extremeña moderna junto al Arco de Trajano", "⭐⭐⭐⭐⭐"),
         Place("Sybarit", "Tapas y platos creativos en un ambiente acogedor", "⭐⭐⭐⭐"),

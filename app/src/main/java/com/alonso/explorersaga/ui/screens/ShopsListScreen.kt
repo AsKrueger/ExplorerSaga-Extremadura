@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlin.Suppress
 
 @Composable
-fun ShopsListScreen(navController: NavController) {
+@Suppress("UNUSED_PARAMETER")
+fun ShopsListScreen(_navController: NavController) {
     val shops = listOf(
         Place("Terracota", "Artesanía y cerámica típica de la región", "⭐⭐⭐⭐"),
         Place("Emérita Souvenirs", "Recuerdos variados de la Mérida romana", "⭐⭐⭐")

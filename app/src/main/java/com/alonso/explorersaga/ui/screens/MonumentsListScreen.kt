@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import kotlin.Suppress
 
 @Composable
-fun MonumentsListScreen(navController: NavController) {
+@Suppress("UNUSED_PARAMETER")
+fun MonumentsListScreen(_navController: NavController) {
     val monuments = listOf(
         Place("Teatro Romano", "Espectacular teatro del siglo I a.C.", "⭐⭐⭐⭐⭐"),
         Place("Anfiteatro Romano", "Lugar de antiguas luchas de gladiadores", "⭐⭐⭐⭐⭐"),
