@@ -25,7 +25,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ExplorerSagaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                // No usamos el padding aquí; omitir el parámetro evita la advertencia de parámetro no usado
+                Scaffold(modifier = Modifier.fillMaxSize()) {
                     AppNavigation()
                 }
             }

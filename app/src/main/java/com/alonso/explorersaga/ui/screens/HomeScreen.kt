@@ -26,7 +26,6 @@ import com.alonso.explorersaga.R
 @Composable
 fun HomeScreen(navController: NavController) {
     val verdeBandera = Color(0xFF007A33)
-    val negroSuave = Color(0xFF222222)
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(

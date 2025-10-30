@@ -20,7 +20,7 @@ La app está dividida en 6 escenas principales que permiten una navegación clar
 2.  **🏛️ Información**: Ofrece un contexto histórico y cultural de la ciudad antes de que el usuario comience a explorar.
 3.  **🏪 Lugares (Categorías)**: Un menú visual para que el usuario elija qué tipo de lugar le interesa (monumentos, restaurantes, tiendas).
 4.  **📋 Listados Detallados**: Muestra una lista de lugares según la categoría elegida, con información relevante como nombre, descripción y popularidad.
-5.  **🗺️ Mapa Interactivo**: Una pantalla (actualmente en desarrollo) que mostrará los puntos de interés en un mapa interactivo con opciones de filtrado.
+5.  **🗺️ Mapa Interactivo**: Un mapa funcional basado en OpenStreetMap que muestra la ubicación de Mérida y un marcador de ejemplo.
 6.  **🎚️ Filtrado**: Pantalla complementaria al mapa para personalizar los lugares mostrados según el interés del usuario.
 
 ---
@@ -44,6 +44,7 @@ El flujo de usuario está diseñado para ser intuitivo y directo:
 *   **Lenguaje de programación**: [Kotlin](https://kotlinlang.org/)
 *   **UI Toolkit**: [Jetpack Compose](https://developer.android.com/jetpack/compose) para una interfaz de usuario declarativa y moderna.
 *   **Navegación**: [Jetpack Navigation Compose](https://developer.android.com/jetpack/compose/navigation) para gestionar el flujo entre pantallas.
+*   **Mapas**: [OpenStreetMap (OSM)](https://www.openstreetmap.org/) a través de la librería `osmdroid-android` para una solución de mapas gratuita y de código abierto.
 *   **Arquitectura**: Estructura simple basada en MVVM (Model-View-ViewModel), con los Composables actuando como Vistas.
 *   **Diseño**: [Material Design 3](https://m3.material.io/) con una paleta de colores personalizada inspirada en la bandera de Extremadura.
 
@@ -62,7 +63,8 @@ El flujo de usuario está diseñado para ser intuitivo y directo:
 
 ## 🔮 Futuras Mejoras
 
--   [ ] **Integración de Google Maps**: Implementar un mapa funcional en la `MapScreen`.
--   [ ] **Datos Dinámicos**: Conectar la app a una base de datos local (Room) o una API remota para gestionar los lugares.
+-   [x] **~~Integración de Google Maps~~ -> Implementar mapa funcional con OpenStreetMap.**
+-   [ ] **Datos Dinámicos**: Conectar la app a una base de datos local (**Room**) para gestionar los lugares de interés.
+-   [ ] **Poblar la Base de Datos**: Crear un sistema que inserte los datos iniciales desde un archivo local (JSON) a la base de datos.
 -   [ ] **Imágenes Reales**: Sustituir los placeholders por imágenes de alta calidad de Mérida.
 -   [ ] **Rutas por Días**: Desarrollar la funcionalidad opcional de rutas personalizadas.

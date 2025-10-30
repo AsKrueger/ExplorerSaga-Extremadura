@@ -1,14 +1,13 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.alonso.explorersaga"
-    compileSdk {
-        version = release(36)
-    }
+    // Use a plain integer for compileSdk to avoid unresolved symbols during Gradle configuration
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.alonso.explorersaga"
@@ -18,6 +17,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        // Le decimos a KSP dónde guardar los archivos de schema de Room
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
     }
 
     buildTypes {
@@ -39,6 +43,10 @@ android {
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        // Use the version from the version catalog so it's centralized and avoids mismatches
+        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
+    }
 }
 
 dependencies {
@@ -52,8 +60,14 @@ dependencies {
     implementation(libs.androidx.compose.material3)
 
     // Dependencias de Navegación y OpenStreetMap (Librería oficial)
-    implementation("androidx.navigation:navigation-compose:2.9.5")
-    implementation("org.osmdroid:osmdroid-android:6.1.20")
+    // Use version catalog references to keep versions centralized
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.osmdroid.android)
+
+    // Room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     // Dependencias de Test
     testImplementation(libs.junit)
