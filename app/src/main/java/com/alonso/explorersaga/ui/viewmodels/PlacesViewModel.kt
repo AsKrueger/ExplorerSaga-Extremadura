@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alonso.explorersaga.data.PlaceEntity
 import com.alonso.explorersaga.data.PlaceRepository
-import com.alonso.explorersaga.ui.screens.Place // Importamos el 'Place' de la UI
+import com.alonso.explorersaga.model.Place // Importamos el 'Place' de la UI
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

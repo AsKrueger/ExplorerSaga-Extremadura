@@ -14,11 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.alonso.explorersaga.model.Place
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
+import com.alonso.explorersaga.ui.screens.PlaceListItem
 
 @Composable
 fun RestaurantsListScreen(
-    _navController: NavController,
+    navController: NavController,
     viewModel: PlacesViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -36,7 +38,7 @@ fun RestaurantsListScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(uiState.places) { place ->
-                PlaceListItem(place = place)
+                PlaceListItem(place = place, navController = navController)
             }
         }
     }

@@ -12,21 +12,20 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alonso.explorersaga.model.Place
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
+import com.alonso.explorersaga.ui.screens.PlaceListItem
 
 @Composable
 fun MonumentsListScreen(
-    _navController: NavController, // Lo dejamos sin usar por ahora
-    viewModel: PlacesViewModel // 1. Recibimos el ViewModel como parámetro
+    navController: NavController,
+    viewModel: PlacesViewModel
 ) {
-    // 2. Observamos el estado del ViewModel. Cada vez que cambie, la UI se recompone.
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // 3. Este efecto se lanza una sola vez cuando la pantalla aparece.
-    LaunchedEffect(key1 = Unit) {
-        // 4. Le pedimos al ViewModel que cargue los monumentos.
+    LaunchedEffect(Unit) {
         viewModel.loadPlaces("monumento")
     }
 
@@ -38,10 +37,10 @@ fun MonumentsListScreen(
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // 5. Usamos la lista de lugares del ViewModel, no la lista de ejemplo.
             items(uiState.places) { place ->
-                PlaceListItem(place = place)
+                PlaceListItem(place = place, navController = navController)
             }
         }
     }
 }
+
