@@ -1,6 +1,6 @@
 [versions]
 # El plugin de Android para Gradle. Versión estable y compatible.
-agp = "8.2.2"
+agp = "8.13.0"
 
 # La versión de Kotlin.
 kotlin = "1.9.22"

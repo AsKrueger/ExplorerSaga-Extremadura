@@ -6,13 +6,12 @@ plugins {
 
 android {
     namespace = "com.alonso.explorersaga"
-    // Use a plain integer for compileSdk to avoid unresolved symbols during Gradle configuration
-    compileSdk = 36
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.alonso.explorersaga"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
