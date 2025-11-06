@@ -9,16 +9,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.alonso.explorersaga.model.Place  // <- import correcto
+import com.alonso.explorersaga.model.Place // <<<--- ¡ESTA ES LA LÍNEA QUE FALTABA!
 
 @Composable
-fun PlaceListItem(place: Place, navController: NavController) {
+fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { /* TODO: Implement navigation, p. ej. navController.navigate("detail/${place.id}") */ }
+            .clickable { onItemClicked(place) } // Usamos la nueva lambda
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = place.name)

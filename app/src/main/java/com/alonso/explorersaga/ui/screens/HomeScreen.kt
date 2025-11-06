@@ -17,16 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.alonso.explorersaga.R
-import com.alonso.explorersaga.navigation.AppScreens
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(onExploreClicked: () -> Unit) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
             modifier = Modifier
@@ -35,7 +34,7 @@ fun HomeScreen(navController: NavController) {
         ) {
             Image(
                 painter = painterResource(id = R.drawable.fondo_campo),
-                contentDescription = "Fondo de un campo de Extremadura",
+                contentDescription = stringResource(id = R.string.home_subtitle),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
@@ -48,7 +47,7 @@ fun HomeScreen(navController: NavController) {
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "ExplorerSaga Extremadura",
+                    text = stringResource(id = R.string.home_title),
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
@@ -56,19 +55,19 @@ fun HomeScreen(navController: NavController) {
                     lineHeight = 40.sp
                 )
                 Text(
-                    text = "Tu próxima aventura empieza aquí",
+                    text = stringResource(id = R.string.home_subtitle),
                     fontSize = 18.sp,
                     color = Color.White,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
                 )
                 Button(
-                    onClick = { navController.navigate(AppScreens.Informacion.route) },
+                    onClick = onExploreClicked,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.padding(horizontal = 32.dp)
                 ) {
                     Text(
-                        text = "Explorar Mérida",
+                        text = stringResource(id = R.string.home_button),
                         color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)

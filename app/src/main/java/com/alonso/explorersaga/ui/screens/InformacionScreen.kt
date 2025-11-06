@@ -17,16 +17,18 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.alonso.explorersaga.R
-import com.alonso.explorersaga.navigation.AppScreens
 
 @Composable
-fun InformacionScreen(navController: NavController) {
+fun InformacionScreen(
+    onMapClicked: () -> Unit,
+    onPlacesClicked: () -> Unit
+) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
@@ -41,7 +43,7 @@ fun InformacionScreen(navController: NavController) {
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.teatro_merida),
-                    contentDescription = "Teatro Romano de Mérida",
+                    contentDescription = stringResource(id = R.string.info_title),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
@@ -57,13 +59,13 @@ fun InformacionScreen(navController: NavController) {
                 )
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 16.dp).align(Alignment.BottomCenter)) {
                     Text(
-                        text = "Descubre Mérida",
+                        text = stringResource(id = R.string.info_title),
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
-                        text = "Historia viva de Extremadura",
+                        text = stringResource(id = R.string.info_subtitle),
                         fontSize = 18.sp,
                         color = Color.White
                     )
@@ -79,7 +81,7 @@ fun InformacionScreen(navController: NavController) {
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
-                        text = "Mérida, la antigua Emerita Augusta, fue fundada en el 25 a.C. y es hoy uno de los conjuntos arqueológicos más importantes de España. Pasea por sus calles y descubre su impresionante legado romano.",
+                        text = stringResource(id = R.string.info_description),
                         fontSize = 16.sp,
                         textAlign = TextAlign.Justify
                     )
@@ -95,18 +97,18 @@ fun InformacionScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { navController.navigate(AppScreens.Mapa.route) },
+                    onClick = onMapClicked,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 ) {
-                    Text(text = "🗺️ Mapa", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(text = stringResource(id = R.string.info_map_button), color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
                 Button(
-                    onClick = { navController.navigate(AppScreens.Lugares.route) },
+                    onClick = onPlacesClicked,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 ) {
-                    Text(text = "📍 Lugares", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(text = stringResource(id = R.string.info_places_button), color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
             }
         }

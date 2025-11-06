@@ -1,3 +1,35 @@
 <resources>
     <string name="app_name">ExplorerSaga</string>
+
+    <!-- HomeScreen -->
+    <string name="home_title">ExplorerSaga Extremadura</string>
+    <string name="home_subtitle">Tu próxima aventura empieza aquí</string>
+    <string name="home_button">Explorar Mérida</string>
+
+    <!-- InformacionScreen -->
+    <string name="info_title">Descubre Mérida</string>
+    <string name="info_subtitle">Historia viva de Extremadura</string>
+    <string name="info_description">Mérida, la antigua Emerita Augusta, fue fundada en el 25 a.C. y es hoy uno de los conjuntos arqueológicos más importantes de España. Pasea por sus calles y descubre su impresionante legado romano.</string>
+    <string name="info_map_button">🗺️ Mapa</string>
+    <string name="info_places_button">📍 Lugares</string>
+
+    <!-- PlacesScreen -->
+    <string name="places_title">Explora por categoría</string>
+    <string name="places_monuments">🏛️ Monumentos históricos</string>
+    <string name="places_restaurants">☕ Restaurantes y cafeterías</string>
+    <string name="places_shops">🛍️ Tiendas y souvenirs</string>
+
+    <!-- FilterScreen -->
+    <string name="filter_title">Filtrar lugares</string>
+    <string name="filter_monuments">Monumentos</string>
+    <string name="filter_restaurants">Restaurantes</string>
+    <string name="filter_shops">Tiendas</string>
+    <string name="filter_popular">Más populares primero</string>
+    <string name="filter_apply_button">Aplicar filtros</string>
+
+    <!-- MapScreen -->
+    <string name="map_filter_icon">🔍</string>
+    <string name="map_routes_icon">🧭</string>
+    <string name="map_center_icon">📍</string>
+
 </resources>

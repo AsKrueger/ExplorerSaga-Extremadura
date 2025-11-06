@@ -11,11 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alonso.explorersaga.R
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 
 @Composable
@@ -33,7 +35,7 @@ fun FilterScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "Filtrar lugares",
+                text = stringResource(id = R.string.filter_title),
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -41,19 +43,19 @@ fun FilterScreen(
             )
 
             FilterOption(
-                text = "Monumentos",
+                text = stringResource(id = R.string.filter_monuments),
                 checked = filterState.monuments
             ) { isChecked ->
                 viewModel.updateFilters(filterState.copy(monuments = isChecked))
             }
             FilterOption(
-                text = "Restaurantes",
+                text = stringResource(id = R.string.filter_restaurants),
                 checked = filterState.restaurants
             ) { isChecked ->
                 viewModel.updateFilters(filterState.copy(restaurants = isChecked))
             }
             FilterOption(
-                text = "Tiendas",
+                text = stringResource(id = R.string.filter_shops),
                 checked = filterState.shops
             ) { isChecked ->
                 viewModel.updateFilters(filterState.copy(shops = isChecked))
@@ -62,7 +64,7 @@ fun FilterScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             FilterOption(
-                text = "Más populares primero",
+                text = stringResource(id = R.string.filter_popular),
                 checked = filterState.popularFirst
             ) { isChecked ->
                 viewModel.updateFilters(filterState.copy(popularFirst = isChecked))
@@ -76,7 +78,7 @@ fun FilterScreen(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Aplicar filtros",
+                    text = stringResource(id = R.string.filter_apply_button),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     modifier = Modifier.padding(vertical = 8.dp)

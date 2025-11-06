@@ -11,19 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alonso.explorersaga.ui.composables.PlaceListItem
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 
 @Composable
 fun MonumentsListScreen(
-    navController: NavController,
     viewModel: PlacesViewModel
+    // Ya no necesita NavController
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    // Ya no se necesita el LaunchedEffect, la pantalla simplemente
-    // muestra el estado actual del ViewModel, que es controlado por los filtros.
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(
@@ -34,7 +31,10 @@ fun MonumentsListScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(uiState.places) { place ->
-                PlaceListItem(place = place, navController = navController)
+                // Llamada corregida a PlaceListItem
+                PlaceListItem(place = place, onItemClicked = {
+                    // TODO: Navegar a la pantalla de detalle del lugar "place"
+                })
             }
         }
     }
