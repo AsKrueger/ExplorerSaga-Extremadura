@@ -14,27 +14,23 @@ import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 fun AppNavigation() {
     val navController = rememberNavController()
 
-    // 1. Obtenemos el contexto y, a través de él, nuestro AppContainer.
     val appContainer = (LocalContext.current.applicationContext as ExplorerSagaApplication).container
-
-    // 2. Creamos una única instancia del ViewModel, pidiéndole la factory al AppContainer.
     val placesViewModel: PlacesViewModel = viewModel(factory = appContainer.placesViewModelFactory)
 
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") { HomeScreen(navController) }
-        composable("informacion") { InformacionScreen(navController) }
-        composable("mapa") { MapScreen(navController) }
-        composable("filtrado") { FilterScreen(navController) }
-        composable("lugares") { PlacesScreen(navController) }
+    NavHost(navController = navController, startDestination = AppScreens.Home.route) {
+        composable(AppScreens.Home.route) { HomeScreen(navController) }
+        composable(AppScreens.Informacion.route) { InformacionScreen(navController) }
+        composable(AppScreens.Mapa.route) { MapScreen(navController, placesViewModel) }
+        composable(AppScreens.Filtrado.route) { FilterScreen(navController, placesViewModel) }
+        composable(AppScreens.Lugares.route) { PlacesScreen(navController) }
 
-        // 3. Pasamos el ViewModel a las tres pantallas que lo necesitan.
-        composable("monuments_list") {
+        composable(AppScreens.MonumentsList.route) {
             MonumentsListScreen(navController, placesViewModel)
         }
-        composable("restaurants_list") {
+        composable(AppScreens.RestaurantsList.route) {
             RestaurantsListScreen(navController, placesViewModel)
         }
-        composable("shops_list") {
+        composable(AppScreens.ShopsList.route) {
             ShopsListScreen(navController, placesViewModel)
         }
     }

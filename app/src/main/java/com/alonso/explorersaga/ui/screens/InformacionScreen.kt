@@ -7,6 +7,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -23,18 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.alonso.explorersaga.R
+import com.alonso.explorersaga.navigation.AppScreens
 
 @Composable
 fun InformacionScreen(navController: NavController) {
-    val verdeBandera = Color(0xFF007A33)
-
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Encabezado con imagen y texto superpuesto
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -47,7 +45,6 @@ fun InformacionScreen(navController: NavController) {
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
-                // Overlay oscuro para mejorar la legibilidad del texto
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -73,12 +70,11 @@ fun InformacionScreen(navController: NavController) {
                 }
             }
 
-            // Cuerpo con la descripción
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -92,7 +88,6 @@ fun InformacionScreen(navController: NavController) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // Pie con los botones de navegación
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,18 +95,18 @@ fun InformacionScreen(navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { navController.navigate("mapa") },
-                    colors = ButtonDefaults.buttonColors(containerColor = verdeBandera),
+                    onClick = { navController.navigate(AppScreens.Mapa.route) },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 ) {
-                    Text(text = "🗺️ Mapa", color = Color.White, fontSize = 16.sp)
+                    Text(text = "🗺️ Mapa", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
                 Button(
-                    onClick = { navController.navigate("lugares") },
-                    colors = ButtonDefaults.buttonColors(containerColor = verdeBandera),
+                    onClick = { navController.navigate(AppScreens.Lugares.route) },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 ) {
-                    Text(text = "📍 Lugares", color = Color.White, fontSize = 16.sp)
+                    Text(text = "📍 Lugares", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
             }
         }

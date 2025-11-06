@@ -4,53 +4,77 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alonso.explorersaga.data.PlaceEntity
 import com.alonso.explorersaga.data.PlaceRepository
-import com.alonso.explorersaga.model.Place // Importamos el 'Place' de la UI
+import com.alonso.explorersaga.model.Place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.combine
 
-// Esta es la clase que contendrá el estado de nuestra UI (la lista de lugares).
+// El estado de la UI ahora incluye el estado de los filtros.
 data class PlacesUiState(
-    val places: List<Place> = emptyList()
+    val places: List<Place> = emptyList(),
+    val filterState: FilterState = FilterState()
+)
+
+// Un data class para mantener el estado de los checkboxes.
+data class FilterState(
+    val monuments: Boolean = true,
+    val restaurants: Boolean = true,
+    val shops: Boolean = true,
+    val popularFirst: Boolean = false
 )
 
 class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
-    // Este es el 'StateFlow'. Es un flujo de datos que guardará el estado
-    // actual de nuestra pantalla. Es privado (_uiState) para que solo
-    // el ViewModel pueda modificarlo.
-    private val _uiState = MutableStateFlow(PlacesUiState())
+    // Estado para los filtros de categoría
+    private val _filterState = MutableStateFlow(FilterState())
 
-    // Esta es la versión pública y de solo lectura del estado. La UI
-    // observará este 'uiState' para recibir las actualizaciones.
-    val uiState: StateFlow<PlacesUiState> = _uiState.asStateFlow()
+    // La UI puede observar el estado de los filtros a través de esto.
+    val filterState: StateFlow<FilterState> = _filterState
 
-    // Esta es la función principal que llamaremos desde la UI.
-    fun loadPlaces(category: String) {
-        // Usamos 'viewModelScope.launch' para iniciar una corrutina.
-        // Esta se cancelará automáticamente si el ViewModel se destruye,
-        // evitando fugas de memoria.
-        viewModelScope.launch {
-            // Le pedimos al repositorio el flujo de datos para una categoría.
-            repository.getPlacesByCategory(category)
-                // El método '.collect' se suscribirá al Flow. Cada vez
-                // que haya un cambio en la base de datos, este bloque
-                // de código se ejecutará con la nueva lista.
-                .collect { placesFromDb ->
-                    // Actualizamos nuestro estado de la UI...
-                    _uiState.value = PlacesUiState(
-                        // ...convirtiendo la lista de 'PlaceEntity' (de la BD)
-                        //     a una lista de 'Place' (de la UI).
-                        places = placesFromDb.map { it.toPlaceUiModel() }
-                    )
-                }
-        }
+    // Función para que la UI actualice los filtros.
+    fun updateFilters(newFilterState: FilterState) {
+        _filterState.value = newFilterState
     }
+
+    // El uiState ahora reacciona a los cambios en los filtros.
+    val uiState: StateFlow<PlacesUiState> = _filterState
+        .flatMapLatest { filters ->
+            // 1. Construimos la lista de categorías activas a partir del estado de los filtros.
+            val activeCategories = mutableListOf<String>()
+            if (filters.monuments) activeCategories.add("monumento")
+            if (filters.restaurants) activeCategories.add("restaurante")
+            if (filters.shops) activeCategories.add("tienda")
+            
+            // Si no hay ninguna categoría activa, devolvemos un flujo vacío para no crashear la query
+            if (activeCategories.isEmpty()) {
+                // Devolvemos un flujo que emite una lista vacía
+                kotlinx.coroutines.flow.flowOf(emptyList<PlaceEntity>())
+            } else {
+                 // 2. Usamos la nueva función del repositorio.
+                repository.getPlacesByCategories(activeCategories)
+            }
+        }
+        .map { placesFromDb ->
+            // 3. Mapeamos los resultados de la base de datos al estado de la UI.
+            val places = placesFromDb.map { it.toPlaceUiModel() }
+            // Combinamos los lugares con el estado actual de los filtros.
+            PlacesUiState(places = places, filterState = _filterState.value)
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = PlacesUiState()
+        )
+    
+    // Las funciones `setCategory` y `_categoryFilter` ya no son necesarias
+    // ya que el nuevo sistema de filtros las reemplaza.
 }
 
-// Función de extensión para convertir el modelo de la BD al modelo de la UI.
-// Esto mantiene nuestro código limpio y la separación de capas.
+// La función de extensión no necesita cambios.
 fun PlaceEntity.toPlaceUiModel(): Place {
     return Place(
         id = this.id,

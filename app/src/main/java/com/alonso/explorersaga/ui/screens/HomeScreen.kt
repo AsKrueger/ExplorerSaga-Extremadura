@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,18 +23,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.alonso.explorersaga.R
+import com.alonso.explorersaga.navigation.AppScreens
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    val verdeBandera = Color(0xFF007A33)
-
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            // Fondo de imagen
             Image(
                 painter = painterResource(id = R.drawable.fondo_campo),
                 contentDescription = "Fondo de un campo de Extremadura",
@@ -41,7 +40,6 @@ fun HomeScreen(navController: NavController) {
                 contentScale = ContentScale.Crop
             )
 
-            // Contenido principal
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -65,13 +63,13 @@ fun HomeScreen(navController: NavController) {
                     modifier = Modifier.padding(top = 8.dp, bottom = 32.dp)
                 )
                 Button(
-                    onClick = { navController.navigate("informacion") },
-                    colors = ButtonDefaults.buttonColors(containerColor = verdeBandera),
+                    onClick = { navController.navigate(AppScreens.Informacion.route) },
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.padding(horizontal = 32.dp)
                 ) {
                     Text(
                         text = "Explorar Mérida",
-                        color = Color.White,
+                        color = MaterialTheme.colorScheme.onPrimary,
                         fontSize = 18.sp,
                         modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
                     )

@@ -8,15 +8,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.alonso.explorersaga.model.Place
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
-import com.alonso.explorersaga.ui.screens.PlaceListItem
 
 @Composable
 fun ShopsListScreen(
@@ -24,10 +21,6 @@ fun ShopsListScreen(
     viewModel: PlacesViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = Unit) {
-        viewModel.loadPlaces("tienda")
-    }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(

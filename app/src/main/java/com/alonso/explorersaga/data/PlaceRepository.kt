@@ -21,4 +21,9 @@ class PlaceRepository(private val placeDao: PlaceDao) {
     fun getPlacesByCategory(category: String): Flow<List<PlaceEntity>> {
         return placeDao.getPlacesByCategory(category)
     }
+
+    // ¡NUEVA FUNCIÓN! Pasa la petición de múltiples categorías al DAO.
+    fun getPlacesByCategories(categories: List<String>): Flow<List<PlaceEntity>> {
+        return placeDao.getPlacesByCategories(categories)
+    }
 }

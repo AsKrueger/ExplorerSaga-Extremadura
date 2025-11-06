@@ -15,6 +15,10 @@ interface PlaceDao {
     @Query("SELECT * FROM places WHERE category = :categoryName")
     fun getPlacesByCategory(categoryName: String): Flow<List<PlaceEntity>>
 
+    // ¡NUEVA FUNCIÓN! Acepta una lista de categorías.
+    @Query("SELECT * FROM places WHERE category IN (:categories)")
+    fun getPlacesByCategories(categories: List<String>): Flow<List<PlaceEntity>>
+
     @Query("SELECT * FROM places WHERE id = :id")
     fun getPlaceById(id: Int): Flow<PlaceEntity?>
 }
