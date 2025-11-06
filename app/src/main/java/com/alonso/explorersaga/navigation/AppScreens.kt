@@ -6,7 +6,8 @@ sealed class AppScreens(val route: String) {
     object Mapa : AppScreens("mapa")
     object Filtrado : AppScreens("filtrado")
     object Lugares : AppScreens("lugares")
-    object MonumentsList : AppScreens("monuments_list")
-    object RestaurantsList : AppScreens("restaurants_list")
-    object ShopsList : AppScreens("shops_list")
+    object PlaceDetail : AppScreens("place_detail")
+
+    // Ruta genérica para todas las listas
+    object PlacesList : AppScreens("places_list") 
 }

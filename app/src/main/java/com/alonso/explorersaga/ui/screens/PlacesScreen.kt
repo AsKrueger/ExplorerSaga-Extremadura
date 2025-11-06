@@ -22,9 +22,8 @@ import com.alonso.explorersaga.R
 
 @Composable
 fun PlacesScreen(
-    onMonumentsClicked: () -> Unit,
-    onRestaurantsClicked: () -> Unit,
-    onShopsClicked: () -> Unit
+    // Una sola lambda que nos dice qué categoría se ha seleccionado
+    onCategorySelected: (String) -> Unit 
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -41,11 +40,12 @@ fun PlacesScreen(
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            CategoryCard(text = stringResource(id = R.string.places_monuments), onClick = onMonumentsClicked)
+            // Cada tarjeta ahora llama a la lambda con su categoría
+            CategoryCard(text = stringResource(id = R.string.places_monuments), onClick = { onCategorySelected("monumento") })
             Spacer(modifier = Modifier.height(16.dp))
-            CategoryCard(text = stringResource(id = R.string.places_restaurants), onClick = onRestaurantsClicked)
+            CategoryCard(text = stringResource(id = R.string.places_restaurants), onClick = { onCategorySelected("restaurante") })
             Spacer(modifier = Modifier.height(16.dp))
-            CategoryCard(text = stringResource(id = R.string.places_shops), onClick = onShopsClicked)
+            CategoryCard(text = stringResource(id = R.string.places_shops), onClick = { onCategorySelected("tienda") })
         }
     }
 }
@@ -58,7 +58,7 @@ fun CategoryCard(text: String, onClick: () -> Unit) {
             .height(120.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(), // Forzamos el ripple de Material 3
+                indication = rememberRipple(),
                 onClick = onClick
             ),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
