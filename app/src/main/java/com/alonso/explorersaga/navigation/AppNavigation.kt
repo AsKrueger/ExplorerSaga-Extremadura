@@ -23,7 +23,7 @@ fun AppNavigation() {
     val placesViewModel: PlacesViewModel = viewModel(factory = appContainer.placesViewModelFactory)
 
     NavHost(navController = navController, startDestination = AppScreens.Home.route) {
-        // ... (rutas Home, Informacion, Mapa, Filtrado)
+        // ... (otras rutas sin cambios)
         composable(AppScreens.Home.route) {
             HomeScreen(onExploreClicked = { navController.navigate(AppScreens.Informacion.route) })
         }
@@ -51,26 +51,24 @@ fun AppNavigation() {
         composable(AppScreens.Lugares.route) {
             PlacesScreen(
                 onCategorySelected = { category ->
+                    // Lógica de filtrado actualizada para TODAS las categorías
                     val newState = when (category) {
-                        "monumento" -> FilterState(monuments = true, restaurants = false, shops = false)
-                        "restaurante" -> FilterState(monuments = false, restaurants = true, shops = false)
-                        "tienda" -> FilterState(monuments = false, restaurants = false, shops = true)
-                        else -> FilterState()
+                        "historico" -> FilterState(monuments = true, iglesias = true, museos = true, restaurants = false, cafeterias = false, tiendasGenerales = false, supermercados = false, souvenirs = false)
+                        "gastronomia" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = true, cafeterias = true, tiendasGenerales = false, supermercados = false, souvenirs = false)
+                        "tienda" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = false, cafeterias = false, tiendasGenerales = true, supermercados = true, souvenirs = true)
+                        else -> FilterState(monuments=true, iglesias=true, museos=true, restaurants=true, cafeterias=true, tiendasGenerales=true, supermercados=true, souvenirs=true) // Estado por defecto: todo activo
                     }
                     placesViewModel.updateFilters(newState)
                     
-                    // Navegamos a la nueva pantalla de lista genérica
                     navController.navigate(AppScreens.PlacesList.route) 
                 }
             )
         }
 
-        // --- PANTALLA DE LISTA ÚNICA ---
         composable(AppScreens.PlacesList.route) {
             PlacesListScreen(navController = navController, viewModel = placesViewModel)
         }
 
-        // --- PANTALLA DE DETALLE ---
         composable(
             route = "${AppScreens.PlaceDetail.route}/{placeId}",
             arguments = listOf(navArgument("placeId") { type = NavType.IntType })

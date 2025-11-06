@@ -22,7 +22,6 @@ import com.alonso.explorersaga.R
 
 @Composable
 fun PlacesScreen(
-    // Una sola lambda que nos dice qué categoría se ha seleccionado
     onCategorySelected: (String) -> Unit 
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -40,10 +39,10 @@ fun PlacesScreen(
                 modifier = Modifier.padding(bottom = 24.dp)
             )
 
-            // Cada tarjeta ahora llama a la lambda con su categoría
-            CategoryCard(text = stringResource(id = R.string.places_monuments), onClick = { onCategorySelected("monumento") })
+            // Enviamos una categoría especial "historico" para el caso combinado
+            CategoryCard(text = stringResource(id = R.string.places_monuments), onClick = { onCategorySelected("historico") })
             Spacer(modifier = Modifier.height(16.dp))
-            CategoryCard(text = stringResource(id = R.string.places_restaurants), onClick = { onCategorySelected("restaurante") })
+            CategoryCard(text = stringResource(id = R.string.places_restaurants), onClick = { onCategorySelected("gastronomia") })
             Spacer(modifier = Modifier.height(16.dp))
             CategoryCard(text = stringResource(id = R.string.places_shops), onClick = { onCategorySelected("tienda") })
         }

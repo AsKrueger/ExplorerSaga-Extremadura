@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "8b45e5f6faaea9af70f28b8a01cdfb22",
+    "identityHash": "75d29f4e83ce2f9661fb710edafadce9",
     "entities": [
       {
         "tableName": "places",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `horarios` TEXT NOT NULL, `direccion` TEXT NOT NULL, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `imageResId` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `horarios` TEXT, `direccion` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `imageResId` INTEGER)",
         "fields": [
           {
             "fieldPath": "id",
@@ -36,13 +36,13 @@
             "fieldPath": "horarios",
             "columnName": "horarios",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "direccion",
             "columnName": "direccion",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "latitude",
@@ -60,7 +60,7 @@
             "fieldPath": "imageResId",
             "columnName": "imageResId",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -76,7 +76,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8b45e5f6faaea9af70f28b8a01cdfb22')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '75d29f4e83ce2f9661fb710edafadce9')"
     ]
   }
 }

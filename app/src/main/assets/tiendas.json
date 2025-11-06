@@ -1,0 +1,102 @@
+[
+  {
+    "id": 50,
+    "name": "LUCINE",
+    "description": "Tienda de ropa y accesorios.",
+    "category": "tienda_general",
+    "horarios": null,
+    "direccion": "C. Hernando de Soto 9, 06800 Mérida",
+    "latitude": 38.9160,
+    "longitude": -6.3430
+  },
+  {
+    "id": 51,
+    "name": "Encuentro Moda",
+    "description": "Tienda de moda para mujer.",
+    "category": "tienda_general",
+    "horarios": null,
+    "direccion": "C. Miguel de Cervantes 5, 06800 Mérida",
+    "latitude": 38.9165,
+    "longitude": -6.3420
+  },
+  {
+    "id": 52,
+    "name": "Azabache Moda Mujer",
+    "description": "Boutique de ropa femenina.",
+    "category": "tienda_general",
+    "horarios": null,
+    "direccion": "C. Moreno de Vargas 4, 06800 Mérida",
+    "latitude": 38.9170,
+    "longitude": -6.3410
+  },
+  {
+    "id": 53,
+    "name": "ALE-HOP",
+    "description": "Tienda de regalos, bazar y artículos originales.",
+    "category": "tienda_general",
+    "horarios": null,
+    "direccion": "C. Santa Eulalia 22, 06800 Mérida",
+    "latitude": 38.9182,
+    "longitude": -6.3402
+  },
+  {
+    "id": 54,
+    "name": "Emérita Cómics",
+    "description": "Tienda de cómics, manga, figuras y juegos de mesa.",
+    "category": "tienda_general",
+    "horarios": null,
+    "direccion": "C. Berzocana 3, 06800 Mérida",
+    "latitude": 38.9178,
+    "longitude": -6.3425
+  },
+  {
+    "id": 55,
+    "name": "Carrefour Express Plaza de Santa María",
+    "description": "Supermercado céntrico con alimentos y bebidas.",
+    "category": "supermercado",
+    "horarios": "09:00-22:00",
+    "direccion": "C. San Salvador 1, 06800 Mérida",
+    "latitude": 38.9175,
+    "longitude": -6.3440
+  },
+  {
+    "id": 56,
+    "name": "DIA Supermercado",
+    "description": "Cadena DIA con productos de alimentación.",
+    "category": "supermercado",
+    "horarios": "09:00-21:00",
+    "direccion": "Av. Juan Carlos I 30, 06800 Mérida",
+    "latitude": 38.9195,
+    "longitude": -6.3380
+  },
+  {
+    "id": 57,
+    "name": "La Espartería 1937",
+    "description": "Souvenirs y artesanía local.",
+    "category": "souvenir",
+    "horarios": null,
+    "direccion": "C. del Puente 24, 06800 Mérida",
+    "latitude": 38.9170,
+    "longitude": -6.3410
+  },
+  {
+    "id": 58,
+    "name": "Memoria Mérida",
+    "description": "Regalos y novelties.",
+    "category": "souvenir",
+    "horarios": null,
+    "direccion": "C. José Ramón Mélida 18, 06800 Mérida",
+    "latitude": 38.9175,
+    "longitude": -6.3385
+  },
+  {
+    "id": 59,
+    "name": "Taller de Artesanía y Cerámica Terracota",
+    "description": "Artesanía y souvenirs hechos a mano.",
+    "category": "souvenir",
+    "horarios": null,
+    "direccion": "C. José Ramón Mélida 26, 06800 Mérida",
+    "latitude": 38.9175,
+    "longitude": -6.3387
+  }
+]
