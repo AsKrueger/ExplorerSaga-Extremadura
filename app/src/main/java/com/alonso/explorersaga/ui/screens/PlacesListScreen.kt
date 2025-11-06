@@ -61,6 +61,18 @@ fun PlacesListScreen(
                         FilterChip(selected = !filterState.restaurants && filterState.cafeterias, onClick = { viewModel.updateFilters(filterState.copy(restaurants = false, cafeterias = true)) }, label = { Text("Cafeterías") })
                     }
                 }
+                 // --- NUEVO: Caso para Tiendas ---
+                filterState.tiendasGenerales || filterState.supermercados || filterState.souvenirs -> {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        FilterChip(selected = filterState.tiendasGenerales && filterState.supermercados && filterState.souvenirs, onClick = { viewModel.updateFilters(filterState.copy(tiendasGenerales = true, supermercados = true, souvenirs = true)) }, label = { Text("Todas") })
+                        FilterChip(selected = filterState.tiendasGenerales && !filterState.supermercados && !filterState.souvenirs, onClick = { viewModel.updateFilters(filterState.copy(tiendasGenerales = true, supermercados = false, souvenirs = false)) }, label = { Text("General") })
+                        FilterChip(selected = !filterState.tiendasGenerales && filterState.supermercados && !filterState.souvenirs, onClick = { viewModel.updateFilters(filterState.copy(tiendasGenerales = false, supermercados = true, souvenirs = false)) }, label = { Text("Super") })
+                        FilterChip(selected = !filterState.tiendasGenerales && !filterState.supermercados && filterState.souvenirs, onClick = { viewModel.updateFilters(filterState.copy(tiendasGenerales = false, supermercados = false, souvenirs = true)) }, label = { Text("Souvenirs") })
+                    }
+                }
             }
 
             LazyColumn(
