@@ -38,7 +38,9 @@ fun AppNavigation() {
                 viewModel = placesViewModel,
                 onFilterClicked = { navController.navigate(AppScreens.Filtrado.route) },
                 onRoutesClicked = { /* TODO */ },
-                onCenterLocationClicked = { /* TODO */ }
+                onCenterLocationClicked = { /* TODO */ },
+                onInfoClicked = { navController.navigate(AppScreens.Informacion.route) },
+                onPlacesClicked = { navController.navigate(AppScreens.Lugares.route) }
             )
         }
         composable(AppScreens.Filtrado.route) {
@@ -61,7 +63,9 @@ fun AppNavigation() {
                     placesViewModel.updateFilters(newState)
                     
                     navController.navigate(AppScreens.PlacesList.route) 
-                }
+                },
+                onMapClicked = { navController.navigate(AppScreens.Mapa.route) },
+                onInfoClicked = { navController.navigate(AppScreens.Informacion.route) }
             )
         }
 

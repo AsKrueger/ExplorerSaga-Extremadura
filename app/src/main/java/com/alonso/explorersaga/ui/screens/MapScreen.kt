@@ -2,10 +2,15 @@ package com.alonso.explorersaga.ui.screens
 
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -42,7 +47,9 @@ fun MapScreen(
     viewModel: PlacesViewModel,
     onFilterClicked: () -> Unit,
     onRoutesClicked: () -> Unit, // TODO
-    onCenterLocationClicked: () -> Unit // TODO
+    onCenterLocationClicked: () -> Unit, // TODO
+    onInfoClicked: () -> Unit,
+    onPlacesClicked: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -70,6 +77,29 @@ fun MapScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
                     Text(text = stringResource(id = R.string.map_filter_icon), fontSize = 24.sp, color = MaterialTheme.colorScheme.onPrimary)
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = onInfoClicked,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                ) {
+                    Text(text = "🏛️ Info", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                }
+                Button(
+                    onClick = onPlacesClicked,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                ) {
+                    Text(text = stringResource(id = R.string.info_places_button), color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
             }
         }

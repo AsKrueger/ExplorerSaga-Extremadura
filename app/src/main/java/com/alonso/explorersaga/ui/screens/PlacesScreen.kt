@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +24,9 @@ import com.alonso.explorersaga.R
 
 @Composable
 fun PlacesScreen(
-    onCategorySelected: (String) -> Unit 
+    onCategorySelected: (String) -> Unit,
+    onMapClicked: () -> Unit,
+    onInfoClicked: () -> Unit
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -45,6 +49,29 @@ fun PlacesScreen(
             CategoryCard(text = stringResource(id = R.string.places_restaurants), onClick = { onCategorySelected("gastronomia") })
             Spacer(modifier = Modifier.height(16.dp))
             CategoryCard(text = stringResource(id = R.string.places_shops), onClick = { onCategorySelected("tienda") })
+            
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = onMapClicked,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                ) {
+                    Text(text = "🗺️ Mapa", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                }
+                Button(
+                    onClick = onInfoClicked,
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                ) {
+                    Text(text = "🏛️ Info", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                }
+            }
         }
     }
 }
