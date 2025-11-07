@@ -2,9 +2,9 @@ package com.alonso.explorersaga.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import kotlinx.serialization.Serializable // <-- NUEVO IMPORT
+import kotlinx.serialization.Serializable
 
-@Serializable // <-- NUEVA ANOTACIÓN
+@Serializable
 @Entity(tableName = "places")
 data class PlaceEntity(
     @PrimaryKey(autoGenerate = true)
@@ -17,7 +17,5 @@ data class PlaceEntity(
     val direccion: String?,
     val latitude: Double,
     val longitude: Double,
-    // El campo imageResId no vendrá en el JSON, así que le damos un valor por defecto.
-    // La librería de serialización lo ignorará si no lo encuentra en el JSON.
-    val imageResId: Int? = null 
+    val photo: String? // <-- CAMPO ACTUALIZADO
 )

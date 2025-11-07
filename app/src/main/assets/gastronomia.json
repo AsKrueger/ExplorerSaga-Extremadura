@@ -7,7 +7,8 @@
     "horarios": "08:30–22:00",
     "direccion": "Calle Almendralejo 6, Mérida",
     "latitude": 38.9153,
-    "longitude": -6.3452
+    "longitude": -6.3452,
+    "photo": "https://via.placeholder.com/150"
   },
   {
     "id": 29,
@@ -17,7 +18,8 @@
     "horarios": "09:00–21:00",
     "direccion": "Calle Holguín 8, Mérida",
     "latitude": 38.9175,
-    "longitude": -6.3431
+    "longitude": -6.3431,
+    "photo": "https://via.placeholder.com/150"
   },
   {
     "id": 30,
@@ -27,7 +29,8 @@
     "horarios": "07:30–22:30",
     "direccion": "Avenida Juan Carlos I 4, Mérida",
     "latitude": 38.9171,
-    "longitude": -6.3428
+    "longitude": -6.3428,
+    "photo": "https://via.placeholder.com/150"
   },
   {
     "id": 31,
@@ -37,7 +40,8 @@
     "horarios": "13:00–16:00 / 20:00–23:30",
     "direccion": "Calle Romero Leal 14, Mérida",
     "latitude": 38.9169,
-    "longitude": -6.3442
+    "longitude": -6.3442,
+    "photo": "https://via.placeholder.com/150"
   },
   {
     "id": 32,
@@ -47,6 +51,7 @@
     "horarios": "12:00–00:00",
     "direccion": "Calle John Lennon 20, Mérida",
     "latitude": 38.9161,
-    "longitude": -6.3450
+    "longitude": -6.3450,
+    "photo": "https://via.placeholder.com/150"
   }
 ]

@@ -1,8 +1,16 @@
 package com.alonso.explorersaga.ui.screens
 
-import androidx.compose.foundation.Image
+import android.content.Context
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
@@ -10,19 +18,31 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
 
 @Composable
 fun PlaceDetailScreen(place: Place) {
+    val context = LocalContext.current
+    val imageResId = remember(place.photo) {
+        if (place.photo?.startsWith("http") == false) {
+            getDrawableResourceId(context, place.photo)
+        } else {
+            null
+        }
+    }
+
     Scaffold {
         Column(
             modifier = Modifier
@@ -37,11 +57,13 @@ fun PlaceDetailScreen(place: Place) {
                     .height(300.dp) // Hacemos la imagen un poco más grande
             ) {
                 // La Imagen
-                Image(
-                    painter = painterResource(id = place.imageResId ?: R.drawable.teatro_merida),
+                AsyncImage(
+                    model = imageResId ?: place.photo ?: R.drawable.teatro_merida,
                     contentDescription = place.name,
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(id = R.drawable.teatro_merida),
+                    error = painterResource(id = R.drawable.teatro_merida)
                 )
 
                 // Gradiente oscuro para legibilidad del texto
@@ -111,4 +133,9 @@ private fun InfoRow(label: String, value: String) {
             style = MaterialTheme.typography.bodyMedium
         )
     }
+}
+
+private fun getDrawableResourceId(context: Context, name: String): Int? {
+    val resourceId = context.resources.getIdentifier(name, "drawable", context.packageName)
+    return if (resourceId == 0) null else resourceId
 }

@@ -1,5 +1,6 @@
 package com.alonso.explorersaga.ui.composables
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -23,15 +24,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
 
 @Composable
 fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
+    val context = LocalContext.current
+    val imageResId = remember(place.photo) {
+        if (place.photo?.startsWith("http") == false) {
+            getDrawableResourceId(context, place.photo)
+        } else {
+            null
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -47,15 +59,17 @@ fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             // 1. Imagen en Miniatura
-            Image(
-                // Usa la imagen del lugar o una por defecto si no existe
-                painter = painterResource(id = place.imageResId ?: R.drawable.teatro_merida),
+            AsyncImage(
+                model = imageResId ?: place.photo ?: R.drawable.teatro_merida,
                 contentDescription = place.name,
                 modifier = Modifier
                     .size(88.dp)
                     .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.drawable.teatro_merida),
+                error = painterResource(id = R.drawable.teatro_merida)
             )
+
 
             Spacer(modifier = Modifier.width(16.dp))
 
@@ -95,4 +109,9 @@ fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
             }
         }
     }
+}
+
+private fun getDrawableResourceId(context: Context, name: String): Int? {
+    val resourceId = context.resources.getIdentifier(name, "drawable", context.packageName)
+    return if (resourceId == 0) null else resourceId
 }
