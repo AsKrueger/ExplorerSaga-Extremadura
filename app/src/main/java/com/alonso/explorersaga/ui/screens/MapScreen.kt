@@ -1,5 +1,7 @@
 package com.alonso.explorersaga.ui.screens
 
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,12 +17,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -67,42 +72,37 @@ fun MapScreen(
                     Text(text = stringResource(id = R.string.map_filter_icon), fontSize = 24.sp, color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
-            Column(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(16.dp)
-            ) {
-                 FloatingActionButton(
-                    onClick = onRoutesClicked,
-                    containerColor = MaterialTheme.colorScheme.primary
-                ) {
-                    Text(text = stringResource(id = R.string.map_routes_icon), fontSize = 24.sp, color = MaterialTheme.colorScheme.onPrimary)
-                }
-            }
-             Column(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(16.dp)
-            ) {
-                 FloatingActionButton(
-                    onClick = onCenterLocationClicked,
-                    containerColor = MaterialTheme.colorScheme.surface
-                ) {
-                    Text(text = stringResource(id = R.string.map_center_icon), fontSize = 24.sp, color = MaterialTheme.colorScheme.primary)
-                }
-            }
         }
     }
 }
 
 private fun MapView.updateMarkers(places: List<Place>) {
+    val context = this.context
     this.overlays.clear()
+
+    val colorHistorico = Color(0xFF556B2F).toArgb() // Verde Oliva Oscuro
+    val colorGastronomia = Color(0xFFFFC107).toArgb() // Amarillo Ámbar
+    val colorTiendas = Color(0xFF1976D2).toArgb() // Azul
+
     places.forEach { place ->
         val geoPoint = GeoPoint(place.latitude, place.longitude)
         val marker = Marker(this)
         marker.position = geoPoint
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
         marker.title = place.name
+
+        val iconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_map_pin)?.mutate()
+
+        val color = when (place.category) {
+            "monumento", "iglesia", "museo" -> colorHistorico
+            "restaurante", "cafeteria" -> colorGastronomia
+            "tienda_general", "supermercado", "souvenir" -> colorTiendas
+            else -> Color.Gray.toArgb()
+        }
+
+        iconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
+        marker.icon = iconDrawable
+
         this.overlays.add(marker)
     }
     this.invalidate()
@@ -115,7 +115,7 @@ private fun rememberMapViewWithLifecycle(): MapView {
         MapView(context).apply {
             setTileSource(TileSourceFactory.MAPNIK)
             setMultiTouchControls(true)
-            controller.setZoom(15.0)
+            controller.setZoom(17.0) // <-- CAMBIO APLICADO AQUÍ
             controller.setCenter(GeoPoint(38.915, -6.345))
         }
     }
