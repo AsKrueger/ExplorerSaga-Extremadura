@@ -2,21 +2,21 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.serialization)
 }
 
-// Bloque ksp en la posición correcta (nivel superior)
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
 }
 
 android {
     namespace = "com.alonso.explorersaga"
-    compileSdk = 35 // ✅ antes era 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.alonso.explorersaga"
         minSdk = 26
-        targetSdk = 35 // ✅ antes era 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -49,9 +49,6 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    // Declaración directa para saltarnos el catálogo de versiones
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -59,7 +56,14 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    // Dependencias de Navegación y OpenStreetMap
+    // La BOM se encargará de las versiones de lifecycle-compose
+    implementation("androidx.lifecycle:lifecycle-runtime-compose") 
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
+
+    // Serialización
+    implementation(libs.kotlinx.serialization.json)
+
+    // Navegación y Mapas
     implementation(libs.androidx.navigation.compose)
     implementation(libs.osmdroid.android)
 
@@ -67,9 +71,8 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
-    ksp(libs.androidx.sqlite.framework)
 
-    // Dependencias de Test
+    // Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

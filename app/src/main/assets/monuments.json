@@ -1,0 +1,303 @@
+
+[
+  {
+    "id": 1,
+    "name": "Teatro Romano de Mérida",
+    "description": "El monumento más emblemático de la ciudad, aún en uso para el Festival Internacional de Teatro Clásico.",
+    "category": "monumento",
+    "horarios": "10:00-21:00",
+    "direccion": "C/ José Ramón Mélida, s/n",
+    "latitude": 38.9157,
+    "longitude": -6.3380
+  },
+  {
+    "id": 2,
+    "name": "Anfiteatro Romano",
+    "description": "Escenario de combates de gladiadores junto al teatro.",
+    "category": "monumento",
+    "horarios": "10:00-21:00",
+    "direccion": "C/ José Ramón Mélida, s/n",
+    "latitude": 38.9155,
+    "longitude": -6.3388
+  },
+  {
+    "id": 3,
+    "name": "Circo Romano",
+    "description": "Uno de los circos mejor conservados del Imperio Romano, con capacidad para 30.000 espectadores.",
+    "category": "monumento",
+    "horarios": "10:00-21:00",
+    "direccion": "Av. Juan Carlos I, s/n",
+    "latitude": 38.9201,
+    "longitude": -6.3315
+  },
+  {
+    "id": 4,
+    "name": "Templo de Diana",
+    "description": "Templo romano dedicado a la diosa Diana, en el foro municipal.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "C/ Romero Leal, 1",
+    "latitude": 38.9170,
+    "longitude": -6.3440
+  },
+  {
+    "id": 5,
+    "name": "Arco de Trajano",
+    "description": "Arco monumental del foro provincial, símbolo de la Mérida imperial.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "C/ Trajano, s/n",
+    "latitude": 38.9180,
+    "longitude": -6.3410
+  },
+  {
+    "id": 6,
+    "name": "Puente Romano sobre el Guadiana",
+    "description": "Puente romano de más de 60 arcos, uno de los más largos del mundo antiguo.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Puente Romano, Mérida",
+    "latitude": 38.9150,
+    "longitude": -6.3435
+  },
+  {
+    "id": 7,
+    "name": "Acueducto de Los Milagros",
+    "description": "Impresionante acueducto romano que abastecía la ciudad desde el embalse de Proserpina.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Av. Vía de la Plata",
+    "latitude": 38.9273,
+    "longitude": -6.3365
+  },
+  {
+    "id": 8,
+    "name": "Acueducto de San Lázaro",
+    "description": "Acueducto menor de origen romano junto a las termas de San Lázaro.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Ctra. de San Lázaro, s/n",
+    "latitude": 38.9225,
+    "longitude": -6.3342
+  },
+  {
+    "id": 9,
+    "name": "Templo de Marte (Hornito de Santa Eulalia)",
+    "description": "Estructura romana reaprovechada como santuario a Santa Eulalia.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Av. de Extremadura, 1",
+    "latitude": 38.9195,
+    "longitude": -6.3395
+  },
+  {
+    "id": 10,
+    "name": "Foro Romano de Augusta Emerita",
+    "description": "Centro político y religioso de la colonia romana Augusta Emerita.",
+    "category": "monumento",
+    "horarios": "10:00-21:00",
+    "direccion": "C/ José Ramón Mélida",
+    "latitude": 38.9159,
+    "longitude": -6.3385
+  },
+  {
+    "id": 11,
+    "name": "Casa del Mitreo y Columbarios",
+    "description": "Casa romana con mosaicos y un pequeño mausoleo familiar.",
+    "category": "monumento",
+    "horarios": "10:00-21:00",
+    "direccion": "Av. Juan Carlos I, 66",
+    "latitude": 38.9112,
+    "longitude": -6.3352
+  },
+  {
+    "id": 12,
+    "name": "Termas de San Lázaro",
+    "description": "Conjunto termal romano bien conservado cerca del río Albarregas.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "C/ San Lázaro, s/n",
+    "latitude": 38.9218,
+    "longitude": -6.3345
+  },
+  {
+    "id": 13,
+    "name": "Pórtico del Foro Municipal",
+    "description": "Restos de un majestuoso pórtico del foro de Mérida.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "C/ Sagasta, s/n",
+    "latitude": 38.9165,
+    "longitude": -6.3428
+  },
+  {
+    "id": 14,
+    "name": "Cripta de Santa Eulalia",
+    "description": "Excavación arqueológica bajo la basílica, con tumbas y restos paleocristianos.",
+    "category": "monumento",
+    "horarios": "10:00-20:00",
+    "direccion": "Av. Extremadura, 1",
+    "latitude": 38.9192,
+    "longitude": -6.3397
+  },
+  {
+    "id": 15,
+    "name": "Termas de Pontezuelas",
+    "description": "Restos de pequeñas termas bajo la actual Mérida.",
+    "category": "monumento",
+    "horarios": null,
+    "direccion": "C/ Pontezuelas, s/n",
+    "latitude": 38.9161,
+    "longitude": -6.3409
+  },
+  {
+    "id": 16,
+    "name": "Restos del Foro Provincial",
+    "description": "Espacio monumental del foro provincial romano.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "C/ Trajano, s/n",
+    "latitude": 38.9182,
+    "longitude": -6.3411
+  },
+  {
+    "id": 17,
+    "name": "Basílica de Santa Eulalia",
+    "description": "Templo cristiano sobre una antigua necrópolis paleocristiana.",
+    "category": "iglesia",
+    "horarios": "9:00-20:00",
+    "direccion": "Av. de Extremadura, 1",
+    "latitude": 38.9193,
+    "longitude": -6.3398
+  },
+  {
+    "id": 18,
+    "name": "Centro Visigodo (Iglesia de Santa Clara)",
+    "description": "Museo dedicado al arte visigodo, dentro de una iglesia medieval.",
+    "category": "museo",
+    "horarios": "9:00-19:00",
+    "direccion": "C/ Santa Clara, 1",
+    "latitude": 38.9175,
+    "longitude": -6.3432
+  },
+  {
+    "id": 19,
+    "name": "Concatedral de Santa María la Mayor",
+    "description": "Principal templo católico de Mérida, de origen medieval.",
+    "category": "iglesia",
+    "horarios": "9:00-20:00",
+    "direccion": "Plaza de España, s/n",
+    "latitude": 38.9168,
+    "longitude": -6.3446
+  },
+  {
+    "id": 20,
+    "name": "Iglesia de San Juan Bautista",
+    "description": "Iglesia gótico-mudéjar junto a la Plaza de España.",
+    "category": "iglesia",
+    "horarios": "Libre acceso",
+    "direccion": "Plaza de España, s/n",
+    "latitude": 38.9169,
+    "longitude": -6.3444
+  },
+  {
+    "id": 21,
+    "name": "Alcazaba Árabe",
+    "description": "Fortaleza musulmana del siglo IX, la más antigua de la Península.",
+    "category": "monumento",
+    "horarios": "9:00-21:00",
+    "direccion": "C/ Gral. José María Álvarez, s/n",
+    "latitude": 38.9149,
+    "longitude": -6.3433
+  },
+  {
+    "id": 22,
+    "name": "Puerta de la Villa",
+    "description": "Entrada histórica de la antigua ciudad amurallada.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Puerta de la Villa, Mérida",
+    "latitude": 38.9173,
+    "longitude": -6.3447
+  },
+  {
+    "id": 23,
+    "name": "Muralla de Mérida",
+    "description": "Restos visibles de la muralla romana y medieval que protegía la ciudad.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Av. Fernández López, s/n",
+    "latitude": 38.9187,
+    "longitude": -6.3420
+  },
+  {
+    "id": 24,
+    "name": "Puente Romano del Albarregas",
+    "description": "Puente secundario romano que unía Mérida con la Vía de la Plata.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "C/ José Sáez de Buruaga, s/n",
+    "latitude": 38.9245,
+    "longitude": -6.3375
+  },
+  {
+    "id": 25,
+    "name": "Embalse de Proserpina",
+    "description": "Antigua presa romana aún en uso, rodeada de naturaleza.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Carretera de Proserpina, km 5",
+    "latitude": 38.9522,
+    "longitude": -6.3535
+  },
+  {
+    "id": 26,
+    "name": "Embalse de Cornalvo",
+    "description": "Impresionante presa romana declarada Patrimonio de la Humanidad.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Parque Natural de Cornalvo",
+    "latitude": 39.0131,
+    "longitude": -6.1644
+  },
+  {
+    "id": 27,
+    "name": "Presa Romana de Alange",
+    "description": "Presa romana con termas aún en funcionamiento.",
+    "category": "monumento",
+    "horarios": "Libre acceso",
+    "direccion": "Alange, Badajoz",
+    "latitude": 38.7773,
+    "longitude": -6.2471
+  },
+  {
+    "id": 28,
+    "name": "Museo Nacional de Arte Romano",
+    "description": "Museo diseñado por Rafael Moneo con miles de piezas arqueológicas.",
+    "category": "museo",
+    "horarios": "9:30-20:00",
+    "direccion": "C/ José Ramón Mélida, s/n",
+    "latitude": 38.9153,
+    "longitude": -6.3387
+  },
+  {
+    "id": 29,
+    "name": "Museo de Arte Visigodo",
+    "description": "Museo en la iglesia de Santa Clara con piezas visigodas y paleocristianas.",
+    "category": "museo",
+    "horarios": "9:00-19:00",
+    "direccion": "C/ Santa Clara, 1",
+    "latitude": 38.9175,
+    "longitude": -6.3433
+  },
+  {
+    "id": 30,
+    "name": "Centro de Interpretación de la Ciudad Romana",
+    "description": "Espacio moderno que explica la historia de Augusta Emerita.",
+    "category": "museo",
+    "horarios": "10:00-20:00",
+    "direccion": "C/ José Ramón Mélida, s/n",
+    "latitude": 38.9156,
+    "longitude": -6.3386
+  }
+]

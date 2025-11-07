@@ -2,7 +2,9 @@ package com.alonso.explorersaga.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable // <-- NUEVO IMPORT
 
+@Serializable // <-- NUEVA ANOTACIÓN
 @Entity(tableName = "places")
 data class PlaceEntity(
     @PrimaryKey(autoGenerate = true)
@@ -11,20 +13,11 @@ data class PlaceEntity(
     val name: String,
     val description: String,
     val category: String,
-
-    // ¡Tu idea! Columna para guardar los horarios.
-    val horarios: String,
-
-    // ¡Tu idea! Columna para la dirección física.
-    val direccion: String,
-
-    // ¡Tu idea! Columna para la latitud geográfica.
+    val horarios: String?,
+    val direccion: String?,
     val latitude: Double,
-
-    // ¡Tu idea! Columna para la longitud geográfica.
     val longitude: Double,
-    
-    // ¡Tu idea! Columna para la imagen de portada.
-    // Guardará el ID del recurso drawable (ej: R.drawable.mi_imagen).
-    val imageResId: Int
+    // El campo imageResId no vendrá en el JSON, así que le damos un valor por defecto.
+    // La librería de serialización lo ignorará si no lo encuentra en el JSON.
+    val imageResId: Int? = null 
 )

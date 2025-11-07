@@ -1,0 +1,52 @@
+[
+  {
+    "id": 28,
+    "name": "Café Joplin",
+    "description": "Cafetería acogedora con ambiente bohemio, ideal para tomar café o té con tranquilidad.",
+    "category": "cafeteria",
+    "horarios": "08:30–22:00",
+    "direccion": "Calle Almendralejo 6, Mérida",
+    "latitude": 38.9153,
+    "longitude": -6.3452
+  },
+  {
+    "id": 29,
+    "name": "La Piel del Oso",
+    "description": "Cafetería moderna con repostería artesanal y decoración cuidada.",
+    "category": "cafeteria",
+    "horarios": "09:00–21:00",
+    "direccion": "Calle Holguín 8, Mérida",
+    "latitude": 38.9175,
+    "longitude": -6.3431
+  },
+  {
+    "id": 30,
+    "name": "Cafetería Pizarrín",
+    "description": "Excelente sitio para desayunar, con buena atención y productos frescos.",
+    "category": "cafeteria",
+    "horarios": "07:30–22:30",
+    "direccion": "Avenida Juan Carlos I 4, Mérida",
+    "latitude": 38.9171,
+    "longitude": -6.3428
+  },
+  {
+    "id": 31,
+    "name": "Restaurante La Tahona",
+    "description": "Cocina mediterránea y extremeña en un entorno elegante.",
+    "category": "restaurante",
+    "horarios": "13:00–16:00 / 20:00–23:30",
+    "direccion": "Calle Romero Leal 14, Mérida",
+    "latitude": 38.9169,
+    "longitude": -6.3442
+  },
+  {
+    "id": 32,
+    "name": "20 D’ Tapas",
+    "description": "Tapas modernas y buen ambiente, excelente calidad-precio.",
+    "category": "restaurante",
+    "horarios": "12:00–00:00",
+    "direccion": "Calle John Lennon 20, Mérida",
+    "latitude": 38.9161,
+    "longitude": -6.3450
+  }
+]

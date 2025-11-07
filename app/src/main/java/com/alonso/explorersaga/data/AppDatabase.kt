@@ -4,11 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-// import androidx.sqlite.db.SupportSQLiteDatabase // Comentamos este import también
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.alonso.explorersaga.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.decodeFromString
 
 @Database(entities = [PlaceEntity::class], version = 1, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
@@ -26,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "explorer_saga_database"
                 )
-                // .addCallback(DatabaseCallback(context)) // 1. HEMOS COMENTADO ESTA LÍNEA
+                .addCallback(DatabaseCallback(context)) // Pasamos el contexto
                 .build()
                 INSTANCE = instance
                 instance
@@ -34,24 +36,39 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 
-    // 2. HEMOS COMENTADO TODA LA CLASE INTERNA DEL CALLBACK
-    /*
-    private class DatabaseCallback(
-        private val context: Context
-    ) : RoomDatabase.Callback() {
+    private class DatabaseCallback(private val context: Context) : RoomDatabase.Callback() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
             INSTANCE?.let { database ->
                 CoroutineScope(Dispatchers.IO).launch {
-                    populateDatabase(database.placeDao())
+                    populateDatabase(context, database.placeDao())
                 }
             }
         }
 
-        suspend fun populateDatabase(placeDao: PlaceDao) {
-            // ... todo el código de inserción ...
+        suspend fun populateDatabase(context: Context, placeDao: PlaceDao) {
+            placeDao.deleteAll()
+
+            // Preparamos el parser de JSON
+            val json = Json { ignoreUnknownKeys = true }
+
+            // Leemos cada archivo de assets y lo parseamos
+            val monuments = json.decodeFromString<List<PlaceEntity>>(
+                context.assets.open("monuments.json").bufferedReader().use { it.readText() }
+            )
+            val gastronomy = json.decodeFromString<List<PlaceEntity>>(
+                context.assets.open("gastronomia.json").bufferedReader().use { it.readText() }
+            )
+            val stores = json.decodeFromString<List<PlaceEntity>>(
+                context.assets.open("tiendas.json").bufferedReader().use { it.readText() }
+            )
+
+            // Combinamos todas las listas en una sola
+            val allPlaces = monuments + gastronomy + stores
+
+            // Insertamos todos los datos en la base de datos de una vez
+            placeDao.insertAll(allPlaces)
         }
     }
-    */
 }
