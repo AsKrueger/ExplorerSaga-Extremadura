@@ -1,6 +1,7 @@
 package com.alonso.explorersaga.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,26 +23,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.alonso.explorersaga.R
+import com.alonso.explorersaga.model.Place
 
-// Objeto de datos de UI para cualquier lugar.
-// Esta es la versión que las pantallas usarán.
-data class Place(
-    val id: Int,
-    val name: String,
-    val description: String,
-    val category: String,
-    val horarios: String,
-    val direccion: String,
-    val latitude: Double,
-    val longitude: Double,
-    val imageResId: Int
-)
-
-// Composable reutilizable para mostrar un elemento en una lista
+// Composable reutilizable para mostrar un elemento en una lista.
+// Ahora acepta un NavController y es más robusto.
 @Composable
-fun PlaceListItem(place: Place) {
+fun PlaceListItem(place: Place, navController: NavController) {
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { /* TODO: Implementar navegación a la pantalla de detalle, p. ej. navController.navigate("detail/${place.id}") */ },
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
@@ -49,9 +42,10 @@ fun PlaceListItem(place: Place) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Imagen de portada
+            // Imagen de portada (con manejo de nulos)
             Image(
-                painter = painterResource(id = place.imageResId),
+                // Si imageResId es nulo, usa el icono de la app por defecto
+                painter = painterResource(id = place.imageResId ?: R.mipmap.ic_launcher),
                 contentDescription = place.name,
                 modifier = Modifier
                     .size(80.dp)
@@ -64,9 +58,10 @@ fun PlaceListItem(place: Place) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = place.name, fontWeight = FontWeight.Bold, fontSize = 20.sp)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = place.direccion, fontSize = 14.sp, color = Color.Gray)
+                // Dirección y horario (con manejo de nulos)
+                Text(text = place.direccion ?: "Dirección no disponible", fontSize = 14.sp, color = Color.Gray)
                 Spacer(modifier = Modifier.height(4.dp))
-                Text(text = "Horario: ${place.horarios}", fontSize = 14.sp, color = Color.DarkGray)
+                Text(text = "Horario: ${place.horarios ?: "No disponible"}", fontSize = 14.sp, color = Color.DarkGray)
             }
         }
     }

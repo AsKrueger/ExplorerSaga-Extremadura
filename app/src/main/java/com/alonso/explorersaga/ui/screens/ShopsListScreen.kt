@@ -8,38 +8,19 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.alonso.explorersaga.R
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alonso.explorersaga.ui.composables.PlaceListItem
+import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 
 @Composable
-fun ShopsListScreen(_navController: NavController) { // Parámetro no usado
-    // Datos de ejemplo completos para tiendas
-    val shops = listOf(
-        Place(
-            id = 7,
-            name = "Terracota Mérida",
-            description = "Artesanía y cerámica típica de la región.",
-            category = "tienda",
-            horarios = "10:00 - 14:00, 17:00 - 20:00",
-            direccion = "C. José Ramón Mélida, 30, 06800 Mérida",
-            latitude = 38.916,
-            longitude = -6.339,
-            imageResId = R.drawable.teatro_merida // Placeholder
-        ),
-        Place(
-            id = 8,
-            name = "Emérita Souvenirs",
-            description = "Recuerdos variados de la Mérida romana y de Extremadura.",
-            category = "tienda",
-            horarios = "09:30 - 21:00",
-            direccion = "C. José Ramón Mélida, 15, 06800 Mérida",
-            latitude = 38.917,
-            longitude = -6.338,
-            imageResId = R.drawable.teatro_merida // Placeholder
-        )
-    )
+fun ShopsListScreen(
+    viewModel: PlacesViewModel
+    // Ya no necesita NavController
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         LazyColumn(
@@ -49,8 +30,11 @@ fun ShopsListScreen(_navController: NavController) { // Parámetro no usado
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(shops) { place ->
-                PlaceListItem(place = place)
+            items(uiState.places) { place ->
+                // Llamada corregida a PlaceListItem
+                PlaceListItem(place = place, onItemClicked = {
+                    // TODO: Navegar a la pantalla de detalle del lugar "place"
+                })
             }
         }
     }

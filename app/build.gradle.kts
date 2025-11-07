@@ -4,24 +4,22 @@ plugins {
     alias(libs.plugins.ksp)
 }
 
+// Bloque ksp en la posición correcta (nivel superior)
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+}
+
 android {
     namespace = "com.alonso.explorersaga"
-    // Use a plain integer for compileSdk to avoid unresolved symbols during Gradle configuration
-    compileSdk = 36
+    compileSdk = 35 // ✅ antes era 34
 
     defaultConfig {
         applicationId = "com.alonso.explorersaga"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 35 // ✅ antes era 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        // Le decimos a KSP dónde guardar los archivos de schema de Room
-        ksp {
-            arg("room.schemaLocation", "$projectDir/schemas")
-        }
     }
 
     buildTypes {
@@ -34,17 +32,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        // Use the version from the version catalog so it's centralized and avoids mismatches
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 }
@@ -52,6 +49,9 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    // Declaración directa para saltarnos el catálogo de versiones
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -59,8 +59,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
-    // Dependencias de Navegación y OpenStreetMap (Librería oficial)
-    // Use version catalog references to keep versions centralized
+    // Dependencias de Navegación y OpenStreetMap
     implementation(libs.androidx.navigation.compose)
     implementation(libs.osmdroid.android)
 
@@ -68,6 +67,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+    ksp(libs.androidx.sqlite.framework)
 
     // Dependencias de Test
     testImplementation(libs.junit)
