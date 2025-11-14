@@ -1,6 +1,8 @@
 package com.alonso.explorersaga.ui.screens
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,25 +14,40 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import coil.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.Marker
 
 @Composable
 fun PlaceDetailScreen(place: Place) {
@@ -113,6 +130,34 @@ fun PlaceDetailScreen(place: Place) {
                 place.direccion?.let {
                     InfoRow(label = "Dirección:", value = it)
                 }
+
+                HorizontalDivider()
+
+                // Mapa
+                val mapView = rememberMapViewWithLifecycle(place)
+                AndroidView(
+                    { mapView },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                )
+
+                // Botón para visitar el sitio web
+                place.website?.let { url ->
+                    Button(
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+                            context.startActivity(intent)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    ) {
+                        Icon(Icons.Default.Info, contentDescription = null)
+                        Text("Visitar Sitio Web", modifier = Modifier.padding(start = 8.dp))
+                    }
+                }
             }
         }
     }
@@ -138,4 +183,44 @@ private fun InfoRow(label: String, value: String) {
 private fun getDrawableResourceId(context: Context, name: String): Int? {
     val resourceId = context.resources.getIdentifier(name, "drawable", context.packageName)
     return if (resourceId == 0) null else resourceId
+}
+
+@Composable
+private fun rememberMapViewWithLifecycle(place: Place): MapView {
+    val context = LocalContext.current
+    val mapView = remember {
+        MapView(context).apply {
+            setTileSource(TileSourceFactory.MAPNIK)
+            setMultiTouchControls(true)
+            val geoPoint = GeoPoint(place.latitude, place.longitude)
+            controller.setZoom(18.0)
+            controller.setCenter(geoPoint)
+
+            // Añadir marcador
+            val marker = Marker(this)
+            marker.position = geoPoint
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker.title = place.name
+            overlays.add(marker)
+            invalidate() // Refrescar el mapa
+        }
+    }
+
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    DisposableEffect(lifecycle, mapView) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> mapView.onResume()
+                Lifecycle.Event.ON_PAUSE -> mapView.onPause()
+                else -> {}
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+            mapView.onDetach()
+        }
+    }
+
+    return mapView
 }

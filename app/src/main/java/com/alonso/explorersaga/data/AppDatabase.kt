@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.decodeFromString
 
-@Database(entities = [PlaceEntity::class], version = 1, exportSchema = true)
+@Database(entities = [PlaceEntity::class], version = 2, exportSchema = true) // VERSIÓN INCREMENTADA
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun placeDao(): PlaceDao
@@ -28,7 +28,8 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "explorer_saga_database"
                 )
-                .addCallback(DatabaseCallback(context)) // Pasamos el contexto
+                .addCallback(DatabaseCallback(context))
+                .fallbackToDestructiveMigration() // AÑADIDO PARA LA MIGRACIÓN
                 .build()
                 INSTANCE = instance
                 instance

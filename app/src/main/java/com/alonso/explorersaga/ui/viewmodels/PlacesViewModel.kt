@@ -92,6 +92,7 @@ fun PlaceEntity.toPlaceUiModel(): Place {
         direccion = this.direccion,
         latitude = this.latitude,
         longitude = this.longitude,
-        photo = this.photo
+        photo = this.photo,
+        website = this.website
     )
 }

@@ -8,7 +8,8 @@
     "direccion": "Calle Almendralejo 6, Mérida",
     "latitude": 38.9153,
     "longitude": -6.3452,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 29,
@@ -19,7 +20,8 @@
     "direccion": "Calle Holguín 8, Mérida",
     "latitude": 38.9175,
     "longitude": -6.3431,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 30,
@@ -30,7 +32,8 @@
     "direccion": "Avenida Juan Carlos I 4, Mérida",
     "latitude": 38.9171,
     "longitude": -6.3428,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 31,
@@ -41,7 +44,8 @@
     "direccion": "Calle Romero Leal 14, Mérida",
     "latitude": 38.9169,
     "longitude": -6.3442,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 32,
@@ -52,6 +56,19 @@
     "direccion": "Calle John Lennon 20, Mérida",
     "latitude": 38.9161,
     "longitude": -6.3450,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
+  },
+  {
+    "id": 50,
+    "name": "Cafeteria D10",
+    "description": "Cafeteria-bocateria con tematica friki, ideal para desayunos y meriendas.",
+    "category": "cafeteria",
+    "horarios": "10:00–12:00 / 18:00–23:00",
+    "direccion": "Calle Sagasta 15, 06800 Mérida",
+    "latitude": 38.916951,
+    "longitude": -6.342719,
+    "photo": "d10",
+    "website": null
   }
 ]

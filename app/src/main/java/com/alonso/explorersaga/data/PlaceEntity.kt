@@ -17,5 +17,6 @@ data class PlaceEntity(
     val direccion: String?,
     val latitude: Double,
     val longitude: Double,
-    val photo: String? // <-- CAMPO ACTUALIZADO
+    val photo: String?,
+    val website: String?
 )

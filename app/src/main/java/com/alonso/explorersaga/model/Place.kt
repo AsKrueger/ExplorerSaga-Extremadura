@@ -13,5 +13,6 @@ data class Place(
     val direccion: String?,
     val latitude: Double,
     val longitude: Double,
-    val photo: String?
+    val photo: String?,
+    val website: String?
 )

@@ -8,7 +8,8 @@
     "direccion": "C/ José Ramón Mélida, s/n",
     "latitude": 38.9157,
     "longitude": -6.3380,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "https://www.festivaldemerida.es/"
   },
   {
     "id": 2,
@@ -19,7 +20,8 @@
     "direccion": "C/ José Ramón Mélida, s/n",
     "latitude": 38.9155,
     "longitude": -6.3388,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "https://www.festivaldemerida.es/"
   },
   {
     "id": 3,
@@ -30,7 +32,8 @@
     "direccion": "Av. Juan Carlos I, s/n",
     "latitude": 38.9201,
     "longitude": -6.3315,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 4,
@@ -41,7 +44,8 @@
     "direccion": "C/ Romero Leal, 1",
     "latitude": 38.9170,
     "longitude": -6.3440,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 5,
@@ -52,7 +56,8 @@
     "direccion": "C/ Trajano, s/n",
     "latitude": 38.9180,
     "longitude": -6.3410,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 6,
@@ -63,7 +68,8 @@
     "direccion": "Puente Romano, Mérida",
     "latitude": 38.9150,
     "longitude": -6.3435,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 7,
@@ -74,7 +80,8 @@
     "direccion": "Av. Vía de la Plata",
     "latitude": 38.9273,
     "longitude": -6.3365,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 8,
@@ -85,7 +92,8 @@
     "direccion": "Ctra. de San Lázaro, s/n",
     "latitude": 38.9225,
     "longitude": -6.3342,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 9,
@@ -96,7 +104,8 @@
     "direccion": "Av. de Extremadura, 1",
     "latitude": 38.9195,
     "longitude": -6.3395,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 10,
@@ -107,7 +116,8 @@
     "direccion": "C/ José Ramón Mélida",
     "latitude": 38.9159,
     "longitude": -6.3385,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 11,
@@ -118,7 +128,8 @@
     "direccion": "Av. Juan Carlos I, 66",
     "latitude": 38.9112,
     "longitude": -6.3352,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 12,
@@ -129,7 +140,8 @@
     "direccion": "C/ San Lázaro, s/n",
     "latitude": 38.9218,
     "longitude": -6.3345,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 13,
@@ -140,7 +152,8 @@
     "direccion": "C/ Sagasta, s/n",
     "latitude": 38.9165,
     "longitude": -6.3428,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 14,
@@ -151,7 +164,8 @@
     "direccion": "Av. Extremadura, 1",
     "latitude": 38.9192,
     "longitude": -6.3397,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 15,
@@ -162,7 +176,8 @@
     "direccion": "C/ Pontezuelas, s/n",
     "latitude": 38.9161,
     "longitude": -6.3409,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com.com/150",
+    "website": null
   },
   {
     "id": 16,
@@ -173,7 +188,8 @@
     "direccion": "C/ Trajano, s/n",
     "latitude": 38.9182,
     "longitude": -6.3411,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 17,
@@ -184,7 +200,8 @@
     "direccion": "Av. de Extremadura, 1",
     "latitude": 38.9193,
     "longitude": -6.3398,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 18,
@@ -195,7 +212,8 @@
     "direccion": "C/ Santa Clara, 1",
     "latitude": 38.9175,
     "longitude": -6.3432,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 19,
@@ -206,7 +224,8 @@
     "direccion": "Plaza de España, s/n",
     "latitude": 38.9168,
     "longitude": -6.3446,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 20,
@@ -217,7 +236,8 @@
     "direccion": "Plaza de España, s/n",
     "latitude": 38.9169,
     "longitude": -6.3444,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 21,
@@ -228,7 +248,8 @@
     "direccion": "C/ Gral. José María Álvarez, s/n",
     "latitude": 38.9149,
     "longitude": -6.3433,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 22,
@@ -239,7 +260,8 @@
     "direccion": "Puerta de la Villa, Mérida",
     "latitude": 38.9173,
     "longitude": -6.3447,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 23,
@@ -250,7 +272,8 @@
     "direccion": "Av. Fernández López, s/n",
     "latitude": 38.9187,
     "longitude": -6.3420,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 24,
@@ -261,7 +284,8 @@
     "direccion": "C/ José Sáez de Buruaga, s/n",
     "latitude": 38.9245,
     "longitude": -6.3375,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 25,
@@ -272,7 +296,8 @@
     "direccion": "Carretera de Proserpina, km 5",
     "latitude": 38.9522,
     "longitude": -6.3535,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 26,
@@ -283,7 +308,8 @@
     "direccion": "Parque Natural de Cornalvo",
     "latitude": 39.0131,
     "longitude": -6.1644,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 27,
@@ -294,7 +320,8 @@
     "direccion": "Alange, Badajoz",
     "latitude": 38.7773,
     "longitude": -6.2471,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 28,
@@ -305,7 +332,8 @@
     "direccion": "C/ José Ramón Mélida, s/n",
     "latitude": 38.9153,
     "longitude": -6.3387,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "http://www.museoarteromano.mcu.es/"
   },
   {
     "id": 29,
@@ -316,7 +344,8 @@
     "direccion": "C/ Santa Clara, 1",
     "latitude": 38.9175,
     "longitude": -6.3433,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 30,
@@ -327,6 +356,7 @@
     "direccion": "C/ José Ramón Mélida, s/n",
     "latitude": 38.9156,
     "longitude": -6.3386,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   }
 ]

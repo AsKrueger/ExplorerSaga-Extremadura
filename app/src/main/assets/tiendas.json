@@ -1,25 +1,15 @@
 [
   {
-    "id": 50,
-    "name": "LUCINE",
-    "description": "Tienda de ropa y accesorios.",
-    "category": "tienda_general",
-    "horarios": null,
-    "direccion": "C. Hernando de Soto 9, 06800 Mérida",
-    "latitude": 38.9160,
-    "longitude": -6.3430,
-    "photo": "https://via.placeholder.com/150"
-  },
-  {
     "id": 51,
     "name": "Encuentro Moda",
     "description": "Tienda de moda para mujer.",
     "category": "tienda_general",
     "horarios": null,
     "direccion": "C. Miguel de Cervantes 5, 06800 Mérida",
-    "latitude": 38.91879170114903,
-    "longitude": -6.343255204469645,
-    "photo": "encuentro_moda"
+    "latitude": 38.918856,
+    "longitude": -6.343204,
+    "photo": "encuentro_moda",
+    "website": null
   },
   {
     "id": 52,
@@ -28,9 +18,10 @@
     "category": "tienda_general",
     "horarios": null,
     "direccion": "C. Moreno de Vargas 4, 06800 Mérida",
-    "latitude": 38.9170,
-    "longitude": -6.3410,
-    "photo": "https://via.placeholder.com/150"
+    "latitude": 38.918526,
+    "longitude": -6.344368,
+    "photo": "azabache_moda",
+    "website": null
   },
   {
     "id": 53,
@@ -41,7 +32,8 @@
     "direccion": "C. Santa Eulalia 22, 06800 Mérida",
     "latitude": 38.9182,
     "longitude": -6.3402,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "https://www.ale-hop.org/"
   },
   {
     "id": 54,
@@ -52,7 +44,8 @@
     "direccion": "C. Berzocana 3, 06800 Mérida",
     "latitude": 38.9178,
     "longitude": -6.3425,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "https://www.emeritacomics.es/"
   },
   {
     "id": 55,
@@ -63,7 +56,8 @@
     "direccion": "C. San Salvador 1, 06800 Mérida",
     "latitude": 38.9175,
     "longitude": -6.3440,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "https://www.carrefour.es/"
   },
   {
     "id": 56,
@@ -74,7 +68,8 @@
     "direccion": "Av. Juan Carlos I 30, 06800 Mérida",
     "latitude": 38.9195,
     "longitude": -6.3380,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": "https://www.dia.es/"
   },
   {
     "id": 57,
@@ -85,7 +80,8 @@
     "direccion": "C. del Puente 24, 06800 Mérida",
     "latitude": 38.9170,
     "longitude": -6.3410,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 58,
@@ -96,7 +92,8 @@
     "direccion": "C. José Ramón Mélida 18, 06800 Mérida",
     "latitude": 38.9175,
     "longitude": -6.3385,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   },
   {
     "id": 59,
@@ -107,6 +104,7 @@
     "direccion": "C. José Ramón Mélida 26, 06800 Mérida",
     "latitude": 38.9175,
     "longitude": -6.3387,
-    "photo": "https://via.placeholder.com/150"
+    "photo": "https://via.placeholder.com/150",
+    "website": null
   }
 ]
