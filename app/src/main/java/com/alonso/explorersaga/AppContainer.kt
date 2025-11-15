@@ -3,7 +3,6 @@ package com.alonso.explorersaga
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.alonso.explorersaga.data.AppDatabase
 import com.alonso.explorersaga.data.PlaceRepository
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 
@@ -20,12 +19,8 @@ interface AppContainer {
  */
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
-    private val placeDao by lazy {
-        AppDatabase.getDatabase(context).placeDao()
-    }
-
     override val placesRepository: PlaceRepository by lazy {
-        PlaceRepository(placeDao)
+        PlaceRepository(context)
     }
 
     override val placesViewModelFactory: ViewModelProvider.Factory by lazy {

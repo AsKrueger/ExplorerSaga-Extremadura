@@ -80,6 +80,10 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
             }
         }
     }
+
+    fun clearSelectedPlace() {
+        _uiState.update { it.copy(selectedPlace = null) }
+    }
 }
 
 fun PlaceEntity.toPlaceUiModel(): Place {

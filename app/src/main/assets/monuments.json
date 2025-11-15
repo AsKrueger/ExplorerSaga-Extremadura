@@ -1,63 +1,63 @@
 [
   {
     "id": 1,
-    "name": "Teatro Romano de Mérida",
-    "description": "El monumento más emblemático de la ciudad, aún en uso para el Festival Internacional de Teatro Clásico.",
+    "name": "Teatro Romano",
+    "description": "El teatro romano de Mérida es un teatro histórico levantado por la Antigua Roma en la colonia Augusta Emerita, actual Mérida. Su creación fue promovida por el cónsul Marco Vipsanio Agripa y, según una fecha inscrita en el propio teatro, su inauguración se produjo hacia los años 16-15 a. C.",
     "category": "monumento",
-    "horarios": "10:00-21:00",
-    "direccion": "C/ José Ramón Mélida, s/n",
-    "latitude": 38.9157,
-    "longitude": -6.3380,
-    "photo": "https://via.placeholder.com/150",
-    "website": "https://www.festivaldemerida.es/"
+    "horarios": "09:00-18:00",
+    "direccion": "Plaza Margarita Xirgú, s/n",
+    "latitude": 38.915363,
+    "longitude": -6.338650,
+    "photo": "teatro_merida",
+    "website": "https://turismomerida.org/que-ver/teatro-romano/"
   },
   {
     "id": 2,
     "name": "Anfiteatro Romano",
-    "description": "Escenario de combates de gladiadores junto al teatro.",
+    "description": "El anfiteatro de Mérida es un antiguo recinto para espectáculos de luchas de gladiadores que fue construido por el Imperio romano en la colonia de Augusta Emerita, actual Mérida (España), a finales del siglo I a. C.",
     "category": "monumento",
-    "horarios": "10:00-21:00",
-    "direccion": "C/ José Ramón Mélida, s/n",
-    "latitude": 38.9155,
-    "longitude": -6.3388,
-    "photo": "https://via.placeholder.com/150",
-    "website": "https://www.festivaldemerida.es/"
+    "horarios": "09:00-21:00",
+    "direccion": "Plaza Margarita Xirgú, s/n",
+    "latitude": 38.916131,
+    "longitude": -6.337878,
+    "photo": "anfiteatro",
+    "website": "https://turismomerida.org/que-ver/anfiteatro-romano/"
   },
   {
     "id": 3,
     "name": "Circo Romano",
-    "description": "Uno de los circos mejor conservados del Imperio Romano, con capacidad para 30.000 espectadores.",
+    "description": "El circo romano de Mérida es un antiguo recinto para carreras de carros que construyeron los romanos en la colonia romana de Augusta Emerita —actual Mérida— a principios del siglo I d. C., pocas décadas después de la fundación de la ciudad.",
     "category": "monumento",
-    "horarios": "10:00-21:00",
+    "horarios": "09:00-18:30",
     "direccion": "Av. Juan Carlos I, s/n",
     "latitude": 38.9201,
     "longitude": -6.3315,
-    "photo": "https://via.placeholder.com/150",
-    "website": null
+    "photo": "circo_romano",
+    "website": "https://turismomerida.org/que-ver/circo-romano/"
   },
   {
     "id": 4,
     "name": "Templo de Diana",
-    "description": "Templo romano dedicado a la diosa Diana, en el foro municipal.",
+    "description": "El denominado Templo de Diana es un templo romano construido en el siglo I d. C. en la ciudad de Augusta Emerita, capital de la provincia romana de Lusitania, actual Mérida.",
     "category": "monumento",
-    "horarios": "Libre acceso",
-    "direccion": "C/ Romero Leal, 1",
-    "latitude": 38.9170,
-    "longitude": -6.3440,
-    "photo": "https://via.placeholder.com/150",
-    "website": null
+    "horarios": "10:00-18:00",
+    "direccion": "Calle Romero Leal, s/n",
+    "latitude": 38.916533,
+    "longitude": -6.344360,
+    "photo": "templo_diana",
+    "website": "https://turismomerida.org/que-ver/templo-diana/"
   },
   {
     "id": 5,
     "name": "Arco de Trajano",
-    "description": "Arco monumental del foro provincial, símbolo de la Mérida imperial.",
+    "description": "El conocido como Arco de Trajano de Mérida es una puerta de acceso con arco monumental romano que recibe esta denominación debido a que en su momento se pensó que era un arco triunfal.\u200B El arco ha sido conocido tradicionalmente en la ciudad como «de Trajano», sin ningún fundamento que lo relacione con ese emperador.\u200B",
     "category": "monumento",
     "horarios": "Libre acceso",
     "direccion": "C/ Trajano, s/n",
     "latitude": 38.9180,
     "longitude": -6.3410,
-    "photo": "https://via.placeholder.com/150",
-    "website": null
+    "photo": "arco_trajano",
+    "website": "https://turismomerida.org/que-ver/arco-trajano/"
   },
   {
     "id": 6,

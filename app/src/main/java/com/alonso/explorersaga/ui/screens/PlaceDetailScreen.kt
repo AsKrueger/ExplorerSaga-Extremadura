@@ -134,9 +134,10 @@ fun PlaceDetailScreen(place: Place) {
                 HorizontalDivider()
 
                 // Mapa
-                val mapView = rememberMapViewWithLifecycle(place)
-                AndroidView(
-                    { mapView },
+                PlaceMap(
+                    latitude = place.latitude,
+                    longitude = place.longitude,
+                    placeName = place.name,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(200.dp)
@@ -186,41 +187,56 @@ private fun getDrawableResourceId(context: Context, name: String): Int? {
 }
 
 @Composable
-private fun rememberMapViewWithLifecycle(place: Place): MapView {
+private fun PlaceMap(
+    latitude: Double,
+    longitude: Double,
+    placeName: String,
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
+    // Remember the MapView instance
     val mapView = remember {
-        MapView(context).apply {
-            setTileSource(TileSourceFactory.MAPNIK)
-            setMultiTouchControls(true)
-            val geoPoint = GeoPoint(place.latitude, place.longitude)
-            controller.setZoom(18.0)
-            controller.setCenter(geoPoint)
-
-            // Añadir marcador
-            val marker = Marker(this)
-            marker.position = geoPoint
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-            marker.title = place.name
-            overlays.add(marker)
-            invalidate() // Refrescar el mapa
-        }
+        MapView(context)
     }
 
+    // Lifecycle handling for the MapView
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    DisposableEffect(lifecycle, mapView) {
-        val observer = LifecycleEventObserver { _, event ->
+    DisposableEffect(key1 = lifecycle, key2 = mapView) {
+        val lifecycleObserver = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> mapView.onResume()
                 Lifecycle.Event.ON_PAUSE -> mapView.onPause()
                 else -> {}
             }
         }
-        lifecycle.addObserver(observer)
+        lifecycle.addObserver(lifecycleObserver)
         onDispose {
-            lifecycle.removeObserver(observer)
+            lifecycle.removeObserver(lifecycleObserver)
             mapView.onDetach()
         }
     }
 
-    return mapView
+    // Use AndroidView to embed the MapView
+    AndroidView(
+        factory = { mapView },
+        modifier = modifier,
+        update = { view ->
+            // This block is called on recomposition
+            view.setTileSource(TileSourceFactory.MAPNIK)
+            view.setMultiTouchControls(true)
+
+            val geoPoint = GeoPoint(latitude, longitude)
+            view.controller.setZoom(18.0)
+            view.controller.setCenter(geoPoint)
+
+            // Clear previous overlays and add the new one
+            view.overlays.clear()
+            val marker = Marker(view)
+            marker.position = geoPoint
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker.title = placeName
+            view.overlays.add(marker)
+            view.invalidate() // Force a redraw
+        }
+    )
 }
