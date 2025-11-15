@@ -5,6 +5,11 @@
     <string name="home_title">ExplorerSaga Extremadura</string>
     <string name="home_subtitle">Tu próxima aventura empieza aquí</string>
     <string name="home_button">Explorar Mérida</string>
+    <string name="home_title_new">Extremadura</string>
+    <string name="home_subtitle_new">Tu próxima aventura empieza aquí</string>
+    <string name="home_button_new">Explorar Mérida</string>
+    <string name="home_copyright">© 2025 ExplorerSaga. Todos los derechos reservados.</string>
+    <string name="logo_content_description">Logo</string>
 
     <!-- InformacionScreen -->
     <string name="info_title">Descubre Mérida</string>

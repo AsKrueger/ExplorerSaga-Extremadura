@@ -76,7 +76,12 @@ fun MapScreen(
                     onClick = onFilterClicked,
                     containerColor = MaterialTheme.colorScheme.primary
                 ) {
-                    Text(text = stringResource(id = R.string.map_filter_icon), fontSize = 24.sp, color = MaterialTheme.colorScheme.onPrimary)
+                    Text(
+                        text = stringResource(id = R.string.map_filter_icon), 
+                        fontFamily = montserratFamily,
+                        fontSize = 24.sp, 
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
                 }
             }
 
@@ -92,14 +97,24 @@ fun MapScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 ) {
-                    Text(text = "🏛️ Info", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(
+                        text = "🏛️ Info", 
+                        fontFamily = montserratFamily,
+                        color = MaterialTheme.colorScheme.onPrimary, 
+                        fontSize = 16.sp
+                    )
                 }
                 Button(
                     onClick = onPlacesClicked,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.info_places_button), color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(
+                        text = stringResource(id = R.string.info_places_button), 
+                        fontFamily = montserratFamily,
+                        color = MaterialTheme.colorScheme.onPrimary, 
+                        fontSize = 16.sp
+                    )
                 }
             }
         }

@@ -1,70 +1,78 @@
-# ExplorerSaga Extremadura
-
-**ExplorerSaga Extremadura** es una aplicación móvil Android diseñada para ofrecer una experiencia turística sencilla, visual y atractiva, centrada inicialmente en la ciudad de Mérida (Extremadura). La app permite a los usuarios explorar lugares históricos, restaurantes, tiendas y rutas recomendadas sin necesidad de registrarse.
-
-Este proyecto nace como parte de un Trabajo de Fin de Grado (TFG), con el objetivo de aplicar conceptos modernos de desarrollo en Android y diseño de experiencia de usuario (UX/UI).
+"""# ExplorerSaga Extremadura: TFG sobre Desarrollo de Aplicaciones Móviles Android
 
 ---
 
-## 🎯 Objetivo General
+## 📝 Resumen del Proyecto (Abstract)
 
-La aplicación busca **ofrecer una experiencia turística sencilla, visual y atractiva**. El usuario podrá **explorar lugares históricos, restaurantes, tiendas y rutas recomendadas** sin necesidad de registrarse ni complicaciones, con un diseño moderno y minimalista.
+Este repositorio contiene el código fuente del Trabajo de Fin de Grado (TFG) **ExplorerSaga Extremadura**, una aplicación móvil Android nativa desarrollada en Kotlin con Jetpack Compose. El proyecto consiste en el diseño e implementación de una guía turística interactiva y visual para la ciudad de Mérida (Extremadura).
 
----
+La aplicación se centra en ofrecer una experiencia de usuario (UX) fluida, moderna y atractiva, permitiendo la consulta de puntos de interés (monumentos, restaurantes, tiendas, etc.) a través de listados y un mapa interactivo. El desarrollo sigue patrones de arquitectura modernos como MVVM y utiliza las últimas herramientas recomendadas del ecosistema de Android Jetpack.
 
-## ✨ Características Principales
+## 🎯 Objetivos del Trabajo
 
-La app está dividida en 6 escenas principales que permiten una navegación clara y progresiva:
+### Objetivo General
 
-1.  **🏠 HomeScreen**: Pantalla de bienvenida con una presentación atractiva que invita a explorar la ciudad de Mérida.
-2.  **🏛️ Información**: Ofrece un contexto histórico y cultural de la ciudad antes de que el usuario comience a explorar.
-3.  **🏪 Lugares (Categorías)**: Un menú visual para que el usuario elija qué tipo de lugar le interesa (monumentos, restaurantes, tiendas).
-4.  **📋 Listados Detallados**: Muestra una lista de lugares según la categoría elegida, con información relevante como nombre, descripción y popularidad.
-5.  **🗺️ Mapa Interactivo**: Un mapa funcional basado en OpenStreetMap que muestra la ubicación de Mérida y un marcador de ejemplo.
-6.  **🎚️ Filtrado**: Pantalla complementaria al mapa para personalizar los lugares mostrados según el interés del usuario.
+Diseñar e implementar una aplicación Android nativa que sirva como guía turística para la ciudad de Mérida, poniendo especial énfasis en la calidad de la interfaz (UI), la experiencia de usuario (UX) y la aplicación de buenas prácticas de desarrollo de software.
 
----
+### Objetivos Específicos
 
-## 🧭 Flujo de Navegación
-
-El flujo de usuario está diseñado para ser intuitivo y directo:
-
-```
-🏠 HomeScreen
-   ↓
-🏛️ Información
-   ├──→ 🗺️ Mapa → 🎚️ Filtrado → Mapa (actualizado)
-   └──→ 🏪 Lugares → 📋 [Listados detallados]
-```
+-   **Aplicar los principios de desarrollo moderno de Android**, utilizando Kotlin como lenguaje y Jetpack Compose para la construcción de la interfaz de usuario.
+-   **Implementar un sistema de navegación claro e intuitivo** que guíe al usuario a través de las diferentes secciones de la aplicación.
+-   **Integrar un mapa interactivo funcional** utilizando una solución de código abierto (OpenStreetMap) para la geolocalización de puntos de interés.
+-   **Estructurar el código de la aplicación** siguiendo un patrón de arquitectura reconocido (MVVM) que garantice la escalabilidad y mantenibilidad del proyecto.
+-   **Ofrecer contenido estático relevante** sobre la historia de la ciudad y una clasificación de lugares por categorías como base funcional.
 
 ---
 
-## 🛠️ Tecnología Utilizada
+## 🛠️ Metodología y Tecnologías Empleadas
 
-*   **Lenguaje de programación**: [Kotlin](https://kotlinlang.org/)
-*   **UI Toolkit**: [Jetpack Compose](https://developer.android.com/jetpack/compose) para una interfaz de usuario declarativa y moderna.
-*   **Navegación**: [Jetpack Navigation Compose](https://developer.android.com/jetpack/compose/navigation) para gestionar el flujo entre pantallas.
-*   **Mapas**: [OpenStreetMap (OSM)](https://www.openstreetmap.org/) a través de la librería `osmdroid-android` para una solución de mapas gratuita y de código abierto.
-*   **Arquitectura**: Estructura simple basada en MVVM (Model-View-ViewModel), con los Composables actuando como Vistas.
-*   **Diseño**: [Material Design 3](https://m3.material.io/) con una paleta de colores personalizada inspirada en la bandera de Extremadura.
+*   **Lenguaje de programación**: [Kotlin](https://kotlinlang.org/), por su sintaxis moderna, seguridad y por ser el lenguaje preferido para el desarrollo Android.
+*   **UI Toolkit**: [Jetpack Compose](https://developer.android.com/jetpack/compose), para la creación de una interfaz de usuario declarativa, reactiva y nativa.
+*   **Navegación**: [Jetpack Navigation Compose](https://developer.android.com/jetpack/compose/navigation) para gestionar el flujo de navegación entre las distintas pantallas (Composables).
+*   **Mapas**: [OpenStreetMap (OSM)](https://www.openstreetmap.org/) a través de la librería `osmdroid-android`, como alternativa gratuita y de código abierto a otros proveedores de mapas.
+*   **Arquitectura**: Estructura simple basada en el patrón **MVVM (Model-View-ViewModel)**. Las Vistas (Views) se implementan con Composables, que observan el estado expuesto por los ViewModels.
+*   **Diseño**: [Material Design 3](https://m3.material.io/), utilizando una paleta de colores personalizada y componentes modernos para una estética limpia y coherente.
 
 ---
 
-## 🚀 Cómo Empezar
+## ✨ Funcionalidades Implementadas
+
+1.  **🏠 Pantalla de Bienvenida**: Presentación visual que sirve como punto de entrada a la aplicación.
+2.  **🏛️ Contexto Histórico**: Pantalla informativa que ofrece al usuario una breve introducción a la historia de Mérida.
+3.  **🏪 Menú de Categorías**: Selección visual de los tipos de lugares de interés (monumentos, restaurantes, tiendas).
+4.  **📋 Listados Detallados**: Muestra de lugares en formato de lista, con datos de ejemplo como nombre y descripción.
+5.  **🗺️ Mapa Interactivo**: Implementación de un mapa funcional que muestra la ubicación de Mérida y un marcador de ejemplo.
+
+---
+
+## 🚀 Guía de Instalación y Ejecución
 
 1.  Clona este repositorio:
     ```bash
     git clone https://github.com/tu-usuario/ExplorerSaga-Extremadura.git
     ```
-2.  Abre el proyecto en la última versión de [Android Studio](https://developer.android.com/studio).
-3.  Sincroniza el proyecto con Gradle y ejecútalo en un emulador o dispositivo físico.
+2.  Abre el proyecto en la última versión estable de [Android Studio](https://developer.android.com/studio).
+3.  Sincroniza el proyecto con Gradle para que se descarguen todas las dependencias.
+4.  Ejecuta la aplicación en un emulador o en un dispositivo físico con Android API 26 o superior.
 
 ---
 
-## 🔮 Futuras Mejoras
+## 🔮 Líneas de Trabajo Futuro
 
--   [x] **~~Integración de Google Maps~~ -> Implementar mapa funcional con OpenStreetMap.**
--   [ ] **Datos Dinámicos**: Conectar la app a una base de datos local (**Room**) para gestionar los lugares de interés.
--   [ ] **Poblar la Base de Datos**: Crear un sistema que inserte los datos iniciales desde un archivo local (JSON) a la base de datos.
--   [ ] **Imágenes Reales**: Sustituir los placeholders por imágenes de alta calidad de Mérida.
--   [ ] **Rutas por Días**: Desarrollar la funcionalidad opcional de rutas personalizadas.
+Como parte de la evolución natural del proyecto, se proponen las siguientes mejoras:
+
+-   [x] **Implementar mapa funcional con OpenStreetMap.**
+-   [x] **Persistencia de Datos**: Integración completa de la biblioteca **Room** para la gestión de una base de datos local (SQLite).
+-   [x] **Carga de Datos Inicial**: Desarrollo de un mecanismo para poblar la base de datos a partir de un fichero JSON local en el primer arranque de la app.
+-   [ ] **Contenido Multimedia**: Reemplazo de las imágenes de marcador de posición (placeholders) por recursos visuales de alta calidad de Mérida.
+-   [ ] **Funcionalidad de Rutas**: Implementación de un sistema que sugiera al usuario rutas turísticas personalizadas por días o temáticas.
+-   [ ] **Internacionalización (i18n)**: Adaptación de la aplicación para soportar múltiples idiomas (ej. inglés), permitiendo un mayor alcance.
+-   [ ] **Testing**: Creación de pruebas unitarias y de instrumentación para garantizar la calidad, robustez y corrección del código.
+-   [ ] **Accesibilidad (a11y)**: Aplicación de mejoras para asegurar la usabilidad de la aplicación por parte de personas con diversidad funcional.
+
+---
+
+## 📄 Licencia
+
+Este proyecto está distribuido bajo la Licencia MIT. Consulta el archivo `LICENSE` para más detalles.
+""

@@ -38,6 +38,7 @@ fun FilterScreen(
         ) {
             Text(
                 text = "Filtros Generales",
+                fontFamily = playfairDisplayFamily,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -45,7 +46,7 @@ fun FilterScreen(
             )
 
             // --- Sección de Lugares Históricos ---
-            Text("Histórico", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            Text("Histórico", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
             FilterOption(text = "Monumentos", checked = filterState.monuments) { viewModel.updateFilters(filterState.copy(monuments = it)) }
             FilterOption(text = "Iglesias", checked = filterState.iglesias) { viewModel.updateFilters(filterState.copy(iglesias = it)) }
             FilterOption(text = "Museos", checked = filterState.museos) { viewModel.updateFilters(filterState.copy(museos = it)) }
@@ -53,14 +54,14 @@ fun FilterScreen(
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
             // --- Sección de Gastronomía ---
-            Text("Gastronomía", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            Text("Gastronomía", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
             FilterOption(text = "Restaurantes", checked = filterState.restaurants) { viewModel.updateFilters(filterState.copy(restaurants = it)) }
             FilterOption(text = "Cafeterías", checked = filterState.cafeterias) { viewModel.updateFilters(filterState.copy(cafeterias = it)) }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
             // --- Sección de Tiendas ---
-            Text("Tiendas", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            Text("Tiendas", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
             FilterOption(text = "Tiendas Generales", checked = filterState.tiendasGenerales) { viewModel.updateFilters(filterState.copy(tiendasGenerales = it)) }
             FilterOption(text = "Supermercados", checked = filterState.supermercados) { viewModel.updateFilters(filterState.copy(supermercados = it)) }
             FilterOption(text = "Souvenirs", checked = filterState.souvenirs) { viewModel.updateFilters(filterState.copy(souvenirs = it)) }
@@ -75,6 +76,7 @@ fun FilterScreen(
             ) {
                 Text(
                     text = "Aplicar Filtros",
+                    fontFamily = montserratFamily,
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     modifier = Modifier.padding(vertical = 8.dp)
@@ -93,6 +95,6 @@ fun FilterOption(text: String, checked: Boolean, onCheckedChange: (Boolean) -> U
             .padding(horizontal = 8.dp)
     ) {
         Checkbox(checked = checked, onCheckedChange = onCheckedChange)
-        Text(text = text, fontSize = 18.sp, modifier = Modifier.padding(start = 8.dp))
+        Text(text = text, fontFamily = montserratFamily, fontSize = 18.sp, modifier = Modifier.padding(start = 8.dp))
     }
 }

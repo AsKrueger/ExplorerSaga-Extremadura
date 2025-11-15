@@ -60,12 +60,14 @@ fun InformacionScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 16.dp).align(Alignment.BottomCenter)) {
                     Text(
                         text = stringResource(id = R.string.info_title),
+                        fontFamily = playfairDisplayFamily,
                         fontSize = 32.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
                         text = stringResource(id = R.string.info_subtitle),
+                        fontFamily = montserratFamily,
                         fontSize = 18.sp,
                         color = Color.White
                     )
@@ -82,6 +84,7 @@ fun InformacionScreen(
                 Column(modifier = Modifier.padding(16.dp)) {
                     Text(
                         text = stringResource(id = R.string.info_description),
+                        fontFamily = montserratFamily,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Justify
                     )
@@ -101,14 +104,24 @@ fun InformacionScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.info_map_button), color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(
+                        text = stringResource(id = R.string.info_map_button), 
+                        fontFamily = montserratFamily,
+                        color = MaterialTheme.colorScheme.onPrimary, 
+                        fontSize = 16.sp
+                    )
                 }
                 Button(
                     onClick = onPlacesClicked,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.info_places_button), color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(
+                        text = stringResource(id = R.string.info_places_button), 
+                        fontFamily = montserratFamily,
+                        color = MaterialTheme.colorScheme.onPrimary, 
+                        fontSize = 16.sp
+                    )
                 }
             }
         }
