@@ -1,6 +1,6 @@
 package com.alonso.explorersaga.ui.screens
 
-import androidx.compose.foundation.Image
+import android.content.Context
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,15 +15,18 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
 
@@ -31,6 +34,15 @@ import com.alonso.explorersaga.model.Place
 // Ahora acepta un NavController y es más robusto.
 @Composable
 fun PlaceListItem(place: Place, navController: NavController) {
+    val context = LocalContext.current
+    val imageModel = remember(place.photo) {
+        if (place.photo?.startsWith("http") == false) {
+            getDrawableResourceId(context, place.photo)
+        } else {
+            place.photo
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -42,15 +54,16 @@ fun PlaceListItem(place: Place, navController: NavController) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Imagen de portada (con manejo de nulos)
-            Image(
-                // Si imageResId es nulo, usa el icono de la app por defecto
-                painter = painterResource(id = place.imageResId ?: R.mipmap.ic_launcher),
+            // Imagen de portada (con manejo de nulos y carga asíncrona)
+            AsyncImage(
+                model = imageModel ?: R.mipmap.ic_launcher,
                 contentDescription = place.name,
                 modifier = Modifier
                     .size(80.dp)
                     .aspectRatio(1f), // Mantiene la imagen cuadrada
-                contentScale = ContentScale.Crop
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(id = R.mipmap.ic_launcher),
+                error = painterResource(id = R.mipmap.ic_launcher)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -65,4 +78,9 @@ fun PlaceListItem(place: Place, navController: NavController) {
             }
         }
     }
+}
+
+private fun getDrawableResourceId(context: Context, name: String): Int? {
+    val resourceId = context.resources.getIdentifier(name, "drawable", context.packageName)
+    return if (resourceId == 0) null else resourceId
 }

@@ -20,19 +20,24 @@ data class PlacesUiState(
 // El estado de filtro definitivo con todas las subcategorías
 data class FilterState(
     val monuments: Boolean = true,
-    val iglesias: Boolean = true,
-    val museos: Boolean = true,
-    val restaurants: Boolean = true,
-    val cafeterias: Boolean = true,
-    val tiendasGenerales: Boolean = true,
-    val supermercados: Boolean = true,
-    val souvenirs: Boolean = true,
+    val iglesias: Boolean = false,
+    val museos: Boolean = false,
+    val restaurants: Boolean = false,
+    val cafeterias: Boolean = false,
+    val bar: Boolean = false,
+    val helados: Boolean = false,
+    val tiendaAlimentos: Boolean = false,
+    val souvenirs: Boolean = false,
+    val supermercados: Boolean = false,
+    val libreria: Boolean = false,
+    val ropa: Boolean = false,
+    val tiendasGenerales: Boolean = false,
     val popularFirst: Boolean = false
 )
 
 class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
-    private val _filterState = MutableStateFlow(FilterState())
+    private val _filterState = MutableStateFlow(FilterState(monuments = true, iglesias = true, museos = true, restaurants = true, cafeterias = true, bar = true, helados = true, tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true))
     val filterState: StateFlow<FilterState> = _filterState
 
     private val _uiState = MutableStateFlow(PlacesUiState())
@@ -47,10 +52,15 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
                 if (filters.museos) activeCategories.add("museo")
                 if (filters.restaurants) activeCategories.add("restaurante")
                 if (filters.cafeterias) activeCategories.add("cafeteria")
-                if (filters.tiendasGenerales) activeCategories.add("tienda_general")
-                if (filters.supermercados) activeCategories.add("supermercado")
+                if (filters.bar) activeCategories.add("bar")
+                if (filters.helados) activeCategories.add("heladeria")
+                if (filters.tiendaAlimentos) activeCategories.add("tienda_alimentos")
                 if (filters.souvenirs) activeCategories.add("souvenir")
-                
+                if (filters.supermercados) activeCategories.add("supermercado")
+                if (filters.libreria) activeCategories.add("libreria")
+                if (filters.ropa) activeCategories.add("ropa")
+                if (filters.tiendasGenerales) activeCategories.add("tienda_general")
+
                 if (activeCategories.isEmpty()) {
                     kotlinx.coroutines.flow.flowOf(emptyList<PlaceEntity>())
                 } else {
@@ -64,6 +74,10 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
                     )
                 }
             }
+        }
+        // Apply initial filter after a short delay to ensure data is loaded
+        viewModelScope.launch {
+            updateFilters(FilterState(monuments = true))
         }
     }
 
@@ -80,6 +94,10 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
             }
         }
     }
+
+    fun clearSelectedPlace() {
+        _uiState.update { it.copy(selectedPlace = null) }
+    }
 }
 
 fun PlaceEntity.toPlaceUiModel(): Place {
@@ -92,6 +110,7 @@ fun PlaceEntity.toPlaceUiModel(): Place {
         direccion = this.direccion,
         latitude = this.latitude,
         longitude = this.longitude,
-        imageResId = this.imageResId
+        photo = this.photo,
+        website = this.website
     )
 }

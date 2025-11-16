@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "75d29f4e83ce2f9661fb710edafadce9",
+    "identityHash": "5ffad4d3c10a365b9ee3a0b8832103ff",
     "entities": [
       {
         "tableName": "places",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `horarios` TEXT, `direccion` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `imageResId` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `description` TEXT NOT NULL, `category` TEXT NOT NULL, `horarios` TEXT, `direccion` TEXT, `latitude` REAL NOT NULL, `longitude` REAL NOT NULL, `photo` TEXT, `website` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -57,9 +57,15 @@
             "notNull": true
           },
           {
-            "fieldPath": "imageResId",
-            "columnName": "imageResId",
-            "affinity": "INTEGER",
+            "fieldPath": "photo",
+            "columnName": "photo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "website",
+            "columnName": "website",
+            "affinity": "TEXT",
             "notNull": false
           }
         ],
@@ -76,7 +82,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '75d29f4e83ce2f9661fb710edafadce9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5ffad4d3c10a365b9ee3a0b8832103ff')"
     ]
   }
 }

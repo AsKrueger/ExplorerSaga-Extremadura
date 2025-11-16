@@ -37,6 +37,7 @@ fun PlacesScreen(
         ) {
             Text(
                 text = stringResource(id = R.string.places_title),
+                fontFamily = playfairDisplayFamily,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
@@ -62,14 +63,14 @@ fun PlacesScreen(
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(end = 8.dp)
                 ) {
-                    Text(text = "🗺️ Mapa", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(text = "🗺️ Mapa", fontFamily = montserratFamily, color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
                 Button(
                     onClick = onInfoClicked,
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.weight(1f).padding(start = 8.dp)
                 ) {
-                    Text(text = "🏛️ Info", color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
+                    Text(text = "🏛️ Info", fontFamily = montserratFamily, color = MaterialTheme.colorScheme.onPrimary, fontSize = 16.sp)
                 }
             }
         }
@@ -93,6 +94,7 @@ fun CategoryCard(text: String, onClick: () -> Unit) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Text(
                 text = text,
+                fontFamily = montserratFamily,
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center

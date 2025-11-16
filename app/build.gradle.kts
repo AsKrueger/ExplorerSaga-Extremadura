@@ -56,6 +56,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
+    // Coil para carga de imágenes
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
     // La BOM se encargará de las versiones de lifecycle-compose
     implementation("androidx.lifecycle:lifecycle-runtime-compose") 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose")
