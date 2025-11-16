@@ -1,30 +1,32 @@
 package com.alonso.explorersaga.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 
 @Composable
-fun FilterScreen(navController: NavController) {
-    val verdeBandera = Color(0xFF007A33)
-
-    val monumentosState = remember { mutableStateOf(true) }
-    val restaurantesState = remember { mutableStateOf(true) }
-    val tiendasState = remember { mutableStateOf(true) }
-    val popularesState = remember { mutableStateOf(false) }
+fun FilterScreen(
+    navController: NavController,
+    viewModel: PlacesViewModel
+) {
+    val filterState by viewModel.filterState.collectAsStateWithLifecycle()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Column(
@@ -32,33 +34,55 @@ fun FilterScreen(navController: NavController) {
                 .fillMaxSize()
                 .padding(innerPadding)
                 .padding(16.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Text(
-                text = "Filtrar lugares",
+                text = "Filtros Generales",
+                fontFamily = playfairDisplayFamily,
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
-                color = verdeBandera,
-                modifier = Modifier.padding(bottom = 24.dp)
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(bottom = 16.dp)
             )
 
-            FilterOption(text = "Monumentos", checked = monumentosState.value) { monumentosState.value = it }
-            FilterOption(text = "Restaurantes", checked = restaurantesState.value) { restaurantesState.value = it }
-            FilterOption(text = "Tiendas", checked = tiendasState.value) { tiendasState.value = it }
+            // --- Sección de Lugares Históricos ---
+            Text("Histórico", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            FilterOption(text = "Monumentos", checked = filterState.monuments) { viewModel.updateFilters(filterState.copy(monuments = it)) }
+            FilterOption(text = "Iglesias", checked = filterState.iglesias) { viewModel.updateFilters(filterState.copy(iglesias = it)) }
+            FilterOption(text = "Museos", checked = filterState.museos) { viewModel.updateFilters(filterState.copy(museos = it)) }
+            
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
+            // --- Sección de Gastronomía ---
+            Text("Gastronomía", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            FilterOption(text = "Restaurantes", checked = filterState.restaurants) { viewModel.updateFilters(filterState.copy(restaurants = it)) }
+            FilterOption(text = "Cafeterías", checked = filterState.cafeterias) { viewModel.updateFilters(filterState.copy(cafeterias = it)) }
+            FilterOption(text = "Bar", checked = filterState.bar) { viewModel.updateFilters(filterState.copy(bar = it)) }
+            FilterOption(text = "Helados", checked = filterState.helados) { viewModel.updateFilters(filterState.copy(helados = it)) }
 
-            FilterOption(text = "Más populares primero", checked = popularesState.value) { popularesState.value = it }
+            HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+            // --- Sección de Tiendas ---
+            Text("Tiendas", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
+            FilterOption(text = "Alimentos", checked = filterState.tiendaAlimentos) { viewModel.updateFilters(filterState.copy(tiendaAlimentos = it)) }
+            FilterOption(text = "Souvenirs", checked = filterState.souvenirs) { viewModel.updateFilters(filterState.copy(souvenirs = it)) }
+            FilterOption(text = "Supermercados", checked = filterState.supermercados) { viewModel.updateFilters(filterState.copy(supermercados = it)) }
+            FilterOption(text = "Libreria", checked = filterState.libreria) { viewModel.updateFilters(filterState.copy(libreria = it)) }
+            FilterOption(text = "Ropa", checked = filterState.ropa) { viewModel.updateFilters(filterState.copy(ropa = it)) }
+            FilterOption(text = "General", checked = filterState.tiendasGenerales) { viewModel.updateFilters(filterState.copy(tiendasGenerales = it)) }
 
             Spacer(modifier = Modifier.weight(1f))
 
+            // --- Botón de Aplicar ---
             Button(
-                onClick = { navController.popBackStack() }, // Vuelve al mapa
-                colors = ButtonDefaults.buttonColors(containerColor = verdeBandera),
-                modifier = Modifier.fillMaxWidth()
+                onClick = { navController.popBackStack() }, // Vuelve a la pantalla anterior (el mapa)
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
             ) {
                 Text(
-                    text = "Aplicar filtros",
-                    color = Color.White,
+                    text = "Aplicar Filtros",
+                    fontFamily = montserratFamily,
+                    color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
@@ -71,9 +95,11 @@ fun FilterScreen(navController: NavController) {
 fun FilterOption(text: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp)
     ) {
         Checkbox(checked = checked, onCheckedChange = onCheckedChange)
-        Text(text = text, fontSize = 18.sp, modifier = Modifier.padding(start = 8.dp))
+        Text(text = text, fontFamily = montserratFamily, fontSize = 18.sp, modifier = Modifier.padding(start = 8.dp))
     }
 }

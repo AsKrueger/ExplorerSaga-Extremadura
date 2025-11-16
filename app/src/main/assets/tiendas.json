@@ -1,0 +1,98 @@
+[
+    {
+    "id": 67,
+    "name": "Emérita Cómics",
+    "description": "Somos un equipo apasionado que comparte el amor por la literatura gráfica, los juegos de mesa y la creación de experiencias únicas. Fundada hace más de 5 años en el corazón de Mérida, nos enorgullece ser un punto de encuentro para la comunidad amante del cómic y el entretenimiento alternativo.",
+    "category": "libreria",
+    "horarios": "11:00–14:00 / 17:30–21:00",
+    "direccion": "Calle Berzocana, 3",
+    "latitude": 38.916763,
+    "longitude": -6.343872,
+    "photo": "emeritacomics",
+    "website": "https://emeritacomics.com/"
+  },
+  {
+    "id": 68,
+    "name": "Memoria Mérida",
+    "description": "Tienda de souvenirs y regalos inspirados en la historia y cultura de Mérida.",
+    "category": "souvenir",
+    "horarios": "10:30–14:00 / 17:30–20:30",
+    "direccion": "C. José Ramón Mélida, 18",
+    "latitude": 38.917675,
+    "longitude": -6.342003,
+    "photo": "memoriamerida",
+    "website": null
+  },
+  {
+    "id": 69,
+    "name": "Supermercado Spar",
+    "description": "",
+    "category": "supermercado",
+    "horarios": "09:00–14:30 / 17:00–20:30",
+    "direccion": "Calle José Ramón Mélida, 21",
+    "latitude": 38.917621,
+    "longitude": -6.341394,
+    "photo": "spar",
+    "website": "https://lacasadeljamon.com/"
+  },
+  {
+    "id": 70,
+    "name": "Supermercado Covirán",
+    "description": "",
+    "category": "supermercado",
+    "horarios": "09:15–21:00",
+    "direccion": "Calle Sagasta, 4",
+    "latitude": 38.916343,
+    "longitude": -6.343701,
+    "photo": "coviran",
+    "website": "https://www.coviran.es/"
+  },
+  {
+    "id": 71,
+    "name": "Supermercado Día",
+    "description": "",
+    "category": "supermercado",
+    "horarios": "09:00–21:30",
+    "direccion": "Calle Marquesa de Pinares, 1",
+    "latitude": 38.920152,
+    "longitude": -6.344130,
+    "photo": "dia",
+    "website": "https://www.dia.es/"
+  },
+  {
+    "id": 72,
+    "name": "Carrefour Express",
+    "description": "",
+    "category": "supermercado",
+    "horarios": "09:00–22:00",
+    "direccion": "Calle San Salvador, 1",
+    "latitude": 38.916498,
+    "longitude": -6.347812,
+    "photo": "carrefourexpress",
+    "website": "https://www.carrefour.es/tiendas-carrefour/supermercados/carrefour-express/plaza-de-santa-maria-s.aspx"
+  },
+  {
+    "id": 73,
+    "name": "OVAL a tu gusto",
+    "description": "Tu tienda de productos Típicos Extremeños, orgullosos de llevar el sabor de Extremadura a cada rincón de España.",
+    "category": "alimentos",
+    "horarios": "09:00–14:30 / 17:30–20:30",
+    "direccion": "Calle San Francisco, 16",
+    "latitude": 38.918418,
+    "longitude": -6.345401,
+    "photo": "oval",
+    "website": "https://www.ovalatugusto.es/"
+  },
+  {
+    "id": 74,
+    "name": "Feliciano Becerra Jiménez",
+    "description": "Especialistas en jamones y productos extremeños de alta calidad, ofreciendo una experiencia gastronómica única.",
+    "category": "alimentos",
+    "horarios": "10:00–14:30 / 17:30–20:30",
+    "direccion": "Calle José Ramón Mélida, 56",
+    "latitude": 38.916702,
+    "longitude": -6.339701,
+    "photo": "felicianobecerra",
+    "website": "http://www.felicianobecerra.com/"
+  }
+]
