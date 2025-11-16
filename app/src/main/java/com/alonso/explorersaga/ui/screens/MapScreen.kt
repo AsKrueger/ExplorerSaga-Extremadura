@@ -6,6 +6,7 @@ import android.graphics.PorterDuffColorFilter
 import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -30,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -47,6 +51,7 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -86,6 +91,10 @@ fun MapScreen(
         )
     )
     val scope = rememberCoroutineScope()
+    var searchQuery by remember { mutableStateOf("") }
+    var showSuggestions by remember { mutableStateOf(true) }
+    val keyboardController = LocalSoftwareKeyboardController.current
+
 
     BottomSheetScaffold(
         scaffoldState = bottomSheetScaffoldState,
@@ -105,38 +114,102 @@ fun MapScreen(
 
             AndroidView({ mapView })
 
-            LaunchedEffect(uiState.places, uiState.selectedPlace) {
-                mapView.updateMarkers(uiState.places) { place ->
-                    selectedPlace = place
-                    scope.launch {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
+            val filteredPlaces = uiState.places.filter {
+                it.name.contains(searchQuery, ignoreCase = true)
+            }
+
+            LaunchedEffect(filteredPlaces, uiState.selectedPlace, showSuggestions) {
+                // Solo actualiza los marcadores si la búsqueda está vacía o si las sugerencias no están visibles
+                if (searchQuery.isBlank() || !showSuggestions) {
+                    mapView.updateMarkers(filteredPlaces) { place ->
+                        selectedPlace = place
+                        scope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
                     }
                 }
+
                 // Centrar en el lugar seleccionado si viene de otra pantalla
                 uiState.selectedPlace?.let { place ->
-                    mapView.controller.animateTo(GeoPoint(place.latitude, place.longitude))
-                    selectedPlace = place
-                    scope.launch {
-                        bottomSheetScaffoldState.bottomSheetState.expand()
+                    if (filteredPlaces.contains(place)) {
+                        mapView.controller.animateTo(GeoPoint(place.latitude, place.longitude), 18.5, 1000L)
+                        selectedPlace = place
+                        scope.launch {
+                            bottomSheetScaffoldState.bottomSheetState.expand()
+                        }
+                        viewModel.clearSelectedPlace() // Limpiar para no volver a centrar
                     }
-                    viewModel.clearSelectedPlace() // Limpiar para no volver a centrar
                 }
             }
 
             Column(
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 16.dp)
             ) {
-                FloatingActionButton(
-                    onClick = onFilterClicked,
-                    containerColor = MaterialTheme.colorScheme.primary
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.map_filter_icon),
-                        fontSize = 24.sp,
-                        color = MaterialTheme.colorScheme.onPrimary
+                    TextField(
+                        value = searchQuery,
+                        onValueChange = {
+                            searchQuery = it
+                            showSuggestions = true
+                        },
+                        label = { Text("Buscar por nombre") },
+                        modifier = Modifier.weight(1f)
                     )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    FloatingActionButton(
+                        onClick = onFilterClicked,
+                        containerColor = MaterialTheme.colorScheme.primary
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.map_filter_icon),
+                            fontSize = 24.sp,
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
+                if (searchQuery.isNotBlank() && showSuggestions) {
+                    val placesToShow = filteredPlaces.take(5)
+                    if(placesToShow.isNotEmpty()){
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(
+                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
+                                    shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
+                                )
+                        ) {
+                            items(placesToShow) { place ->
+                                Text(
+                                    text = place.name,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            keyboardController?.hide()
+                                            searchQuery = place.name
+                                            showSuggestions = false
+                                            selectedPlace = place
+                                            mapView.controller.animateTo(
+                                                GeoPoint(
+                                                    place.latitude,
+                                                    place.longitude
+                                                ), 18.5, 1000L
+                                            )
+                                            scope.launch {
+                                                bottomSheetScaffoldState.bottomSheetState.expand()
+                                            }
+                                        }
+                                        .padding(16.dp)
+                                )
+                            }
+                        }
+                    }
                 }
             }
 

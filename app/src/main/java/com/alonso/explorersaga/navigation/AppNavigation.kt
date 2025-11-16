@@ -55,10 +55,10 @@ fun AppNavigation() {
                 onCategorySelected = { category ->
                     // Lógica de filtrado actualizada para TODAS las categorías
                     val newState = when (category) {
-                        "historico" -> FilterState(monuments = true, iglesias = true, museos = true, restaurants = false, cafeterias = false, tiendasGenerales = false, supermercados = false, souvenirs = false)
-                        "gastronomia" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = true, cafeterias = true, tiendasGenerales = false, supermercados = false, souvenirs = false)
-                        "tienda" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = false, cafeterias = false, tiendasGenerales = true, supermercados = true, souvenirs = true)
-                        else -> FilterState(monuments=true, iglesias=true, museos=true, restaurants=true, cafeterias=true, tiendasGenerales=true, supermercados=true, souvenirs=true) // Estado por defecto: todo activo
+                        "historico" -> FilterState(monuments = true, iglesias = true, museos = true, restaurants = false, cafeterias = false, bar = false, helados = false, tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = false, ropa = false, tiendasGenerales = false)
+                        "gastronomia" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = true, cafeterias = true, bar = true, helados = true, tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = false, ropa = false, tiendasGenerales = false)
+                        "tienda" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = false, cafeterias = false, bar = false, helados = false, tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true)
+                        else -> FilterState(monuments=true, iglesias=true, museos=true, restaurants=true, cafeterias=true, bar = true, helados = true, tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true) // Estado por defecto: todo activo
                     }
                     placesViewModel.updateFilters(newState)
                     

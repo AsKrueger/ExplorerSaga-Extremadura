@@ -57,15 +57,20 @@ fun FilterScreen(
             Text("Gastronomía", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
             FilterOption(text = "Restaurantes", checked = filterState.restaurants) { viewModel.updateFilters(filterState.copy(restaurants = it)) }
             FilterOption(text = "Cafeterías", checked = filterState.cafeterias) { viewModel.updateFilters(filterState.copy(cafeterias = it)) }
+            FilterOption(text = "Bar", checked = filterState.bar) { viewModel.updateFilters(filterState.copy(bar = it)) }
+            FilterOption(text = "Helados", checked = filterState.helados) { viewModel.updateFilters(filterState.copy(helados = it)) }
 
             HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
 
             // --- Sección de Tiendas ---
             Text("Tiendas", fontFamily = playfairDisplayFamily, style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(top = 8.dp))
-            FilterOption(text = "Tiendas Generales", checked = filterState.tiendasGenerales) { viewModel.updateFilters(filterState.copy(tiendasGenerales = it)) }
-            FilterOption(text = "Supermercados", checked = filterState.supermercados) { viewModel.updateFilters(filterState.copy(supermercados = it)) }
+            FilterOption(text = "Alimentos", checked = filterState.tiendaAlimentos) { viewModel.updateFilters(filterState.copy(tiendaAlimentos = it)) }
             FilterOption(text = "Souvenirs", checked = filterState.souvenirs) { viewModel.updateFilters(filterState.copy(souvenirs = it)) }
-            
+            FilterOption(text = "Supermercados", checked = filterState.supermercados) { viewModel.updateFilters(filterState.copy(supermercados = it)) }
+            FilterOption(text = "Libreria", checked = filterState.libreria) { viewModel.updateFilters(filterState.copy(libreria = it)) }
+            FilterOption(text = "Ropa", checked = filterState.ropa) { viewModel.updateFilters(filterState.copy(ropa = it)) }
+            FilterOption(text = "General", checked = filterState.tiendasGenerales) { viewModel.updateFilters(filterState.copy(tiendasGenerales = it)) }
+
             Spacer(modifier = Modifier.weight(1f))
 
             // --- Botón de Aplicar ---
