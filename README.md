@@ -1,4 +1,4 @@
-"""# ExplorerSaga Extremadura: TFG sobre Desarrollo de Aplicaciones Móviles Android
+# ExplorerSaga Extremadura: TFG sobre Desarrollo de Aplicaciones Móviles Android
 
 ---
 
