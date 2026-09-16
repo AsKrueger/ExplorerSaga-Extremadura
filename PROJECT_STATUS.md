@@ -31,7 +31,13 @@ La aplicación se encuentra en un estado **estable y funcional**. Se puede compi
 
 Esta es la lista de tareas pendientes, divididas como "Issues" para una gestión de proyecto clara.
 
-### **EPIC: 🗃️ Base de Datos y Gestión de Datos**
+### **EPIC: ⚙️ Backend e Infraestructura**
+
+-   **Issue #2: [Infraestructura Base Spring Boot] - COMPLETADO ✅**
+    -   Estructura de proyecto Maven con Spring Boot 3.3.0.
+    -   Configuración de Maven Wrapper.
+    -   Endpoint de Health Check funcional.
+    -   Configuración de perfiles (`dev`, `test`).
 
 -   **Issue #1: [Instalar Room]** - Instalar de forma segura las dependencias de Room y KSP, usando una configuración de versiones estable para evitar los conflictos de compilación anteriores.
 -   **Issue #2: [Poblar la Base de Datos]** - Crear un sistema que, la primera vez que se abre la app, lea los datos de un archivo local (ej. un `JSON` en los assets) y los inserte en la base de datos Room.

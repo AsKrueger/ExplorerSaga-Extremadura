@@ -1,0 +1,4 @@
+# Development configuration
+logging:
+  level:
+    com.alonso.explorersaga: DEBUG
