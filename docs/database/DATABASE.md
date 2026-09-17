@@ -1,55 +1,51 @@
-# Modelo de Datos Inicial (Conceptual)
+# Base de Datos: ExplorerSaga Extremadura
 
 ## 📌 Introducción
-El modelo de datos de ExplorerSaga está diseñado para ser flexible, permitiendo almacenar información de múltiples fuentes y garantizando la trazabilidad del dato original.
+Capa de persistencia inicial implementada con PostgreSQL 15 y gestionada mediante Flyway. El diseño garantiza la independencia del dominio frente a proveedores externos mediante una estructura multi-fuente genérica.
 
-## 🗄️ Entidades Principales
+## 🗄️ Esquema Físico (V1)
 
-### 1. `Place` (Lugar)
-Representa el punto de interés final que verá el usuario.
-- **Campos**:
-    - `id` (PK): Identificador interno.
-    - `name`: Nombre del lugar (normalizado).
-    - `description`: Descripción principal.
-    - `latitude`, `longitude`: Coordenadas geográficas.
-    - `address`: Dirección física legible.
-    - `category_id` (FK): Referencia a la categoría.
-    - `image_url`: Enlace a la imagen principal.
-    - `website`: Sitio web oficial.
-    - `created_at`, `updated_at`: Timestamps.
+### 1. `categories`
+Almacena la taxonomía interna de lugares de ExplorerSaga.
+- `id`: BIGSERIAL (PK)
+- `name`: VARCHAR(100) (UNIQUE, NOT NULL) - Ej: MONUMENT, RESTAURANT.
+- `description`: TEXT
 
-### 2. `Category` (Categoría)
-Define el tipo de lugar.
-- **Campos**:
-    - `id` (PK).
-    - `name`: Nombre interno (ej. MONUMENT).
-    - `display_name`: Nombre para mostrar (ej. Monumento).
-    - `icon`: Identificador del icono a usar en la UI.
+### 2. `sources`
+Catálogo de fuentes externas de información.
+- `id`: BIGSERIAL (PK)
+- `code`: VARCHAR(50) (UNIQUE, NOT NULL) - Ej: GOOGLE_PLACES, OPEN_DATA_EXTREMADURA.
+- `name`: VARCHAR(100) (NOT NULL)
+- `description`: TEXT
 
-### 3. `Source` (Fuente)
-Define de dónde provienen los datos.
-- **Campos**:
-    - `id` (PK).
-    - `name`: Nombre de la fuente (ej. OPENSTREETMAP, WIKIDATA).
-    - `base_url`: URL de la fuente externa.
+### 3. `places`
+Entidad núcleo que representa un lugar de interés.
+- `id`: BIGSERIAL (PK)
+- `name`: VARCHAR(255) (NOT NULL)
+- `description`: TEXT
+- `address`: VARCHAR(500)
+- `latitude`: DOUBLE PRECISION (NOT NULL)
+- `longitude`: DOUBLE PRECISION (NOT NULL)
+- `category_id`: BIGINT (FK -> categories.id)
+- `created_at`: TIMESTAMP WITH TIME ZONE (Default: NOW)
+- `updated_at`: TIMESTAMP WITH TIME ZONE (Default: NOW)
 
-### 4. `PlaceSource` (Relación Lugar-Fuente)
-Crucial para la deduplicación y actualización. Mapea un lugar de ExplorerSaga con su equivalente en una fuente externa.
-- **Campos**:
-    - `place_id` (FK): Referencia al lugar interno.
-    - `source_id` (FK): Referencia a la fuente.
-    - `external_id`: ID que utiliza la fuente externa (ej. ID de nodo en OSM).
-    - `last_sync`: Fecha de la última vez que se actualizó desde esta fuente específica.
-    - `raw_data`: (Opcional) JSON con la respuesta original para auditoría.
+### 4. `place_sources`
+Tabla de enlace que permite la trazabilidad multi-fuente.
+- `id`: BIGSERIAL (PK)
+- `place_id`: BIGINT (FK -> places.id)
+- `source_id`: BIGINT (FK -> sources.id)
+- `external_id`: VARCHAR(255) (NOT NULL) - Identificador en la fuente original (ej: Place ID).
+- `last_sync`: TIMESTAMP WITH TIME ZONE
 
-## 🤝 Relaciones
-- Un `Place` tiene una única `Category` (relación Many-to-One).
-- Un `Place` puede tener múltiples `PlaceSource` (relación One-to-Many). Esto permite que un mismo monumento se alimente de OSM para las coordenadas y de Wikidata para la descripción histórica.
-- Una `Source` puede estar vinculada a muchos `PlaceSource`.
+## 🛡️ Restricciones de Integridad
+- **Unicidad**: Restricción `UNIQUE(source_id, external_id)` en `place_sources` para evitar duplicidad de registros de una misma fuente.
+- **Referencial**: La eliminación de categorías está protegida si existen lugares asociados.
+- **Tipado**: Uso de `DOUBLE PRECISION` para coordenadas y `TIMESTAMP WITH TIME ZONE` para precisión temporal.
 
-## 🛡️ Estrategia contra Duplicados
-Al recibir un lugar de una fuente externa:
-1. Se comprueba si existe un `PlaceSource` con el mismo `external_id` y `source_id`.
-2. Si no existe, se realiza una búsqueda geográfica en la tabla `Place` (ej. lugares en un radio de 20 metros con nombre similar).
-3. Si hay coincidencia, se añade una nueva `PlaceSource` al lugar existente en lugar de crear uno nuevo.
-4. Si no hay coincidencia, se crea un nuevo `Place`.
+## 🔄 Datos Transitorios (Fuera de DB)
+Siguiendo las políticas de proveedores (Google Places EEE), los siguientes datos **no se persisten**:
+- Fotografías de terceros.
+- Horarios de apertura dinámicos.
+- Valoraciones de usuarios.
+Estos datos deben ser consultados dinámicamente o gestionados mediante caché efímera en memoria.

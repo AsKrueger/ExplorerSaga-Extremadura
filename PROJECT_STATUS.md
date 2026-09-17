@@ -31,7 +31,31 @@ La aplicación se encuentra en un estado **estable y funcional**. Se puede compi
 
 Esta es la lista de tareas pendientes, divididas como "Issues" para una gestión de proyecto clara.
 
-### **EPIC: 🗃️ Base de Datos y Gestión de Datos**
+### **EPIC: ⚙️ Backend e Infraestructura**
+
+-   **Issue #2: [Infraestructura Base Spring Boot] - COMPLETADO ✅**
+    -   Estructura de proyecto Maven con Spring Boot 3.3.0.
+    -   Configuración de Maven Wrapper.
+    -   Endpoint de Health Check funcional.
+    -   Configuración de perfiles (`dev`, `test`).
+
+-   **Issue #3: [Investigación y diseño de fuentes] - COMPLETADO ✅**
+    -   Investigación de viabilidad de Turismo Mérida y Google Places.
+    -   Diseño del modelo de dominio multi-fuente.
+    -   Definición de estrategias de deduplicación y caché.
+    -   Actualización de documentación técnica (Architecture, Database, API).
+
+-   **Issue #4: [Persistencia con PostgreSQL + JPA] - COMPLETADO ✅**
+    -   Configuración de Spring Data JPA y driver PostgreSQL.
+    -   Infraestructura reproducible con Docker Compose.
+    -   Implementación de entidades JPA (`Place`, `Category`, `Source`, `PlaceSource`).
+    -   Creación de repositorios y tests de integración de persistencia.
+
+-   **Issue #5: [Capa de aplicación y lógica de dominio] - COMPLETADO ✅**
+    -   Implementación de DTOs para desacoplar el dominio de la infraestructura.
+    -   Creación de servicios de negocio (`Category`, `Source`, `Place`, `PlaceSource`).
+    -   Validación de reglas de negocio (coordenadas, existencia, duplicados).
+    -   Estrategia de tests unitarios (Mockito) e integración (E2E Service-to-DB).
 
 -   **Issue #1: [Instalar Room]** - Instalar de forma segura las dependencias de Room y KSP, usando una configuración de versiones estable para evitar los conflictos de compilación anteriores.
 -   **Issue #2: [Poblar la Base de Datos]** - Crear un sistema que, la primera vez que se abre la app, lea los datos de un archivo local (ej. un `JSON` en los assets) y los inserte en la base de datos Room.

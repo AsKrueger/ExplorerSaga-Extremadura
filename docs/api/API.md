@@ -15,45 +15,33 @@ Permite obtener la lista de puntos de interés.
         - `category`: Filtrar por slug de categoría (opcional).
         - `city`: Filtrar por ciudad (opcional, por defecto "Mérida").
         - `page`, `size`: Paginación.
-- **`GET /places/{id}`**: Detalle completo de un lugar específico.
-- **`GET /places/nearby`**: Lugares cercanos a una ubicación.
-    - **Parámetros**:
-        - `lat`, `lon`: Coordenadas del usuario.
-        - `radius`: Radio en metros (opcional).
+### `GET /places/{id}`
+Devuelve el detalle enriquecido de un lugar, combinando datos persistentes y consultas dinámicas (fotos, horarios actualizados).
 
-### 2. Categorías (`/categories`)
-Obtener el catálogo de categorías disponibles para alimentar los filtros de la App.
-
-- **`GET /categories`**: Lista de categorías (Nombre, Icono, ID).
-
-### 3. Sincronización (Administración/Interno)
-Endpoints para forzar actualizaciones (útiles durante desarrollo).
-
-- **`POST /sync/osm`**: Dispara la sincronización manual con OpenStreetMap para un área definida.
-
-## 📦 Estructura de Respuesta (Ejemplo)
-
-### `GET /places/1`
 ```json
 {
   "id": 1,
-  "name": "Teatro Romano",
-  "description": "El teatro romano de Mérida...",
-  "category": {
-    "id": 1,
-    "name": "MONUMENT",
-    "display": "Monumento"
-  },
+  "name": "Teatro Romano de Mérida",
+  "description": "Edificio construido por Roma en la colonia Augusta Emerita...",
+  "category": "MONUMENT",
   "location": {
-    "latitude": 38.915363,
-    "longitude": -6.338650,
+    "latitude": 38.9153,
+    "longitude": -6.3386,
     "address": "Plaza Margarita Xirgú, s/n"
   },
-  "media": {
-    "image_url": "https://...",
-    "website": "https://..."
+  "opening_hours": {
+    "status": "OPEN",
+    "periods": [...],
+    "text": "Abierto hasta las 21:00"
   },
-  "updated_at": "2024-03-20T10:00:00Z"
+  "multimedia": {
+    "main_image": "https://maps.googleapis.com/...",
+    "attribution": "Google Maps"
+  },
+  "sources": [
+    {"name": "TURISMO_MERIDA", "external_id": "BIC-123"},
+    {"name": "GOOGLE_PLACES", "external_id": "ChIJ..."}
+  ]
 }
 ```
 

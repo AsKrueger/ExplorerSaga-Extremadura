@@ -1,0 +1,19 @@
+# Test configuration using the local Docker Compose PostgreSQL
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/explorersaga
+    username: explorersaga_user
+    password: explorersaga_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+  flyway:
+    enabled: true
+    clean-disabled: false
+
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate: ERROR
