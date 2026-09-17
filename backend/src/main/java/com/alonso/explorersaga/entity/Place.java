@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Entity
@@ -21,21 +21,26 @@ public class Place {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(length = 500)
     private String address;
 
+    @Column(nullable = false)
     private Double latitude;
 
+    @Column(nullable = false)
     private Double longitude;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Column(name = "created_at", updatable = false)
+    private OffsetDateTime createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @Column(name = "updated_at")
+    private OffsetDateTime updatedAt;
 
     public Place() {}
 
@@ -95,12 +100,20 @@ public class Place {
         this.category = category;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
         return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

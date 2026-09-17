@@ -1,12 +1,12 @@
 package com.alonso.explorersaga.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @Entity
 @Table(name = "place_sources", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"source_id", "external_id"})
+        @UniqueConstraint(name = "uk_place_sources_source_external", columnNames = {"source_id", "external_id"})
 })
 public class PlaceSource {
 
@@ -25,7 +25,8 @@ public class PlaceSource {
     @Column(name = "external_id", nullable = false)
     private String externalId;
 
-    private LocalDateTime lastSync;
+    @Column(name = "last_sync")
+    private OffsetDateTime lastSync;
 
     public PlaceSource() {}
 
@@ -61,11 +62,11 @@ public class PlaceSource {
         this.externalId = externalId;
     }
 
-    public LocalDateTime getLastSync() {
+    public OffsetDateTime getLastSync() {
         return lastSync;
     }
 
-    public void setLastSync(LocalDateTime lastSync) {
+    public void setLastSync(OffsetDateTime lastSync) {
         this.lastSync = lastSync;
     }
 

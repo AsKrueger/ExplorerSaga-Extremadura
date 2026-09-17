@@ -11,16 +11,20 @@ public class Source {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 50)
+    private String code;
+
+    @Column(nullable = false, length = 100)
     private String name;
 
-    private String baseUrl;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
     public Source() {}
 
-    public Source(String name, String baseUrl) {
+    public Source(String code, String name) {
+        this.code = code;
         this.name = name;
-        this.baseUrl = baseUrl;
     }
 
     public Long getId() {
@@ -31,6 +35,14 @@ public class Source {
         this.id = id;
     }
 
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
     public String getName() {
         return name;
     }
@@ -39,12 +51,12 @@ public class Source {
         this.name = name;
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
+    public String getDescription() {
+        return description;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

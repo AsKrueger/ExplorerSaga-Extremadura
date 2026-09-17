@@ -1,56 +1,51 @@
-# Modelo de Datos Inicial (Conceptual)
+# Base de Datos: ExplorerSaga Extremadura
 
 ## 📌 Introducción
-El modelo de datos de ExplorerSaga está diseñado para ser flexible, permitiendo almacenar información de múltiples fuentes y garantizando la trazabilidad del dato original.
+Capa de persistencia inicial implementada con PostgreSQL 15 y gestionada mediante Flyway. El diseño garantiza la independencia del dominio frente a proveedores externos mediante una estructura multi-fuente genérica.
 
-## 🗄️ Entidades Principales
+## 🗄️ Esquema Físico (V1)
 
-### 1. `Place` (Lugar)
-Representa la entidad central normalizada.
-- **Campos Almacenables (Persistentes)**:
-    - `id` (PK): Identificador interno.
-    - `name`: Nombre normalizado (prioridad Turismo Mérida para monumentos).
-    - `latitude`, `longitude`: Coordenadas (refresco obligatorio cada 30 días si proceden de Google).
-    - `address`: Dirección estandarizada.
-    - `category_id` (FK).
-    - `description`: Historia/Cultura (Turismo Mérida).
-    - `website`, `phone`.
-    - `created_at`, `updated_at`.
-- **Campos Dinámicos (No persistentes en DB principal, consultados vía API)**:
-    - Fotografías actuales de Google.
-    - Horarios de apertura dinámicos (Google Pro SKU).
-    - Valoraciones de usuarios.
+### 1. `categories`
+Almacena la taxonomía interna de lugares de ExplorerSaga.
+- `id`: BIGSERIAL (PK)
+- `name`: VARCHAR(100) (UNIQUE, NOT NULL) - Ej: MONUMENT, RESTAURANT.
+- `description`: TEXT
 
-### 2. `Category` (Categoría)
-Define el tipo de lugar.
-- **Campos**:
-    - `id` (PK).
-    - `name`: Nombre interno (ej. MONUMENT).
-    - `display_name`: Nombre para mostrar (ej. Monumento).
-    - `icon`: Identificador del icono a usar en la UI.
+### 2. `sources`
+Catálogo de fuentes externas de información.
+- `id`: BIGSERIAL (PK)
+- `code`: VARCHAR(50) (UNIQUE, NOT NULL) - Ej: GOOGLE_PLACES, OPEN_DATA_EXTREMADURA.
+- `name`: VARCHAR(100) (NOT NULL)
+- `description`: TEXT
 
-### 3. `Source` (Fuente)
-Define de dónde provienen los datos.
-- **Campos**:
-    - `id` (PK).
-    - `name`: Nombre de la fuente (ej. TURISMO_MERIDA, GOOGLE_PLACES).
-    - `base_url`: URL de la fuente externa.
+### 3. `places`
+Entidad núcleo que representa un lugar de interés.
+- `id`: BIGSERIAL (PK)
+- `name`: VARCHAR(255) (NOT NULL)
+- `description`: TEXT
+- `address`: VARCHAR(500)
+- `latitude`: DOUBLE PRECISION (NOT NULL)
+- `longitude`: DOUBLE PRECISION (NOT NULL)
+- `category_id`: BIGINT (FK -> categories.id)
+- `created_at`: TIMESTAMP WITH TIME ZONE (Default: NOW)
+- `updated_at`: TIMESTAMP WITH TIME ZONE (Default: NOW)
 
-### 4. `PlaceSource` (Relación Lugar-Fuente)
-Crucial para la deduplicación y actualización. Mapea un lugar de ExplorerSaga con su equivalente en una fuente externa.
-- **Campos**:
-    - `place_id` (FK): Referencia al lugar interno.
-    - `source_id` (FK): Referencia a la fuente.
-    - `external_id`: ID que utiliza la fuente externa (ej. Google Place ID).
-    - `last_sync`: Fecha de la última actualización desde esta fuente.
+### 4. `place_sources`
+Tabla de enlace que permite la trazabilidad multi-fuente.
+- `id`: BIGSERIAL (PK)
+- `place_id`: BIGINT (FK -> places.id)
+- `source_id`: BIGINT (FK -> sources.id)
+- `external_id`: VARCHAR(255) (NOT NULL) - Identificador en la fuente original (ej: Place ID).
+- `last_sync`: TIMESTAMP WITH TIME ZONE
 
-## 🤝 Relaciones y Procedencia
-- **Place 1:N PlaceSource**: Un monumento (ej. Teatro Romano) tendrá un `PlaceSource` para `TURISMO_MERIDA` (con su ID de BIC) y otro para `GOOGLE_PLACES` (con su `place_id`).
-- **Preferencia de Atributos**:
-    - **Contenido Cultural**: Turismo Mérida > Google.
-    - **Ubicación GPS**: Google > Turismo Mérida.
+## 🛡️ Restricciones de Integridad
+- **Unicidad**: Restricción `UNIQUE(source_id, external_id)` en `place_sources` para evitar duplicidad de registros de una misma fuente.
+- **Referencial**: La eliminación de categorías está protegida si existen lugares asociados.
+- **Tipado**: Uso de `DOUBLE PRECISION` para coordenadas y `TIMESTAMP WITH TIME ZONE` para precisión temporal.
 
-## 🛡️ Estrategia Multinivel contra Duplicados
-1. **Identificador Directo**: Coincidencia exacta de `place_id` o ID de dataset BIC.
-2. **Geofencing**: Búsqueda en radio de 20m en la base de datos de ExplorerSaga.
-3. **Similitud Léxica**: Normalización de nombres (lower case, sin tildes, eliminación de stop-words como "Teatro", "Museo" en la comparación) para validación final.
+## 🔄 Datos Transitorios (Fuera de DB)
+Siguiendo las políticas de proveedores (Google Places EEE), los siguientes datos **no se persisten**:
+- Fotografías de terceros.
+- Horarios de apertura dinámicos.
+- Valoraciones de usuarios.
+Estos datos deben ser consultados dinámicamente o gestionados mediante caché efímera en memoria.

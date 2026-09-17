@@ -4,10 +4,10 @@ services:
     container_name: explorersaga-db
     environment:
       POSTGRES_DB: explorersaga
-      POSTGRES_USER: explorersaga_user
-      POSTGRES_PASSWORD: explorersaga_password
+      POSTGRES_USER: ${DB_USER:-explorersaga_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-explorersaga_password}
     ports:
-      - "5432:5432"
+      - "${DB_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 

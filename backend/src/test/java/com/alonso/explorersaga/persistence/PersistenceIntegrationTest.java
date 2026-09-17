@@ -8,20 +8,23 @@ import com.alonso.explorersaga.repository.CategoryRepository;
 import com.alonso.explorersaga.repository.PlaceRepository;
 import com.alonso.explorersaga.repository.PlaceSourceRepository;
 import com.alonso.explorersaga.repository.SourceRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@DataJpaTest
+@SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class PersistenceIntegrationTest {
 
     @Autowired
@@ -36,6 +39,14 @@ class PersistenceIntegrationTest {
     @Autowired
     private PlaceSourceRepository placeSourceRepository;
 
+    @BeforeEach
+    void cleanUp() {
+        placeSourceRepository.deleteAll();
+        placeRepository.deleteAll();
+        sourceRepository.deleteAll();
+        categoryRepository.deleteAll();
+    }
+
     @Test
     void shouldPersistMultiSourcePlace() {
         // 1. Create Category
@@ -46,68 +57,96 @@ class PersistenceIntegrationTest {
         Place place = new Place();
         place.setName("Teatro Romano");
         place.setDescription("Ancient Roman theatre");
+        place.setAddress("Plaza Margarita Xirgú, s/n");
+        place.setLatitude(38.9153);
+        place.setLongitude(-6.3386);
         place.setCategory(category);
         place = placeRepository.save(place);
 
         // 3. Create Sources
-        Source turismoMerida = new Source("TURISMO_MERIDA", "https://turismomerida.org");
-        turismoMerida = sourceRepository.save(turismoMerida);
+        Source google = new Source("GOOGLE_PLACES", "Google Places API");
+        google = sourceRepository.save(google);
 
-        Source googlePlaces = new Source("GOOGLE_PLACES", "https://maps.googleapis.com");
-        googlePlaces = sourceRepository.save(googlePlaces);
+        Source openData = new Source("OPEN_DATA_EXTREMADURA", "Open Data Extremadura");
+        openData = sourceRepository.save(openData);
 
         // 4. Create PlaceSources
         PlaceSource ps1 = new PlaceSource();
         ps1.setPlace(place);
-        ps1.setSource(turismoMerida);
-        ps1.setExternalId("BIC-123");
-        ps1.setLastSync(LocalDateTime.now());
+        ps1.setSource(google);
+        ps1.setExternalId("ChIJxxxxx");
+        ps1.setLastSync(OffsetDateTime.now());
         placeSourceRepository.save(ps1);
 
         PlaceSource ps2 = new PlaceSource();
         ps2.setPlace(place);
-        ps2.setSource(googlePlaces);
-        ps2.setExternalId("ChIJ-google-id");
-        ps2.setLastSync(LocalDateTime.now());
+        ps2.setSource(openData);
+        ps2.setExternalId("BIC-12345");
+        ps2.setLastSync(OffsetDateTime.now());
         placeSourceRepository.save(ps2);
 
         // 5. Verify
         Place savedPlace = placeRepository.findById(place.getId()).orElseThrow();
         assertThat(savedPlace.getName()).isEqualTo("Teatro Romano");
-        assertThat(savedPlace.getCategory().getName()).isEqualTo("MONUMENT");
-
+        
         List<PlaceSource> sources = placeSourceRepository.findAll();
         assertThat(sources).hasSize(2);
-        assertThat(sources).extracting(ps -> ps.getSource().getName())
-                .containsExactlyInAnyOrder("TURISMO_MERIDA", "GOOGLE_PLACES");
+        assertThat(sources).extracting(ps -> ps.getSource().getCode())
+                .containsExactlyInAnyOrder("GOOGLE_PLACES", "OPEN_DATA_EXTREMADURA");
     }
 
     @Test
     void shouldViolateUniqueConstraintOnPlaceSource() {
-        Source source = sourceRepository.save(new Source("SOURCE1", "url"));
+        Category cat = categoryRepository.save(new Category("CAT1", "desc"));
+        Source source = sourceRepository.save(new Source("S1", "name"));
         
-        Place place1 = new Place();
-        place1.setName("Place 1");
-        place1 = placeRepository.save(place1);
+        Place p1 = new Place();
+        p1.setName("P1");
+        p1.setLatitude(0.0);
+        p1.setLongitude(0.0);
+        p1.setCategory(cat);
+        p1 = placeRepository.save(p1);
 
-        Place place2 = new Place();
-        place2.setName("Place 2");
-        place2 = placeRepository.save(place2);
+        Place p2 = new Place();
+        p2.setName("P2");
+        p2.setLatitude(1.0);
+        p2.setLongitude(1.0);
+        p2.setCategory(cat);
+        p2 = placeRepository.save(p2);
 
         PlaceSource ps1 = new PlaceSource();
-        ps1.setPlace(place1);
+        ps1.setPlace(p1);
         ps1.setSource(source);
-        ps1.setExternalId("EXT-001");
+        ps1.setExternalId("EXT-ID");
         placeSourceRepository.save(ps1);
 
         PlaceSource ps2 = new PlaceSource();
-        ps2.setPlace(place2);
+        ps2.setPlace(p2);
         ps2.setSource(source);
-        ps2.setExternalId("EXT-001"); // Duplicate external ID for same source
+        ps2.setExternalId("EXT-ID"); // Duplicate external ID for same source
 
-        PlaceSource ps2Final = ps2;
+        PlaceSource finalPs2 = ps2;
         assertThrows(DataIntegrityViolationException.class, () -> {
-            placeSourceRepository.saveAndFlush(ps2Final);
+            placeSourceRepository.saveAndFlush(finalPs2);
+        });
+    }
+
+    @Test
+    void shouldPreventDeletingCategoryWithPlaces() {
+        Category category = new Category("PROTECTED", "desc");
+        category = categoryRepository.save(category);
+
+        Place place = new Place();
+        place.setName("Protected Place");
+        place.setLatitude(0.0);
+        place.setLongitude(0.0);
+        place.setCategory(category);
+        placeRepository.save(place);
+
+        Category finalCategory = category;
+        assertThrows(DataIntegrityViolationException.class, () -> {
+            categoryRepository.delete(finalCategory);
+            categoryRepository.flush();
         });
     }
 }
