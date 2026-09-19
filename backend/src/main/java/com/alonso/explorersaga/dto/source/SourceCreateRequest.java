@@ -1,8 +1,18 @@
 package com.alonso.explorersaga.dto.source;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class SourceCreateRequest {
+    @NotBlank
+    @Size(max = 50)
     private String code;
+
+    @NotBlank
+    @Size(max = 100)
     private String name;
+
+    @Size(max = 500)
     private String description;
 
     public SourceCreateRequest() {}
