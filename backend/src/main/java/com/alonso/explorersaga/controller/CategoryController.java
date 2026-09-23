@@ -1,9 +1,9 @@
 package com.alonso.explorersaga.controller;
 
+import com.alonso.explorersaga.application.port.in.CategoryUseCase;
 import com.alonso.explorersaga.dto.category.CategoryCreateRequest;
 import com.alonso.explorersaga.dto.category.CategoryResponse;
 import com.alonso.explorersaga.dto.common.ErrorResponse;
-import com.alonso.explorersaga.service.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,10 +24,10 @@ import java.util.List;
 @Tag(name = "Categories", description = "Gestión de categorías de lugares turísticos")
 public class CategoryController {
 
-    private final CategoryService categoryService;
+    private final CategoryUseCase categoryUseCase;
 
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
+    public CategoryController(CategoryUseCase categoryUseCase) {
+        this.categoryUseCase = categoryUseCase;
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryCreateRequest request) {
-        CategoryResponse response = categoryService.createCategory(request);
+        CategoryResponse response = categoryUseCase.createCategory(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -55,7 +55,7 @@ public class CategoryController {
     })
     public ResponseEntity<CategoryResponse> getCategory(
             @Parameter(description = "ID de la categoría", example = "1") @PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getCategory(id));
+        return ResponseEntity.ok(categoryUseCase.getCategory(id));
     }
 
     @GetMapping
@@ -65,6 +65,6 @@ public class CategoryController {
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = CategoryResponse.class))))
     })
     public ResponseEntity<List<CategoryResponse>> listCategories() {
-        return ResponseEntity.ok(categoryService.listCategories());
+        return ResponseEntity.ok(categoryUseCase.listCategories());
     }
 }

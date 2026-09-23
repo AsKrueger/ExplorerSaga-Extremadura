@@ -1,9 +1,9 @@
 package com.alonso.explorersaga.controller;
 
+import com.alonso.explorersaga.application.port.in.SourceUseCase;
 import com.alonso.explorersaga.dto.common.ErrorResponse;
 import com.alonso.explorersaga.dto.source.SourceCreateRequest;
 import com.alonso.explorersaga.dto.source.SourceResponse;
-import com.alonso.explorersaga.service.SourceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,10 +24,10 @@ import java.util.List;
 @Tag(name = "Sources", description = "Gestión de fuentes de información externa")
 public class SourceController {
 
-    private final SourceService sourceService;
+    private final SourceUseCase sourceUseCase;
 
-    public SourceController(SourceService sourceService) {
-        this.sourceService = sourceService;
+    public SourceController(SourceUseCase sourceUseCase) {
+        this.sourceUseCase = sourceUseCase;
     }
 
     @PostMapping
@@ -41,7 +41,7 @@ public class SourceController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<SourceResponse> createSource(@Valid @RequestBody SourceCreateRequest request) {
-        SourceResponse response = sourceService.createSource(request);
+        SourceResponse response = sourceUseCase.createSource(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -55,7 +55,7 @@ public class SourceController {
     })
     public ResponseEntity<SourceResponse> getSource(
             @Parameter(description = "ID de la fuente", example = "1") @PathVariable Long id) {
-        return ResponseEntity.ok(sourceService.getSource(id));
+        return ResponseEntity.ok(sourceUseCase.getSource(id));
     }
 
     @GetMapping
@@ -65,6 +65,6 @@ public class SourceController {
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = SourceResponse.class))))
     })
     public ResponseEntity<List<SourceResponse>> listSources() {
-        return ResponseEntity.ok(sourceService.listSources());
+        return ResponseEntity.ok(sourceUseCase.listSources());
     }
 }

@@ -1,9 +1,9 @@
 package com.alonso.explorersaga.controller;
 
+import com.alonso.explorersaga.application.port.in.PlaceUseCase;
 import com.alonso.explorersaga.dto.common.ErrorResponse;
 import com.alonso.explorersaga.dto.place.PlaceCreateRequest;
 import com.alonso.explorersaga.dto.place.PlaceResponse;
-import com.alonso.explorersaga.service.PlaceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -24,10 +24,10 @@ import java.util.List;
 @Tag(name = "Places", description = "Gestión de lugares turísticos")
 public class PlaceController {
 
-    private final PlaceService placeService;
+    private final PlaceUseCase placeUseCase;
 
-    public PlaceController(PlaceService placeService) {
-        this.placeService = placeService;
+    public PlaceController(PlaceUseCase placeUseCase) {
+        this.placeUseCase = placeUseCase;
     }
 
     @PostMapping
@@ -43,7 +43,7 @@ public class PlaceController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<PlaceResponse> createPlace(@Valid @RequestBody PlaceCreateRequest request) {
-        PlaceResponse response = placeService.createPlace(request);
+        PlaceResponse response = placeUseCase.createPlace(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -57,7 +57,7 @@ public class PlaceController {
     })
     public ResponseEntity<PlaceResponse> getPlace(
             @Parameter(description = "ID del lugar turístico", example = "1") @PathVariable Long id) {
-        return ResponseEntity.ok(placeService.getPlace(id));
+        return ResponseEntity.ok(placeUseCase.getPlace(id));
     }
 
     @GetMapping
@@ -67,6 +67,6 @@ public class PlaceController {
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class))))
     })
     public ResponseEntity<List<PlaceResponse>> listPlaces() {
-        return ResponseEntity.ok(placeService.listPlaces());
+        return ResponseEntity.ok(placeUseCase.listPlaces());
     }
 }

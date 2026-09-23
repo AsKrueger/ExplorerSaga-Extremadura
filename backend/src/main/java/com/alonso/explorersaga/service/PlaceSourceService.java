@@ -1,5 +1,9 @@
 package com.alonso.explorersaga.service;
 
+import com.alonso.explorersaga.application.port.in.PlaceSourceUseCase;
+import com.alonso.explorersaga.application.port.out.PlaceRepositoryPort;
+import com.alonso.explorersaga.application.port.out.PlaceSourceRepositoryPort;
+import com.alonso.explorersaga.application.port.out.SourceRepositoryPort;
 import com.alonso.explorersaga.dto.placesource.PlaceSourceCreateRequest;
 import com.alonso.explorersaga.dto.placesource.PlaceSourceResponse;
 import com.alonso.explorersaga.dto.source.SourceResponse;
@@ -9,9 +13,6 @@ import com.alonso.explorersaga.entity.Source;
 import com.alonso.explorersaga.exception.DuplicateResourceException;
 import com.alonso.explorersaga.exception.InvalidDataException;
 import com.alonso.explorersaga.exception.ResourceNotFoundException;
-import com.alonso.explorersaga.repository.PlaceRepository;
-import com.alonso.explorersaga.repository.PlaceSourceRepository;
-import com.alonso.explorersaga.repository.SourceRepository;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,28 +20,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.OffsetDateTime;
 
 @Service
-public class PlaceSourceService {
+public class PlaceSourceService implements PlaceSourceUseCase {
 
-    private final PlaceSourceRepository placeSourceRepository;
-    private final PlaceRepository placeRepository;
-    private final SourceRepository sourceRepository;
+    private final PlaceSourceRepositoryPort placeSourceRepositoryPort;
+    private final PlaceRepositoryPort placeRepositoryPort;
+    private final SourceRepositoryPort sourceRepositoryPort;
 
-    public PlaceSourceService(PlaceSourceRepository placeSourceRepository,
-                              PlaceRepository placeRepository,
-                              SourceRepository sourceRepository) {
-        this.placeSourceRepository = placeSourceRepository;
-        this.placeRepository = placeRepository;
-        this.sourceRepository = sourceRepository;
+    public PlaceSourceService(PlaceSourceRepositoryPort placeSourceRepositoryPort,
+                              PlaceRepositoryPort placeRepositoryPort,
+                              SourceRepositoryPort sourceRepositoryPort) {
+        this.placeSourceRepositoryPort = placeSourceRepositoryPort;
+        this.placeRepositoryPort = placeRepositoryPort;
+        this.sourceRepositoryPort = sourceRepositoryPort;
     }
 
+    @Override
     @Transactional
     public PlaceSourceResponse addPlaceSource(PlaceSourceCreateRequest request) {
         validateRequest(request);
 
-        Place place = placeRepository.findById(request.getPlaceId())
+        Place place = placeRepositoryPort.findById(request.getPlaceId())
                 .orElseThrow(() -> new ResourceNotFoundException("Place with ID " + request.getPlaceId() + " not found"));
 
-        Source source = sourceRepository.findById(request.getSourceId())
+        Source source = sourceRepositoryPort.findById(request.getSourceId())
                 .orElseThrow(() -> new ResourceNotFoundException("Source with ID " + request.getSourceId() + " not found"));
 
         PlaceSource placeSource = new PlaceSource();
@@ -50,7 +52,7 @@ public class PlaceSourceService {
         placeSource.setLastSync(OffsetDateTime.now());
 
         try {
-            PlaceSource saved = placeSourceRepository.saveAndFlush(placeSource);
+            PlaceSource saved = placeSourceRepositoryPort.saveAndFlush(placeSource);
             return mapToResponse(saved);
         } catch (DataIntegrityViolationException e) {
             // Check if it's the unique constraint violation

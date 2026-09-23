@@ -59,11 +59,11 @@ Para garantizar rigor técnico y evitar presuponer componentes no implementados,
 | **Application Services** | **Implementado** | Servicios que contienen lógica de aplicación y transaccionalidad. |
 | **Spring Data Repositories** | **Implementado** | Repositorios JPA estándar para acceso a PostgreSQL. |
 | **PostgreSQL / Flyway** | **Implementado** | Persistencia relacional con esquema inicial (`V1__Initial_Schema.sql`). |
-| **Input Ports (Use Cases)** | **Propuesto** | Interfaces de casos de uso para desacoplar controladores de servicios. |
-| **Output Ports (Repositories)** | **Propuesto** | Interfaces de puertos de salida para aislar la persistencia. |
-| **Persistence Adapters** | **Propuesto** | Adaptadores JPA que implementan los Output Ports. |
+| **Input Ports (Use Cases)** | **Implementado** | Interfaces de casos de uso (`CategoryUseCase`, etc.) para desacoplar controladores de servicios. |
+| **Output Ports (Repositories)** | **Implementado** | Interfaces de puertos de salida (`CategoryRepositoryPort`, etc.) para aislar la persistencia. |
+| **Persistence Adapters** | **Implementado** | Adaptadores JPA (`JpaCategoryRepositoryAdapter`, etc.) que implementan los Output Ports. |
 | **External Adapters** | **Futuro** | Clientes para integraciones con OpenStreetMap, Overpass, OpenData, etc. |
-| **Domain independiente de JPA** | **A evaluar** | Separación gradual del modelo de dominio puro frente a entidades de persistencia. |
+| **Domain independiente de JPA** | **Descartado temporalmente** | Evaluado en Issue #11. Se mantiene el modelo compartido pragmático detrás de los Output Ports para evitar boilerplate innecesario. |
 | **Location Value Object** | **A evaluar** | Objeto de valor para coordenadas geográficas con validación de invariantes. |
 
 ---

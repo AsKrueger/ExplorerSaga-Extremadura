@@ -1,5 +1,8 @@
 package com.alonso.explorersaga.service;
 
+import com.alonso.explorersaga.application.port.out.PlaceRepositoryPort;
+import com.alonso.explorersaga.application.port.out.PlaceSourceRepositoryPort;
+import com.alonso.explorersaga.application.port.out.SourceRepositoryPort;
 import com.alonso.explorersaga.dto.placesource.PlaceSourceCreateRequest;
 import com.alonso.explorersaga.dto.placesource.PlaceSourceResponse;
 import com.alonso.explorersaga.entity.Place;
@@ -7,9 +10,6 @@ import com.alonso.explorersaga.entity.PlaceSource;
 import com.alonso.explorersaga.entity.Source;
 import com.alonso.explorersaga.exception.DuplicateResourceException;
 import com.alonso.explorersaga.exception.ResourceNotFoundException;
-import com.alonso.explorersaga.repository.PlaceRepository;
-import com.alonso.explorersaga.repository.PlaceSourceRepository;
-import com.alonso.explorersaga.repository.SourceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -27,11 +27,11 @@ import static org.mockito.Mockito.*;
 class PlaceSourceServiceTest {
 
     @Mock
-    private PlaceSourceRepository placeSourceRepository;
+    private PlaceSourceRepositoryPort placeSourceRepositoryPort;
     @Mock
-    private PlaceRepository placeRepository;
+    private PlaceRepositoryPort placeRepositoryPort;
     @Mock
-    private SourceRepository sourceRepository;
+    private SourceRepositoryPort sourceRepositoryPort;
 
     @InjectMocks
     private PlaceSourceService placeSourceService;
@@ -54,9 +54,9 @@ class PlaceSourceServiceTest {
         saved.setSource(source);
         saved.setExternalId("EXT-ID");
 
-        when(placeRepository.findById(1L)).thenReturn(Optional.of(place));
-        when(sourceRepository.findById(2L)).thenReturn(Optional.of(source));
-        when(placeSourceRepository.saveAndFlush(any(PlaceSource.class))).thenReturn(saved);
+        when(placeRepositoryPort.findById(1L)).thenReturn(Optional.of(place));
+        when(sourceRepositoryPort.findById(2L)).thenReturn(Optional.of(source));
+        when(placeSourceRepositoryPort.saveAndFlush(any(PlaceSource.class))).thenReturn(saved);
 
         PlaceSourceResponse response = placeSourceService.addPlaceSource(request);
 
@@ -69,9 +69,9 @@ class PlaceSourceServiceTest {
         PlaceSourceCreateRequest request = new PlaceSourceCreateRequest(1L, 2L, "EXT-ID");
         Source source = new Source("S1", "Name"); source.setId(2L);
 
-        when(placeRepository.findById(1L)).thenReturn(Optional.of(new Place()));
-        when(sourceRepository.findById(2L)).thenReturn(Optional.of(source));
-        when(placeSourceRepository.saveAndFlush(any(PlaceSource.class)))
+        when(placeRepositoryPort.findById(1L)).thenReturn(Optional.of(new Place()));
+        when(sourceRepositoryPort.findById(2L)).thenReturn(Optional.of(source));
+        when(placeSourceRepositoryPort.saveAndFlush(any(PlaceSource.class)))
                 .thenThrow(new DataIntegrityViolationException("uk_place_sources_source_external violation"));
 
         assertThrows(DuplicateResourceException.class, () -> placeSourceService.addPlaceSource(request));
@@ -79,7 +79,7 @@ class PlaceSourceServiceTest {
 
     @Test
     void addPlaceSource_PlaceNotFound_ThrowsResourceNotFound() {
-        when(placeRepository.findById(1L)).thenReturn(Optional.empty());
+        when(placeRepositoryPort.findById(1L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> placeSourceService.addPlaceSource(new PlaceSourceCreateRequest(1L, 2L, "E")));
     }
 }
