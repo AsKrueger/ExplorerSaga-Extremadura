@@ -11,21 +11,32 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 import java.io.IOException
 
+enum class DataSourceOrigin {
+    REMOTE,
+    LOCAL_FALLBACK,
+    NONE
+}
+
+data class PlacesResult(
+    val places: List<PlaceEntity>,
+    val origin: DataSourceOrigin
+)
+
 class PlaceRepository(private val context: Context) {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    suspend fun getPlaces(): List<PlaceEntity> = withContext(Dispatchers.IO) {
+    suspend fun getPlacesResult(): PlacesResult = withContext(Dispatchers.IO) {
         try {
             val remotePlaces = RetrofitClient.api.getPlaces()
             if (remotePlaces.isNotEmpty()) {
-                remotePlaces.map { it.toPlaceEntity() }
+                PlacesResult(remotePlaces.map { it.toPlaceEntity() }, DataSourceOrigin.REMOTE)
             } else {
-                loadPlacesFromAssets()
+                PlacesResult(loadPlacesFromAssets(), DataSourceOrigin.LOCAL_FALLBACK)
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            loadPlacesFromAssets()
+            PlacesResult(loadPlacesFromAssets(), DataSourceOrigin.LOCAL_FALLBACK)
         }
     }
 
@@ -40,12 +51,12 @@ class PlaceRepository(private val context: Context) {
         }
     }
 
-    fun getPlacesByCategories(categories: List<String>): Flow<List<PlaceEntity>> = flow {
-        val places = getPlaces()
-        val filtered = places.filter { place ->
+    fun getPlacesByCategories(categories: List<String>): Flow<PlacesResult> = flow {
+        val result = getPlacesResult()
+        val filtered = result.places.filter { place ->
             categories.any { cat -> place.category.contains(cat, ignoreCase = true) }
         }
-        emit(filtered)
+        emit(PlacesResult(filtered, result.origin))
     }
 
     fun getPlaceByIdFlow(id: Int): Flow<PlaceEntity?> = flow {

@@ -1,26 +1,22 @@
-# Walkthrough - Issue #15: Integración Android con el backend mediante Retrofit
+# Walkthrough - Issue #16: Transparencia del origen de datos y resiliencia de la aplicación Android
 
-Successfully integrated the Android application (`ExplorerSaga-Extremadura`) with the Spring Boot backend via Retrofit, connecting the mobile UI to real tourism data persisted in PostgreSQL and imported from OpenStreetMap.
+Successfully implemented data source transparency, fallback governance, and UI resilience features in the Android application (`ExplorerSaga-Extremadura`).
 
 ## Changes Made
 
-### 1. Retrofit & Network Configuration (`app/build.gradle.kts`, `libs.versions.toml`)
-- Added Retrofit (`2.9.0`), OkHttp Logging Interceptor, and Kotlinx Serialization Converter dependencies.
-- Configured Retrofit client in **`ExplorerSagaApi.kt`** targeting `http://10.0.2.2:8080/` for local Android emulator access.
+### 1. Data Source Origin Representation (`PlaceRepository.kt`, `PlacesViewModel.kt`)
+- **`DataSourceOrigin` Enum (`REMOTE`, `LOCAL_FALLBACK`, `NONE`)**: Added explicit data source representation.
+- **`PlacesResult` Wrapper**: Packages places list along with their provenance origin (`REMOTE` vs `LOCAL_FALLBACK`).
+- **`PlaceRepository`**: Differentiates between successful backend responses (`REMOTE`) and local JSON asset fallbacks (`LOCAL_FALLBACK`) when network errors occur or when the backend is unreachable.
 
-### 2. Android DTOs & Repository (`PlaceRepository.kt`)
-- Created **`PlaceResponseDto`** and **`CategoryResponseDto`** matching the backend OpenAPI contract.
-- Updated **`PlaceRepository`** to fetch remote places asynchronously via Retrofit (`ExplorerSagaApi.getPlaces()`), with fallback to local JSON asset files (`monuments.json`, `gastronomia.json`, `tiendas.json`) for resilience and offline support.
-
-### 3. ViewModel & UI State (`PlacesViewModel.kt`)
-- Updated `PlacesUiState` to include `isLoading` and `errorMessage` states.
-- Integrated repository flow collection with loading state updates.
+### 2. ViewModel & UI Resilience (`PlacesViewModel.kt`, `PlacesListScreen.kt`)
+- **`PlacesUiState`**: Updated to include `dataSourceOrigin` state.
+- **`PlacesViewModel.retry()`**: Added a manual retry action to re-trigger data loading without unnecessary duplicate re-compositions.
+- **`PlacesListScreen`**:
+  - Added a subtle data source indicator banner at the top (`🟢 Conectado al Backend` vs `🟡 Modo Local (Respaldo)`).
+  - Added an empty/error view with a **"Reintentar"** button when no data is available.
 
 ## Verification
 
-- **Android Gradle Sync**: Completed successfully.
-- **Backend Tests**: Verified that all backend tests continue passing (`36/36 tests passing, BUILD SUCCESS`).
-- **End-to-End Flow**:
-  1. Start PostgreSQL and Spring Boot backend (`.\mvnw.cmd spring-boot:run`).
-  2. Import tourism data from Overpass API (`POST /api/v1/places/import`).
-  3. Run Android application in emulator; Places are fetched in real-time from the backend REST API via Retrofit and displayed in the Compose UI.
+- **Backend Build & Tests**: Executed `.\mvnw.cmd clean verify` successfully (**BUILD SUCCESS**, **36/36 tests passing**).
+- **Android Integration**: App correctly identifies whether places were fetched via Retrofit from the backend or loaded from local assets when offline, providing clear user feedback and retry capabilities.
