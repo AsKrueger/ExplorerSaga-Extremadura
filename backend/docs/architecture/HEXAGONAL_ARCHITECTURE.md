@@ -62,7 +62,7 @@ Para garantizar rigor técnico y evitar presuponer componentes no implementados,
 | **Input Ports (Use Cases)** | **Implementado** | Interfaces de casos de uso (`CategoryUseCase`, etc.) para desacoplar controladores de servicios. |
 | **Output Ports (Repositories)** | **Implementado** | Interfaces de puertos de salida (`CategoryRepositoryPort`, etc.) para aislar la persistencia. |
 | **Persistence Adapters** | **Implementado** | Adaptadores JPA (`JpaCategoryRepositoryAdapter`, etc.) que implementan los Output Ports. |
-| **External Adapters** | **Futuro** | Clientes para integraciones con OpenStreetMap, Overpass, OpenData, etc. |
+| **External Adapters** | **Diseñado** | Definidos conceptualmente y puerto de salida (`TourismDataProvider`) especificado (Issue #12). |
 | **Domain independiente de JPA** | **Descartado temporalmente** | Evaluado en Issue #11. Se mantiene el modelo compartido pragmático detrás de los Output Ports para evitar boilerplate innecesario. |
 | **Location Value Object** | **A evaluar** | Objeto de valor para coordenadas geográficas con validación de invariantes. |
 
