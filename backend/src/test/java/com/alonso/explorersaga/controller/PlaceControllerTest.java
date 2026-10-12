@@ -90,7 +90,7 @@ class PlaceControllerTest {
     void listPlaces_Success() throws Exception {
         PlaceResponse response = new PlaceResponse();
         response.setName("P");
-        when(placeUseCase.listPlaces()).thenReturn(List.of(response));
+        when(placeUseCase.listPlaces(any())).thenReturn(List.of(response));
 
         mockMvc.perform(get("/api/v1/places"))
                 .andExpect(status().isOk())

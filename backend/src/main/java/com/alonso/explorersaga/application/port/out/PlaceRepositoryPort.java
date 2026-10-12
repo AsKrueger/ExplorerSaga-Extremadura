@@ -9,4 +9,5 @@ public interface PlaceRepositoryPort {
     Place save(Place place);
     Optional<Place> findById(Long id);
     List<Place> findAll();
+    List<Place> findByCategoryNameIgnoreCase(String name);
 }

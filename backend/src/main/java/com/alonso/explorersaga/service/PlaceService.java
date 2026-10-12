@@ -58,7 +58,17 @@ public class PlaceService implements PlaceUseCase {
     @Override
     @Transactional(readOnly = true)
     public List<PlaceResponse> listPlaces() {
-        return placeRepositoryPort.findAll().stream()
+        return listPlaces(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PlaceResponse> listPlaces(String category) {
+        List<Place> places = (category != null && !category.isBlank())
+                ? placeRepositoryPort.findByCategoryNameIgnoreCase(category)
+                : placeRepositoryPort.findAll();
+
+        return places.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
