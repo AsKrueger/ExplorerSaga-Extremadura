@@ -8,6 +8,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 @Serializable
 data class CategoryResponseDto(
@@ -29,7 +30,7 @@ data class PlaceResponseDto(
 
 interface ExplorerSagaApi {
     @GET("api/v1/places")
-    suspend fun getPlaces(): List<PlaceResponseDto>
+    suspend fun getPlaces(@Query("category") category: String? = null): List<PlaceResponseDto>
 
     @GET("api/v1/places/{id}")
     suspend fun getPlaceById(@Path("id") id: Long): PlaceResponseDto
