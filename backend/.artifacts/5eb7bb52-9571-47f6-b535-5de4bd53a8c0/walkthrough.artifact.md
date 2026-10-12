@@ -1,29 +1,23 @@
-# Walkthrough - Issue #13: Implementación del adaptador OpenStreetMap / Overpass API
+# Walkthrough - Issue #14: Importación idempotente e identidad externa de lugares
 
-Successfully implemented the first functional external data adapter for ExplorerSaga Backend, enabling tourism place ingestion from OpenStreetMap via Overpass API while respecting Hexagonal Architecture boundaries and achieving 0 € operating cost.
+Successfully implemented idempotent import handling for ExplorerSaga Backend, ensuring that repeated executions of the OpenStreetMap Overpass API import do not create duplicate places or duplicate provenance relations (`PlaceSource`), while properly tracking metrics (`processed`, `inserted`, `updated`, `skipped`, `failed`).
 
 ## Changes Made
 
-### 1. Application Ports & Use Cases
-- **`TourismDataProvider.java`** & **`NormalizedPlaceData.java`**: Output port contract and normalized data record in `com.alonso.explorersaga.application.port.out`.
-- **`ImportTourismPlacesUseCase.java`** & **`ImportResult.java`**: Input port and result record in `com.alonso.explorersaga.application.port.in`.
+### 1. Enhanced Import Result & Idempotency Logic
+- **`ImportResult.java`**: Expanded record to track `processed`, `inserted`, `updated`, `skipped`, and `failed`.
+- **`ImportTourismPlacesService.java`**: Implemented robust idempotence checking using `PlaceSourceRepositoryPort.findBySourceAndExternalId`. If an external item (`type/id` e.g., `"node/123"`) is already associated with the source, the service updates mutable place fields (name, description, address, coordinates, category) if any changes occurred (`updated++`), or skips (`skipped++`) if identical. If not found, it inserts a new place and provenance link (`inserted++`).
 
-### 2. Infrastructure Adapter (Overpass API)
-- **`OverpassAdapter.java`**: Implements `TourismDataProvider`, querying Overpass API (`https://overpass-api.de/api/interpreter`) specifically for tourist attractions, monuments, and places of worship in Mérida, converting raw responses into normalized application records.
-- **`OverpassResponseDto.java`**, **`OverpassElementDto.java`**, **`OverpassCenterDto.java`**: Isolated Jackson DTOs for JSON deserialization of Overpass responses.
+### 2. External Identity (`type/id`)
+- Maintained stable external identity format combining OpenStreetMap element type and numeric ID (`node/123`, `way/456`), preventing ID collisions across different OSM element types.
 
-### 3. Application Service & REST Endpoint
-- **`ImportTourismPlacesService.java`**: Implements `ImportTourismPlacesUseCase`, coordinating data fetching, source resolution (`Source`), duplicate checking (`PlaceSource`), category resolution (`Category`), and persistence via output ports.
-- **`PlaceController.java`**: Added `POST /api/v1/places/import` endpoint to trigger the import flow on-demand.
-
-### 4. Configuration & Testing
-- **`application-dev.yml`**: Added Overpass provider configuration parameters (base URL and timeout).
-- **`ImportTourismPlacesServiceTest.java`**: Unit tests verifying the import flow and persistence delegation using mocked output ports without requiring live network connections.
-- **`HEXAGONAL_ARCHITECTURE.md`**: Updated component status matrix marking **External Adapters** as *Implementado*.
+### 3. Unit & Controller Tests
+- **`ImportTourismPlacesServiceTest.java`**: Added unit tests for initial import success and idempotent re-import skipping/updating.
+- **`PlaceControllerTest.java`**: Updated endpoint test for `POST /api/v1/places/import` to validate the updated `ImportResult` structure.
 
 ## Verification Results
 
 ### Automated Tests & Build
 - Executed `.\mvnw.cmd clean verify` successfully.
 - **BUILD SUCCESS**
-- **35/35 tests passed successfully** (including new import service unit tests and updated controller tests).
+- **36/36 tests passed successfully** (unit tests, idempotence tests, controller tests, integration tests, and persistence tests).

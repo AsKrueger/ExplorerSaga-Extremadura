@@ -46,6 +46,7 @@ public class ImportTourismPlacesService implements ImportTourismPlacesUseCase {
         List<NormalizedPlaceData> rawPlaces = tourismDataProvider.fetchTourismPlaces();
         int processed = 0;
         int inserted = 0;
+        int updated = 0;
         int skipped = 0;
         int failed = 0;
 
@@ -67,10 +68,6 @@ public class ImportTourismPlacesService implements ImportTourismPlacesUseCase {
 
                 // 2. Check if PlaceSource already exists
                 Optional<PlaceSource> existing = placeSourceRepositoryPort.findBySourceAndExternalId(source, data.externalId());
-                if (existing.isPresent()) {
-                    skipped++;
-                    continue;
-                }
 
                 // 3. Find or create Category
                 String catName = data.categoryName() != null ? data.categoryName() : "Monument";
@@ -80,31 +77,69 @@ public class ImportTourismPlacesService implements ImportTourismPlacesUseCase {
                             return categoryRepositoryPort.save(newCat);
                         });
 
-                // 4. Save Place
-                Place place = new Place();
-                place.setName(data.name());
-                place.setDescription(data.description());
-                place.setAddress(data.address());
-                place.setLatitude(data.latitude());
-                place.setLongitude(data.longitude());
-                place.setCategory(category);
-                Place savedPlace = placeRepositoryPort.save(place);
+                if (existing.isPresent()) {
+                    Place place = existing.get().getPlace();
+                    boolean changed = false;
+                    if (data.name() != null && !data.name().equals(place.getName())) {
+                        place.setName(data.name());
+                        changed = true;
+                    }
+                    if (data.description() != null && !data.description().equals(place.getDescription())) {
+                        place.setDescription(data.description());
+                        changed = true;
+                    }
+                    if (data.address() != null && !data.address().equals(place.getAddress())) {
+                        place.setAddress(data.address());
+                        changed = true;
+                    }
+                    if (data.latitude() != null && !data.latitude().equals(place.getLatitude())) {
+                        place.setLatitude(data.latitude());
+                        changed = true;
+                    }
+                    if (data.longitude() != null && !data.longitude().equals(place.getLongitude())) {
+                        place.setLongitude(data.longitude());
+                        changed = true;
+                    }
+                    if (!place.getCategory().equals(category)) {
+                        place.setCategory(category);
+                        changed = true;
+                    }
 
-                // 5. Save PlaceSource
-                PlaceSource placeSource = new PlaceSource();
-                placeSource.setPlace(savedPlace);
-                placeSource.setSource(source);
-                placeSource.setExternalId(data.externalId());
-                placeSource.setLastSync(OffsetDateTime.now());
-                placeSourceRepositoryPort.saveAndFlush(placeSource);
+                    if (changed) {
+                        placeRepositoryPort.save(place);
+                        existing.get().setLastSync(OffsetDateTime.now());
+                        placeSourceRepositoryPort.saveAndFlush(existing.get());
+                        updated++;
+                    } else {
+                        skipped++;
+                    }
+                } else {
+                    // Save new Place
+                    Place place = new Place();
+                    place.setName(data.name());
+                    place.setDescription(data.description());
+                    place.setAddress(data.address());
+                    place.setLatitude(data.latitude());
+                    place.setLongitude(data.longitude());
+                    place.setCategory(category);
+                    Place savedPlace = placeRepositoryPort.save(place);
 
-                inserted++;
+                    // Save PlaceSource
+                    PlaceSource placeSource = new PlaceSource();
+                    placeSource.setPlace(savedPlace);
+                    placeSource.setSource(source);
+                    placeSource.setExternalId(data.externalId());
+                    placeSource.setLastSync(OffsetDateTime.now());
+                    placeSourceRepositoryPort.saveAndFlush(placeSource);
+
+                    inserted++;
+                }
             } catch (Exception e) {
                 logger.error("Failed to import place {}: {}", data.externalId(), e.getMessage());
                 failed++;
             }
         }
 
-        return new ImportResult(processed, inserted, skipped, failed);
+        return new ImportResult(processed, inserted, updated, skipped, failed);
     }
 }

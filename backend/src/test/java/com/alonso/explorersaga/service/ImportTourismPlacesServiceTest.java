@@ -74,10 +74,59 @@ class ImportTourismPlacesServiceTest {
 
         assertThat(result.processed()).isEqualTo(1);
         assertThat(result.inserted()).isEqualTo(1);
+        assertThat(result.updated()).isEqualTo(0);
         assertThat(result.skipped()).isEqualTo(0);
         assertThat(result.failed()).isEqualTo(0);
 
         verify(placeRepositoryPort).save(any(Place.class));
         verify(placeSourceRepositoryPort).saveAndFlush(any(PlaceSource.class));
+    }
+
+    @Test
+    void importPlaces_Idempotent_AlreadyExists_Skipped() {
+        NormalizedPlaceData data = new NormalizedPlaceData(
+                "node/123",
+                "OSM_OVERPASS",
+                "Teatro Romano de Mérida",
+                "Roman theatre",
+                "Calle Jose Ramon Melida",
+                38.9,
+                -6.3,
+                "Historical Monument"
+        );
+
+        when(tourismDataProvider.fetchTourismPlaces()).thenReturn(List.of(data));
+        Source source = new Source("OSM_OVERPASS", "OSM");
+        source.setId(1L);
+        when(sourceRepositoryPort.findByCode("OSM_OVERPASS")).thenReturn(Optional.of(source));
+
+        Category category = new Category("Historical Monument", "Desc");
+        category.setId(1L);
+        when(categoryRepositoryPort.findByName("Historical Monument")).thenReturn(Optional.of(category));
+
+        Place place = new Place();
+        place.setName("Teatro Romano de Mérida");
+        place.setDescription("Roman theatre");
+        place.setAddress("Calle Jose Ramon Melida");
+        place.setLatitude(38.9);
+        place.setLongitude(-6.3);
+        place.setCategory(category);
+
+        PlaceSource placeSource = new PlaceSource();
+        placeSource.setPlace(place);
+        placeSource.setSource(source);
+        placeSource.setExternalId("node/123");
+
+        when(placeSourceRepositoryPort.findBySourceAndExternalId(source, "node/123")).thenReturn(Optional.of(placeSource));
+
+        ImportResult result = importService.importPlaces();
+
+        assertThat(result.processed()).isEqualTo(1);
+        assertThat(result.inserted()).isEqualTo(0);
+        assertThat(result.updated()).isEqualTo(0);
+        assertThat(result.skipped()).isEqualTo(1);
+        assertThat(result.failed()).isEqualTo(0);
+
+        verify(placeRepositoryPort, never()).save(any());
     }
 }
