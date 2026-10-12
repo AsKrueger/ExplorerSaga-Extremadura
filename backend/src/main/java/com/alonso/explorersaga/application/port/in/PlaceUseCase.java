@@ -9,4 +9,5 @@ public interface PlaceUseCase {
     PlaceResponse createPlace(PlaceCreateRequest request);
     PlaceResponse getPlace(Long id);
     List<PlaceResponse> listPlaces();
+    List<PlaceResponse> listPlaces(String category);
 }

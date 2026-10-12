@@ -26,17 +26,21 @@ class PlaceRepository(private val context: Context) {
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    suspend fun getPlacesResult(): PlacesResult = withContext(Dispatchers.IO) {
+    suspend fun getPlacesResult(category: String? = null): PlacesResult = withContext(Dispatchers.IO) {
         try {
-            val remotePlaces = RetrofitClient.api.getPlaces()
+            val remotePlaces = RetrofitClient.api.getPlaces(category)
             if (remotePlaces.isNotEmpty()) {
                 PlacesResult(remotePlaces.map { it.toPlaceEntity() }, DataSourceOrigin.REMOTE)
             } else {
-                PlacesResult(loadPlacesFromAssets(), DataSourceOrigin.LOCAL_FALLBACK)
+                val localPlaces = loadPlacesFromAssets()
+                val filteredLocal = if (category != null) localPlaces.filter { it.category.contains(category, ignoreCase = true) } else localPlaces
+                PlacesResult(filteredLocal, DataSourceOrigin.LOCAL_FALLBACK)
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            PlacesResult(loadPlacesFromAssets(), DataSourceOrigin.LOCAL_FALLBACK)
+            val localPlaces = loadPlacesFromAssets()
+            val filteredLocal = if (category != null) localPlaces.filter { it.category.contains(category, ignoreCase = true) } else localPlaces
+            PlacesResult(filteredLocal, DataSourceOrigin.LOCAL_FALLBACK)
         }
     }
 
@@ -52,9 +56,15 @@ class PlaceRepository(private val context: Context) {
     }
 
     fun getPlacesByCategories(categories: List<String>): Flow<PlacesResult> = flow {
-        val result = getPlacesResult()
-        val filtered = result.places.filter { place ->
-            categories.any { cat -> place.category.contains(cat, ignoreCase = true) }
+        // If single category selected, pass it to backend query
+        val categoryQuery = if (categories.size == 1) categories.first() else null
+        val result = getPlacesResult(categoryQuery)
+        val filtered = if (categoryQuery != null) {
+            result.places
+        } else {
+            result.places.filter { place ->
+                categories.any { cat -> place.category.contains(cat, ignoreCase = true) }
+            }
         }
         emit(PlacesResult(filtered, result.origin))
     }

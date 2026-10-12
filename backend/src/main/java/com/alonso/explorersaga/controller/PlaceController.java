@@ -76,12 +76,13 @@ public class PlaceController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos los lugares turísticos", description = "Devuelve el listado completo de lugares turísticos registrados.")
+    @Operation(summary = "Listar todos los lugares turísticos", description = "Devuelve el listado completo de lugares turísticos registrados, opcionalmente filtrados por categoría.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Listado recuperado con éxito",
                     content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = PlaceResponse.class))))
     })
-    public ResponseEntity<List<PlaceResponse>> listPlaces() {
-        return ResponseEntity.ok(placeUseCase.listPlaces());
+    public ResponseEntity<List<PlaceResponse>> listPlaces(
+            @Parameter(description = "Categoría para filtrar los lugares", example = "Monument") @RequestParam(required = false) String category) {
+        return ResponseEntity.ok(placeUseCase.listPlaces(category));
     }
 }
