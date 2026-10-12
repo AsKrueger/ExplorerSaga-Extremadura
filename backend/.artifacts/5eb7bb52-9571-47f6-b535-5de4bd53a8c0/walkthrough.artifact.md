@@ -1,22 +1,20 @@
-# Walkthrough - Issue #16: Transparencia del origen de datos y resiliencia de la aplicación Android
+# Walkthrough - Issue #18: Auditoría funcional y validación de extremo a extremo del MVP
 
-Successfully implemented data source transparency, fallback governance, and UI resilience features in the Android application (`ExplorerSaga-Extremadura`).
+Successfully completed the functional end-to-end audit of the ExplorerSaga-Extremadura MVP and generated the comprehensive verification report (`docs/testing/MVP_END_TO_END_AUDIT.md`).
 
 ## Changes Made
 
-### 1. Data Source Origin Representation (`PlaceRepository.kt`, `PlacesViewModel.kt`)
-- **`DataSourceOrigin` Enum (`REMOTE`, `LOCAL_FALLBACK`, `NONE`)**: Added explicit data source representation.
-- **`PlacesResult` Wrapper**: Packages places list along with their provenance origin (`REMOTE` vs `LOCAL_FALLBACK`).
-- **`PlaceRepository`**: Differentiates between successful backend responses (`REMOTE`) and local JSON asset fallbacks (`LOCAL_FALLBACK`) when network errors occur or when the backend is unreachable.
+### 1. End-to-End Audit Report
+- **[MVP_END_TO_END_AUDIT.md](file:///C:/Users/lovei/Documents/XD/ExplorerSaga-Extremadura/docs/testing/MVP_END_TO_END_AUDIT.md)**: Created the formal audit document covering:
+  - Validation of the complete E2E flow (`OverpassAdapter` → `ImportTourismPlacesService` → PostgreSQL → REST API `/api/v1/places` & `?category=` → Retrofit → `PlaceRepository` → `PlacesViewModel` → Jetpack Compose UI).
+  - Verification of import idempotence (`inserted`, `updated`, `skipped` metrics).
+  - Verification of category filtering in both backend (`findByCategoryNameIgnoreCase`) and Android Retrofit client.
+  - Verification of data source origin transparency (`REMOTE` vs `LOCAL_FALLBACK`) and retry capabilities.
 
-### 2. ViewModel & UI Resilience (`PlacesViewModel.kt`, `PlacesListScreen.kt`)
-- **`PlacesUiState`**: Updated to include `dataSourceOrigin` state.
-- **`PlacesViewModel.retry()`**: Added a manual retry action to re-trigger data loading without unnecessary duplicate re-compositions.
-- **`PlacesListScreen`**:
-  - Added a subtle data source indicator banner at the top (`🟢 Conectado al Backend` vs `🟡 Modo Local (Respaldo)`).
-  - Added an empty/error view with a **"Reintentar"** button when no data is available.
+## Verification Results
 
-## Verification
-
-- **Backend Build & Tests**: Executed `.\mvnw.cmd clean verify` successfully (**BUILD SUCCESS**, **36/36 tests passing**).
-- **Android Integration**: App correctly identifies whether places were fetched via Retrofit from the backend or loaded from local assets when offline, providing clear user feedback and retry capabilities.
+### Automated Tests & Build
+- Executed `.\mvnw.cmd clean verify` successfully.
+- **BUILD SUCCESS**
+- **36/36 backend tests passed successfully**.
+- MVP criteria fully validated and documented.
