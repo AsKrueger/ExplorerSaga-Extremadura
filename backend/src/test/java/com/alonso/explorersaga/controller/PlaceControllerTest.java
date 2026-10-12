@@ -99,12 +99,13 @@ class PlaceControllerTest {
 
     @Test
     void importPlaces_Success() throws Exception {
-        ImportResult importResult = new ImportResult(10, 8, 2, 0);
+        ImportResult importResult = new ImportResult(10, 8, 1, 1, 0);
         when(importTourismPlacesUseCase.importPlaces()).thenReturn(importResult);
 
         mockMvc.perform(post("/api/v1/places/import"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.processed").value(10))
-                .andExpect(jsonPath("$.inserted").value(8));
+                .andExpect(jsonPath("$.inserted").value(8))
+                .andExpect(jsonPath("$.updated").value(1));
     }
 }
