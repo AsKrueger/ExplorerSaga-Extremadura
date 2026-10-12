@@ -1,8 +1,18 @@
 package com.alonso.explorersaga.dto.placesource;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class PlaceSourceCreateRequest {
+    @NotNull
     private Long placeId;
+
+    @NotNull
     private Long sourceId;
+
+    @NotBlank
+    @Size(max = 255)
     private String externalId;
 
     public PlaceSourceCreateRequest() {}

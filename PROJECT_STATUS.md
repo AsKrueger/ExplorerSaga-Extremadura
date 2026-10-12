@@ -57,6 +57,13 @@ Esta es la lista de tareas pendientes, divididas como "Issues" para una gestión
     -   Validación de reglas de negocio (coordenadas, existencia, duplicados).
     -   Estrategia de tests unitarios (Mockito) e integración (E2E Service-to-DB).
 
+-   **Issue #6: [API REST del dominio] - COMPLETADO ✅**
+    -   Implementación de controladores REST versionados (/api/v1).
+    -   Manejo global de excepciones y formato común de errores HTTP.
+    -   Validación de entrada robusta (Bean Validation + Custom rules).
+    -   Documentación interactiva con Swagger/OpenAPI.
+    -   Tests de integración E2E (HTTP -> Controller -> DB).
+
 -   **Issue #1: [Instalar Room]** - Instalar de forma segura las dependencias de Room y KSP, usando una configuración de versiones estable para evitar los conflictos de compilación anteriores.
 -   **Issue #2: [Poblar la Base de Datos]** - Crear un sistema que, la primera vez que se abre la app, lea los datos de un archivo local (ej. un `JSON` en los assets) y los inserte en la base de datos Room.
 -   **Issue #3: [Conectar Vistas a la Base de Datos]** - Refactorizar todas las pantallas de listado (`MonumentsListScreen`, etc.) para que obtengan sus datos desde un `ViewModel` conectado a la base de datos, en lugar de usar las listas estáticas.

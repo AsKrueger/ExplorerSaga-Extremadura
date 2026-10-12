@@ -1,0 +1,5 @@
+- [x] Perform domain and JPA coupling audit for `Category`, `Source`, `Place`, `PlaceSource`, and `Location`
+- [x] Create `docs/architecture/DOMAIN_MODEL.md` documenting domain responsibilities, evaluation, and architectural decisions (concluding with pragmatic deferred domain/JPA separation)
+- [x] Update `docs/architecture/HEXAGONAL_ARCHITECTURE.md` with domain evaluation conclusions
+- [x] Run `.\mvnw.cmd clean verify` and confirm build success and all 33 tests passing
+- [x] Generate walkthrough artifact (`walkthrough.artifact.md`)
