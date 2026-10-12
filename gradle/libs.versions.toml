@@ -17,6 +17,11 @@ sqlite = "2.4.0"
 # Serialización compatible
 kotlinxSerializationJson = "1.6.3"
 
+# Red (Retrofit & OkHttp)
+retrofit = "2.9.0"
+okhttp = "4.12.0"
+retrofitKotlinxSerializationConverter = "1.0.0"
+
 # Otras dependencias
 osmdroidAndroid = "6.1.18"
 junit = "4.13.2"
@@ -31,6 +36,11 @@ androidx-activity-compose = { group = "androidx.activity", name = "activity-comp
 
 # Serialización
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+
+# Red (Retrofit & OkHttp)
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-kotlinx-serialization-converter = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofitKotlinxSerializationConverter" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 
 # Compose - Usamos la BOM (Bill of Materials) para que gestione las versiones internas
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }

@@ -8,13 +8,16 @@ import com.alonso.explorersaga.model.Place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class PlacesUiState(
     val places: List<Place> = emptyList(),
     val filterState: FilterState = FilterState(),
-    val selectedPlace: Place? = null
+    val selectedPlace: Place? = null,
+    val isLoading: Boolean = false,
+    val errorMessage: String? = null
 )
 
 // El estado de filtro definitivo con todas las subcategorías
@@ -46,6 +49,7 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
     init {
         viewModelScope.launch {
             _filterState.flatMapLatest { filters ->
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                 val activeCategories = mutableListOf<String>()
                 if (filters.monuments) activeCategories.add("monumento")
                 if (filters.iglesias) activeCategories.add("iglesia")
@@ -62,7 +66,7 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
                 if (filters.tiendasGenerales) activeCategories.add("tienda_general")
 
                 if (activeCategories.isEmpty()) {
-                    kotlinx.coroutines.flow.flowOf(emptyList<PlaceEntity>())
+                    flowOf(emptyList<PlaceEntity>())
                 } else {
                     repository.getPlacesByCategories(activeCategories)
                 }
@@ -70,7 +74,8 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
                 _uiState.update { currentState ->
                     currentState.copy(
                         places = placesFromDb.map { it.toPlaceUiModel() },
-                        filterState = _filterState.value
+                        filterState = _filterState.value,
+                        isLoading = false
                     )
                 }
             }
@@ -87,7 +92,7 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     fun loadPlaceById(id: Int) {
         viewModelScope.launch {
-            repository.getPlaceById(id).collect { placeEntity ->
+            repository.getPlaceByIdFlow(id).collect { placeEntity ->
                 _uiState.update { currentState ->
                     currentState.copy(selectedPlace = placeEntity?.toPlaceUiModel())
                 }

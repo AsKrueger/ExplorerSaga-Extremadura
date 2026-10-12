@@ -1,23 +1,26 @@
-# Walkthrough - Issue #14: Importación idempotente e identidad externa de lugares
+# Walkthrough - Issue #15: Integración Android con el backend mediante Retrofit
 
-Successfully implemented idempotent import handling for ExplorerSaga Backend, ensuring that repeated executions of the OpenStreetMap Overpass API import do not create duplicate places or duplicate provenance relations (`PlaceSource`), while properly tracking metrics (`processed`, `inserted`, `updated`, `skipped`, `failed`).
+Successfully integrated the Android application (`ExplorerSaga-Extremadura`) with the Spring Boot backend via Retrofit, connecting the mobile UI to real tourism data persisted in PostgreSQL and imported from OpenStreetMap.
 
 ## Changes Made
 
-### 1. Enhanced Import Result & Idempotency Logic
-- **`ImportResult.java`**: Expanded record to track `processed`, `inserted`, `updated`, `skipped`, and `failed`.
-- **`ImportTourismPlacesService.java`**: Implemented robust idempotence checking using `PlaceSourceRepositoryPort.findBySourceAndExternalId`. If an external item (`type/id` e.g., `"node/123"`) is already associated with the source, the service updates mutable place fields (name, description, address, coordinates, category) if any changes occurred (`updated++`), or skips (`skipped++`) if identical. If not found, it inserts a new place and provenance link (`inserted++`).
+### 1. Retrofit & Network Configuration (`app/build.gradle.kts`, `libs.versions.toml`)
+- Added Retrofit (`2.9.0`), OkHttp Logging Interceptor, and Kotlinx Serialization Converter dependencies.
+- Configured Retrofit client in **`ExplorerSagaApi.kt`** targeting `http://10.0.2.2:8080/` for local Android emulator access.
 
-### 2. External Identity (`type/id`)
-- Maintained stable external identity format combining OpenStreetMap element type and numeric ID (`node/123`, `way/456`), preventing ID collisions across different OSM element types.
+### 2. Android DTOs & Repository (`PlaceRepository.kt`)
+- Created **`PlaceResponseDto`** and **`CategoryResponseDto`** matching the backend OpenAPI contract.
+- Updated **`PlaceRepository`** to fetch remote places asynchronously via Retrofit (`ExplorerSagaApi.getPlaces()`), with fallback to local JSON asset files (`monuments.json`, `gastronomia.json`, `tiendas.json`) for resilience and offline support.
 
-### 3. Unit & Controller Tests
-- **`ImportTourismPlacesServiceTest.java`**: Added unit tests for initial import success and idempotent re-import skipping/updating.
-- **`PlaceControllerTest.java`**: Updated endpoint test for `POST /api/v1/places/import` to validate the updated `ImportResult` structure.
+### 3. ViewModel & UI State (`PlacesViewModel.kt`)
+- Updated `PlacesUiState` to include `isLoading` and `errorMessage` states.
+- Integrated repository flow collection with loading state updates.
 
-## Verification Results
+## Verification
 
-### Automated Tests & Build
-- Executed `.\mvnw.cmd clean verify` successfully.
-- **BUILD SUCCESS**
-- **36/36 tests passed successfully** (unit tests, idempotence tests, controller tests, integration tests, and persistence tests).
+- **Android Gradle Sync**: Completed successfully.
+- **Backend Tests**: Verified that all backend tests continue passing (`36/36 tests passing, BUILD SUCCESS`).
+- **End-to-End Flow**:
+  1. Start PostgreSQL and Spring Boot backend (`.\mvnw.cmd spring-boot:run`).
+  2. Import tourism data from Overpass API (`POST /api/v1/places/import`).
+  3. Run Android application in emulator; Places are fetched in real-time from the backend REST API via Retrofit and displayed in the Compose UI.
