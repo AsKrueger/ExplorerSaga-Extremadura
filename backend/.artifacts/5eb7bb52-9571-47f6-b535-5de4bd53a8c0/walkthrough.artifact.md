@@ -1,24 +1,19 @@
-# Walkthrough - Issue #17 & Issue #18: Filtros de Categoría y Auditoría E2E del MVP
+# Walkthrough - Issue #19: Auditoría de cobertura y calidad de datos turísticos de Mérida
 
-Successfully implemented category filtering and completed the functional end-to-end audit of the ExplorerSaga-Extremadura MVP, generating the formal verification report (`docs/testing/MVP_END_TO_END_AUDIT.md`).
+Successfully completed the tourism data coverage and quality audit for Mérida (`docs/testing/MERIDA_DATA_QUALITY_AUDIT.md`), evaluating OpenStreetMap / Overpass API results and confirming that no second external source is necessary for the MVP.
 
 ## Changes Made
 
-### 1. Backend & Android Category Filtering (Issue #17)
-- **Backend**: Added `findByCategoryNameIgnoreCase` in `PlaceRepository`, overloaded `listPlaces(String category)` in `PlaceUseCase`/`PlaceService`, and added `?category=` request parameter in `PlaceController`.
-- **Android**: Updated `ExplorerSagaApi` and `PlaceRepository` to forward category queries while maintaining offline JSON asset fallback.
-
-### 2. End-to-End Audit Report (Issue #18)
-- **[MVP_END_TO_END_AUDIT.md](file:///C:/Users/lovei/Documents/XD/ExplorerSaga-Extremadura/docs/testing/MVP_END_TO_END_AUDIT.md)**: Created the formal audit document covering:
-  - Validation of the complete E2E flow (`OverpassAdapter` → `ImportTourismPlacesService` → PostgreSQL → REST API `/api/v1/places` & `?category=` → Retrofit → `PlaceRepository` → `PlacesViewModel` → Jetpack Compose UI).
-  - Verification of import idempotence (`inserted`, `updated`, `skipped` metrics).
-  - Verification of category filtering in both backend and Android client.
-  - Verification of data source origin transparency (`REMOTE` vs `LOCAL_FALLBACK`) and retry capabilities.
+### 1. Data Quality & Coverage Audit Report
+- **[MERIDA_DATA_QUALITY_AUDIT.md](file:///C:/Users/lovei/Documents/XD/ExplorerSaga-Extremadura/docs/testing/MERIDA_DATA_QUALITY_AUDIT.md)**: Created the formal audit document covering:
+  - Inventory and geographic bounding box strategy for Mérida (`38.88,-6.36,38.95,-6.30`).
+  - Distribution by categories (`Historical Monument`, `Tourism Attraction`, `Religious Site`).
+  - Evaluation of data consistency (coordinates, stable external identity `type/id`, idempotence).
+  - **Justified Decision**: Concluded that OpenStreetMap provides sufficient, accurate coverage of Mérida's key monuments and tourist attractions at 0 € operating cost, making a second external source unnecessary for the MVP.
 
 ## Verification Results
 
 ### Automated Tests & Build
 - Executed `.\mvnw.cmd clean verify` successfully.
 - **BUILD SUCCESS**
-- **36/36 backend tests passed successfully**.
-- MVP criteria fully validated and documented.
+- **Tests passed successfully**.
