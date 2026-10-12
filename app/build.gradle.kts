@@ -56,6 +56,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
 
+    // Retrofit & OkHttp
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx.serialization.converter)
+    implementation(libs.okhttp.logging.interceptor)
+
     // Coil para carga de imágenes
     implementation("io.coil-kt:coil-compose:2.6.0")
 

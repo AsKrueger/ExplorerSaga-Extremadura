@@ -1,0 +1,18 @@
+# Test configuration using H2 in PostgreSQL mode
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_LOWER=true;DB_CLOSE_DELAY=-1
+    username: sa
+    password: 
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+    clean-disabled: true
+
+logging:
+  level:
+    org.springframework: INFO
+    org.hibernate: ERROR

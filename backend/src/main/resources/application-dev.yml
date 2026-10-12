@@ -1,0 +1,26 @@
+# Development configuration
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/explorersaga
+    username: explorersaga_user
+    password: explorersaga_password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  flyway:
+    enabled: true
+
+explorersaga:
+  providers:
+    overpass:
+      base-url: https://overpass-api.de/api/interpreter
+      timeout-ms: 10000
+
+logging:
+  level:
+    com.alonso.explorersaga: DEBUG
