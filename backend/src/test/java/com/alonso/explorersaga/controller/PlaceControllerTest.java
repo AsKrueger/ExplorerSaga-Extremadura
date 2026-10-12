@@ -1,10 +1,11 @@
 package com.alonso.explorersaga.controller;
 
+import com.alonso.explorersaga.application.port.in.ImportResult;
+import com.alonso.explorersaga.application.port.in.ImportTourismPlacesUseCase;
+import com.alonso.explorersaga.application.port.in.PlaceUseCase;
 import com.alonso.explorersaga.dto.category.CategoryResponse;
 import com.alonso.explorersaga.dto.place.PlaceCreateRequest;
 import com.alonso.explorersaga.dto.place.PlaceResponse;
-import com.alonso.explorersaga.exception.InvalidDataException;
-import com.alonso.explorersaga.service.PlaceService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,10 @@ class PlaceControllerTest {
     private ObjectMapper objectMapper;
 
     @MockBean
-    private PlaceService placeService;
+    private PlaceUseCase placeUseCase;
+
+    @MockBean
+    private ImportTourismPlacesUseCase importTourismPlacesUseCase;
 
     @Test
     void createPlace_Success() throws Exception {
@@ -47,7 +51,7 @@ class PlaceControllerTest {
         response.setName("Teatro");
         response.setCategory(new CategoryResponse(1L, "CAT", "D"));
 
-        when(placeService.createPlace(any())).thenReturn(response);
+        when(placeUseCase.createPlace(any())).thenReturn(response);
 
         mockMvc.perform(post("/api/v1/places")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -75,7 +79,7 @@ class PlaceControllerTest {
         PlaceResponse response = new PlaceResponse();
         response.setId(1L);
         response.setName("P");
-        when(placeService.getPlace(1L)).thenReturn(response);
+        when(placeUseCase.getPlace(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/places/1"))
                 .andExpect(status().isOk())
@@ -86,10 +90,21 @@ class PlaceControllerTest {
     void listPlaces_Success() throws Exception {
         PlaceResponse response = new PlaceResponse();
         response.setName("P");
-        when(placeService.listPlaces()).thenReturn(List.of(response));
+        when(placeUseCase.listPlaces()).thenReturn(List.of(response));
 
         mockMvc.perform(get("/api/v1/places"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].name").value("P"));
+    }
+
+    @Test
+    void importPlaces_Success() throws Exception {
+        ImportResult importResult = new ImportResult(10, 8, 2, 0);
+        when(importTourismPlacesUseCase.importPlaces()).thenReturn(importResult);
+
+        mockMvc.perform(post("/api/v1/places/import"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.processed").value(10))
+                .andExpect(jsonPath("$.inserted").value(8));
     }
 }
