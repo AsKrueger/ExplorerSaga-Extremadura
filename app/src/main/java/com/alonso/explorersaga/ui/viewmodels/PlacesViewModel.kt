@@ -61,19 +61,61 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
             _filterState.flatMapLatest { filters ->
                 _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                 val activeCategories = mutableListOf<String>()
-                if (filters.monuments) activeCategories.add("monumento")
-                if (filters.iglesias) activeCategories.add("iglesia")
-                if (filters.museos) activeCategories.add("museo")
-                if (filters.restaurants) activeCategories.add("restaurante")
-                if (filters.cafeterias) activeCategories.add("cafeteria")
-                if (filters.bar) activeCategories.add("bar")
-                if (filters.helados) activeCategories.add("heladeria")
-                if (filters.tiendaAlimentos) activeCategories.add("tienda_alimentos")
-                if (filters.souvenirs) activeCategories.add("souvenir")
-                if (filters.supermercados) activeCategories.add("supermercado")
-                if (filters.libreria) activeCategories.add("libreria")
-                if (filters.ropa) activeCategories.add("ropa")
-                if (filters.tiendasGenerales) activeCategories.add("tienda_general")
+                if (filters.monuments) {
+                    activeCategories.add("monumento")
+                    activeCategories.add("monument")
+                    activeCategories.add("historical")
+                }
+                if (filters.iglesias) {
+                    activeCategories.add("iglesia")
+                    activeCategories.add("religious")
+                    activeCategories.add("worship")
+                }
+                if (filters.museos) {
+                    activeCategories.add("museo")
+                    activeCategories.add("museum")
+                    activeCategories.add("attraction")
+                    activeCategories.add("tourism")
+                }
+                if (filters.restaurants) {
+                    activeCategories.add("restaurante")
+                    activeCategories.add("restaurant")
+                }
+                if (filters.cafeterias) {
+                    activeCategories.add("cafeteria")
+                    activeCategories.add("cafe")
+                }
+                if (filters.bar) {
+                    activeCategories.add("bar")
+                }
+                if (filters.helados) {
+                    activeCategories.add("heladeria")
+                    activeCategories.add("ice_cream")
+                }
+                if (filters.tiendaAlimentos) {
+                    activeCategories.add("tienda_alimentos")
+                    activeCategories.add("food")
+                }
+                if (filters.souvenirs) {
+                    activeCategories.add("souvenir")
+                }
+                if (filters.supermercados) {
+                    activeCategories.add("supermercado")
+                    activeCategories.add("supermarket")
+                }
+                if (filters.libreria) {
+                    activeCategories.add("libreria")
+                    activeCategories.add("book")
+                }
+                if (filters.ropa) {
+                    activeCategories.add("ropa")
+                    activeCategories.add("clothes")
+                }
+                if (filters.tiendasGenerales) {
+                    activeCategories.add("tienda_general")
+                    activeCategories.add("shop")
+                    activeCategories.add("store")
+                }
 
                 if (activeCategories.isEmpty()) {
                     flowOf(PlacesResult(emptyList(), DataSourceOrigin.NONE))

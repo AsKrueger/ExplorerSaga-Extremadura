@@ -373,11 +373,12 @@ private fun MapView.updateMarkers(places: List<Place>, onMarkerClick: (Place) ->
 
         val iconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_map_pin)?.mutate()
 
-        val color = when (place.category) {
-            "monumento", "iglesia", "museo" -> colorHistorico
-            "restaurante", "cafeteria" -> colorGastronomia
-            "tienda_general", "supermercado", "souvenir" -> colorTiendas
-            else -> Color.Gray.toArgb()
+        val catLower = place.category.lowercase()
+        val color = when {
+            catLower.contains("monument") || catLower.contains("historic") || catLower.contains("iglesia") || catLower.contains("museo") || catLower.contains("religious") || catLower.contains("worship") || catLower.contains("attraction") -> colorHistorico
+            catLower.contains("restaurante") || catLower.contains("restaurant") || catLower.contains("cafeteria") || catLower.contains("cafe") || catLower.contains("bar") || catLower.contains("helado") -> colorGastronomia
+            catLower.contains("tienda") || catLower.contains("supermercado") || catLower.contains("souvenir") || catLower.contains("shop") || catLower.contains("store") -> colorTiendas
+            else -> colorHistorico
         }
 
         iconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
