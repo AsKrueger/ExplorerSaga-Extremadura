@@ -1,13 +1,13 @@
 package com.alonso.explorersaga.service;
 
+import com.alonso.explorersaga.application.port.out.CategoryRepositoryPort;
+import com.alonso.explorersaga.application.port.out.PlaceRepositoryPort;
 import com.alonso.explorersaga.dto.place.PlaceCreateRequest;
 import com.alonso.explorersaga.dto.place.PlaceResponse;
 import com.alonso.explorersaga.entity.Category;
 import com.alonso.explorersaga.entity.Place;
 import com.alonso.explorersaga.exception.InvalidDataException;
 import com.alonso.explorersaga.exception.ResourceNotFoundException;
-import com.alonso.explorersaga.repository.CategoryRepository;
-import com.alonso.explorersaga.repository.PlaceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -24,10 +24,10 @@ import static org.mockito.Mockito.*;
 class PlaceServiceTest {
 
     @Mock
-    private PlaceRepository placeRepository;
+    private PlaceRepositoryPort placeRepositoryPort;
 
     @Mock
-    private CategoryRepository categoryRepository;
+    private CategoryRepositoryPort categoryRepositoryPort;
 
     @InjectMocks
     private PlaceService placeService;
@@ -55,8 +55,8 @@ class PlaceServiceTest {
         savedEntity.setLatitude(38.0);
         savedEntity.setLongitude(-6.0);
 
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
-        when(placeRepository.save(any(Place.class))).thenReturn(savedEntity);
+        when(categoryRepositoryPort.findById(1L)).thenReturn(Optional.of(category));
+        when(placeRepositoryPort.save(any(Place.class))).thenReturn(savedEntity);
 
         PlaceResponse response = placeService.createPlace(request);
 
@@ -83,7 +83,7 @@ class PlaceServiceTest {
         request.setLatitude(38.0);
         request.setLongitude(-6.0);
 
-        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        when(categoryRepositoryPort.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> placeService.createPlace(request));
     }

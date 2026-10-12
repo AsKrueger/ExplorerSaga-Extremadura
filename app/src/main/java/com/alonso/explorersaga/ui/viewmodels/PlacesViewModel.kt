@@ -2,19 +2,25 @@ package com.alonso.explorersaga.ui.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alonso.explorersaga.data.DataSourceOrigin
 import com.alonso.explorersaga.data.PlaceEntity
 import com.alonso.explorersaga.data.PlaceRepository
+import com.alonso.explorersaga.data.PlacesResult
 import com.alonso.explorersaga.model.Place
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class PlacesUiState(
     val places: List<Place> = emptyList(),
     val filterState: FilterState = FilterState(),
-    val selectedPlace: Place? = null
+    val selectedPlace: Place? = null,
+    val isLoading: Boolean = false,
+    val dataSourceOrigin: DataSourceOrigin = DataSourceOrigin.NONE,
+    val errorMessage: String? = null
 )
 
 // El estado de filtro definitivo con todas las subcategorías
@@ -44,8 +50,16 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
     val uiState: StateFlow<PlacesUiState> = _uiState
 
     init {
+        loadPlaces()
+        viewModelScope.launch {
+            updateFilters(FilterState(monuments = true))
+        }
+    }
+
+    fun loadPlaces() {
         viewModelScope.launch {
             _filterState.flatMapLatest { filters ->
+                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
                 val activeCategories = mutableListOf<String>()
                 if (filters.monuments) activeCategories.add("monumento")
                 if (filters.iglesias) activeCategories.add("iglesia")
@@ -62,23 +76,25 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
                 if (filters.tiendasGenerales) activeCategories.add("tienda_general")
 
                 if (activeCategories.isEmpty()) {
-                    kotlinx.coroutines.flow.flowOf(emptyList<PlaceEntity>())
+                    flowOf(PlacesResult(emptyList(), DataSourceOrigin.NONE))
                 } else {
                     repository.getPlacesByCategories(activeCategories)
                 }
-            }.collect { placesFromDb ->
+            }.collect { result ->
                 _uiState.update { currentState ->
                     currentState.copy(
-                        places = placesFromDb.map { it.toPlaceUiModel() },
-                        filterState = _filterState.value
+                        places = result.places.map { it.toPlaceUiModel() },
+                        filterState = _filterState.value,
+                        isLoading = false,
+                        dataSourceOrigin = result.origin
                     )
                 }
             }
         }
-        // Apply initial filter after a short delay to ensure data is loaded
-        viewModelScope.launch {
-            updateFilters(FilterState(monuments = true))
-        }
+    }
+
+    fun retry() {
+        loadPlaces()
     }
 
     fun updateFilters(newFilterState: FilterState) {
@@ -87,7 +103,7 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     fun loadPlaceById(id: Int) {
         viewModelScope.launch {
-            repository.getPlaceById(id).collect { placeEntity ->
+            repository.getPlaceByIdFlow(id).collect { placeEntity ->
                 _uiState.update { currentState ->
                     currentState.copy(selectedPlace = placeEntity?.toPlaceUiModel())
                 }

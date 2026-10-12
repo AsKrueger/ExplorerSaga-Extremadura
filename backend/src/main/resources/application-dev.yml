@@ -15,6 +15,12 @@ spring:
   flyway:
     enabled: true
 
+explorersaga:
+  providers:
+    overpass:
+      base-url: https://overpass-api.de/api/interpreter
+      timeout-ms: 10000
+
 logging:
   level:
     com.alonso.explorersaga: DEBUG

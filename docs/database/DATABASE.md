@@ -43,9 +43,10 @@ Tabla de enlace que permite la trazabilidad multi-fuente.
 - **Referencial**: La eliminación de categorías está protegida si existen lugares asociados.
 - **Tipado**: Uso de `DOUBLE PRECISION` para coordenadas y `TIMESTAMP WITH TIME ZONE` para precisión temporal.
 
-## 🔄 Datos Transitorios (Fuera de DB)
-Siguiendo las políticas de proveedores (Google Places EEE), los siguientes datos **no se persisten**:
+## 🔄 Datos Transitorios y Política de Capa REST
+Siguiendo las políticas de proveedores (Google Places EEE 2026), los siguientes datos **no se persisten** en la base de datos núcleo:
 - Fotografías de terceros.
 - Horarios de apertura dinámicos.
 - Valoraciones de usuarios.
-Estos datos deben ser consultados dinámicamente o gestionados mediante caché efímera en memoria.
+
+La API REST actúa como orquestador, combinando los datos persistentes de PostgreSQL con información dinámica obtenida en tiempo real cuando es necesario.

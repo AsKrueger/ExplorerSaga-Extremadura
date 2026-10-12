@@ -1,12 +1,12 @@
 package com.alonso.explorersaga.service;
 
+import com.alonso.explorersaga.application.port.out.CategoryRepositoryPort;
 import com.alonso.explorersaga.dto.category.CategoryCreateRequest;
 import com.alonso.explorersaga.dto.category.CategoryResponse;
 import com.alonso.explorersaga.entity.Category;
 import com.alonso.explorersaga.exception.DuplicateResourceException;
 import com.alonso.explorersaga.exception.InvalidDataException;
 import com.alonso.explorersaga.exception.ResourceNotFoundException;
-import com.alonso.explorersaga.repository.CategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 class CategoryServiceTest {
 
     @Mock
-    private CategoryRepository categoryRepository;
+    private CategoryRepositoryPort categoryRepositoryPort;
 
     @InjectMocks
     private CategoryService categoryService;
@@ -39,14 +39,14 @@ class CategoryServiceTest {
         Category entity = new Category("MONUMENT", "Desc");
         entity.setId(1L);
 
-        when(categoryRepository.findByName("MONUMENT")).thenReturn(Optional.empty());
-        when(categoryRepository.save(any(Category.class))).thenReturn(entity);
+        when(categoryRepositoryPort.findByName("MONUMENT")).thenReturn(Optional.empty());
+        when(categoryRepositoryPort.save(any(Category.class))).thenReturn(entity);
 
         CategoryResponse response = categoryService.createCategory(request);
 
         assertThat(response.getId()).isEqualTo(1L);
         assertThat(response.getName()).isEqualTo("MONUMENT");
-        verify(categoryRepository).save(any(Category.class));
+        verify(categoryRepositoryPort).save(any(Category.class));
     }
 
     @Test
@@ -58,14 +58,14 @@ class CategoryServiceTest {
     @Test
     void createCategory_DuplicateName_ThrowsDuplicateResource() {
         CategoryCreateRequest request = new CategoryCreateRequest("MONUMENT", "Desc");
-        when(categoryRepository.findByName("MONUMENT")).thenReturn(Optional.of(new Category()));
+        when(categoryRepositoryPort.findByName("MONUMENT")).thenReturn(Optional.of(new Category()));
 
         assertThrows(DuplicateResourceException.class, () -> categoryService.createCategory(request));
     }
 
     @Test
     void getCategory_NotFound_ThrowsResourceNotFound() {
-        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+        when(categoryRepositoryPort.findById(1L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> categoryService.getCategory(1L));
     }
 }
