@@ -189,6 +189,15 @@ curl "http://localhost:8080/api/v1/places?category=Monument"
 3. **Límite de peticiones de Overpass API (HTTP 429 / 504 Gateway Timeout):**
    - Overpass API es una API pública compartida con límites de frecuencia. Si la importación falla por timeout, reintentar tras unos segundos. La lógica del backend captura el error amigablemente y no corrompe la base de datos.
 
+4. **Error de compilación en Gradle (`SDK location not found`):**
+   - **Causa:** El archivo `local.properties` no existe o no define la ruta válida del SDK de Android en el sistema anfitrión (`sdk.dir`). Este archivo está excluido del control de versiones (`.gitignore`) por contener rutas específicas de cada desarrollador.
+   - **Solución A (Android Studio):** Abrir la carpeta raíz del proyecto en Android Studio; la IDE creará automáticamente el archivo `local.properties` con la ruta de tu SDK local.
+   - **Solución B (Terminal / CLI):** Copia la plantilla `local.properties.example` a `local.properties` en la raíz del proyecto y ajusta la propiedad `sdk.dir` a la ruta de tu SDK:
+     - **Windows:** `sdk.dir=C\:/Users/TU_USUARIO/AppData/Local/Android/Sdk`
+     - **Linux:** `sdk.dir=/home/TU_USUARIO/Android/Sdk`
+     - **macOS:** `sdk.dir=/Users/TU_USUARIO/Library/Android/sdk`
+   - **Solución C (Variable de entorno):** Configurar la variable de entorno del sistema `ANDROID_HOME` apuntando al directorio raíz de tu SDK de Android.
+
 ---
 
 ## 📌 9. Limitaciones Conocidas del MVP
