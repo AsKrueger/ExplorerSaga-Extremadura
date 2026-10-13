@@ -69,3 +69,7 @@ Este documento sirve como un registro del trabajo de desarrollo completado, docu
 -   **Issue #22: [Publicación de v1.0.0-rc1 y Cierre Formal del MVP] - CERRADO ✅**
     -   **Descripción:** Verificar la disponibilidad de la versión candidata `v1.0.0-rc1` y sus notas de release, auditar la documentación desde la perspectiva de un evaluador externo, verificar los 10 criterios de evaluación del MVP y formalizar la declaración de cierre del MVP.
     -   **Resultado:** Se confirmó que toda la documentación (`README.md`, `docs/SETUP.md`, `docs/RELEASE_NOTES_v1.0.0-rc1.md`) es portátil, independiente de entornos locales y libre de dependencias de pago. Se evaluó satisfactoriamente la matriz de 10/10 criterios de aceptación del MVP y se declaró el cierre formal del MVP en `PROJECT_STATUS.md`.
+
+-   **Issue #23: [Corrección de Configuración Local de Android SDK (`local.properties`)] - CERRADO ✅**
+    -   **Descripción:** Resolver el error de compilación `SDK location not found` producido cuando se ejecuta Gradle desde la línea de comandos o en un entorno recién clonado sin la variable `ANDROID_HOME` o el archivo `local.properties`.
+    -   **Resultado:** Se creó una plantilla `local.properties.example` en la raíz del proyecto, se configuró `local.properties` con la ruta válida del SDK de Android escapada correctamente para Windows/Linux/macOS y se documentó detalladamente la solución en la Sección 8 de [docs/SETUP.md](docs/SETUP.md).
