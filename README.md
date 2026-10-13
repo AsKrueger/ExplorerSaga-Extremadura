@@ -35,25 +35,34 @@ Diseñar e implementar una aplicación Android nativa que sirva como guía turí
 
 ---
 
-## ✨ Funcionalidades Implementadas
+## ✨ Funcionalidades Implementadas (Versión Candidata MVP)
 
-1.  **🏠 Pantalla de Bienvenida**: Presentación visual que sirve como punto de entrada a la aplicación.
-2.  **🏛️ Contexto Histórico**: Pantalla informativa que ofrece al usuario una breve introducción a la historia de Mérida.
-3.  **🏪 Menú de Categorías**: Selección visual de los tipos de lugares de interés (monumentos, restaurantes, tiendas).
-4.  **📋 Listados Detallados**: Muestra de lugares en formato de lista, con datos de ejemplo como nombre y descripción.
-5.  **🗺️ Mapa Interactivo**: Implementación de un mapa funcional que muestra la ubicación de Mérida y un marcador de ejemplo.
+1. **🏠 Pantalla de Bienvenida**: Presentación visual que sirve como punto de entrada a la aplicación.
+2. **🏛️ Contexto Histórico**: Pantalla informativa que ofrece al usuario una breve introducción a la historia de Mérida.
+3. **🏪 Menú de Categorías**: Selección visual de los tipos de lugares de interés (monumentos, restaurantes, tiendas).
+4. **📋 Listados Detallados**: Muestra de lugares en formato de lista con filtros interactivos por subcategorías.
+5. **🗺️ Mapa Interactivo**: Mapa dinámico con OpenStreetMap que muestra marcadores geolocalizados de Mérida codificados por color según la categoría y desplegable informativo BottomSheet.
+6. **🌐 Backend Spring Boot Hexagonal & PostgreSQL**:
+   - Persistencia relacional en PostgreSQL 15 con migraciones automáticas Flyway.
+   - API REST v1 (`/api/v1/places`) con filtrado por categorías y documentación OpenAPI/Swagger.
+   - Adaptador de ingesta e importación idempotente desde OpenStreetMap (Overpass API) a coste 0 €.
+7. **🔄 Resiliencia y Respaldo Local en Android**:
+   - Integración remota mediante Retrofit con indicador visual claro de origen de datos (`🟢 Conectado al Backend` vs `🟡 Modo Local (Respaldo)`).
+   - Respaldo local transparente basado en assets JSON cuando el servidor o la red no están disponibles.
+   - Acción de reintento de conexión desde la interfaz.
 
 ---
 
-## 🚀 Guía de Instalación y Ejecución
+## 🚀 Guía de Instalación, Configuración y Ejecución
 
-1.  Clona este repositorio:
-    ```bash
-    git clone https://github.com/tu-usuario/ExplorerSaga-Extremadura.git
-    ```
-2.  Abre el proyecto en la última versión estable de [Android Studio](https://developer.android.com/studio).
-3.  Sincroniza el proyecto con Gradle para que se descarguen todas las dependencias.
-4.  Ejecuta la aplicación en un emulador o en un dispositivo físico con Android API 26 o superior.
+Consulta la documentación detallada de puesta en marcha en [docs/SETUP.md](docs/SETUP.md), la cual incluye:
+
+- Requisitos de entorno (JDK 17/21, Docker/PostgreSQL, Android Studio, SDK 35).
+- Despliegue de la base de datos PostgreSQL con Docker Compose.
+- Ejecución de la suite de pruebas del backend (`mvnw test`) y Android (`gradlew test`).
+- Arranque del backend Spring Boot e importación manual desde Overpass API.
+- Configuración y ejecución de la aplicación Android en el emulador.
+- Guía de solución de problemas y pruebas de aceptación E2E.
 
 ---
 

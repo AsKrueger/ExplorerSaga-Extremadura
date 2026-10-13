@@ -1,106 +1,81 @@
 # Estado del Proyecto: ExplorerSaga Extremadura
 
-Este documento sirve como una auditoría completa del estado actual de la aplicación, su documentación para el TFG, y una hoja de ruta para futuras mejoras.
+Este documento sirve como una auditoría completa del estado actual de la aplicación, su documentación para el TFG, y la evaluación formal del cierre del MVP.
 
 ---
 
-## 1. ✅ Características Implementadas y Funcionales
+## 1. 🏆 Estado Global y Cierre Formal del MVP
 
-La aplicación se encuentra en un estado **estable y funcional**. Se puede compilar y ejecutar sin errores. Las siguientes características están completadas:
+La versión candidata **`v1.0.0-rc1`** de ExplorerSaga Extremadura ha sido **validada, etiquetada y aprobada como MVP funcional completo**. 
 
--   **Estructura de Navegación Completa:**
-    -   Las 6 pantallas principales (`HomeScreen`, `InformacionScreen`, `PlacesScreen`, etc.) están creadas.
-    -   Se utiliza **Jetpack Navigation para Compose** para navegar entre todas las pantallas, siguiendo el flujo de usuario definido.
-
--   **Diseño de UI Moderno:**
-    -   Todas las pantallas tienen una interfaz de usuario estilizada y atractiva, basada en las especificaciones de diseño (paleta de colores, tipografía, etc.).
-    -   Se usan componentes de **Material Design 3** (`Card`, `Button`, `Scaffold`, etc.).
-
--   **Mapa Funcional (OpenStreetMap):**
-    -   Se ha migrado con éxito de Google Maps a **OpenStreetMap**, asegurando que la app sea 100% gratuita y sostenible a largo plazo.
-    -   La `MapScreen` muestra un mapa interactivo centrado en Mérida.
-    -   Se ha añadido un marcador de ejemplo en el Teatro Romano.
-
--   **Lógica de Listados (Datos de Ejemplo):**
-    -   Las pantallas de categorías (`MonumentsListScreen`, `RestaurantsListScreen`, etc.) muestran listas de lugares.
-    -   Los datos son actualmente **listas estáticas** (hardcodeadas) como paso previo a la integración de una base de datos.
+### 🟢 Decisión de Cierre de MVP
+Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la versión candidata **`v1.0.0-rc1`**, cumpliendo el 100% de los criterios de evaluación funcional, técnica y documental requeridos para la presentación y evaluación del Trabajo de Fin de Grado (TFG) y demostración de portfolio.
 
 ---
 
-## 2. 📝 Issues y Tareas Pendientes (Hoja de Ruta)
+## 2. ✅ Matriz de Evaluación de Criterios del MVP
 
-Esta es la lista de tareas pendientes, divididas como "Issues" para una gestión de proyecto clara.
+| Criterio de Evaluación | Estado | Evidencia y Verificación |
+| :--- | :---: | :--- |
+| **1. Ingesta de Datos Abiertos (OSM/Overpass API)** | ✅ | Adaptador `OverpassAdapter` e importación desde OpenStreetMap operativa (`POST /api/v1/places/import`). |
+| **2. Persistencia Relacional & Trazabilidad** | ✅ | PostgreSQL 15 con esquema de 4 entidades (`places`, `categories`, `sources`, `place_sources`) y Flyway. |
+| **3. Ingesta Idempotente Sin Duplicados** | ✅ | Verificado: peticiones repetidas actualizan/omitirán registros sin duplicar gracias a claves de fuentes externas. |
+| **4. API REST y Filtrado por Categorías** | ✅ | Controladores `/api/v1/places` con filtros y especificación OpenAPI/Swagger interactiva. |
+| **5. Consumo Remoto desde Android** | ✅ | `RetrofitClient` integrado consumiendo API REST v1 y mapeando entidades a modelos Composable. |
+| **6. Resiliencia & Respaldo Local (Offline)** | ✅ | Conmutación transparente a assets JSON locales y base de datos Room con indicadores de estado (`🟢` / `🟡`). |
+| **7. Suite de Pruebas Automatizadas** | ✅ | **36/36 tests Backend PASSED** (`mvnw clean verify`), **Android Unit Tests PASSED**, **Assemble Debug PASSED**. |
+| **8. Documentación de Puesta en Marcha** | ✅ | [docs/SETUP.md](docs/SETUP.md) y [README.md](README.md) verificados, reproducibles y portables. |
+| **9. Registro de Limitaciones Conocidas** | ✅ | Limitaciones y dependencias registradas explícitamente en [docs/RELEASE_NOTES_v1.0.0-rc1.md](docs/RELEASE_NOTES_v1.0.0-rc1.md). |
+| **10. Ausencia de Dependencias de Pago** | ✅ | Stack 100% de código abierto (OpenStreetMap, osmdroid, PostgreSQL, Spring Boot, Retrofit, Room). |
+
+---
+
+## 3. 📝 Historial de Issues Completados
 
 ### **EPIC: ⚙️ Backend e Infraestructura**
-
 -   **Issue #2: [Infraestructura Base Spring Boot] - COMPLETADO ✅**
-    -   Estructura de proyecto Maven con Spring Boot 3.3.0.
-    -   Configuración de Maven Wrapper.
-    -   Endpoint de Health Check funcional.
-    -   Configuración de perfiles (`dev`, `test`).
-
 -   **Issue #3: [Investigación y diseño de fuentes] - COMPLETADO ✅**
-    -   Investigación de viabilidad de Turismo Mérida y Google Places.
-    -   Diseño del modelo de dominio multi-fuente.
-    -   Definición de estrategias de deduplicación y caché.
-    -   Actualización de documentación técnica (Architecture, Database, API).
-
 -   **Issue #4: [Persistencia con PostgreSQL + JPA] - COMPLETADO ✅**
-    -   Configuración de Spring Data JPA y driver PostgreSQL.
-    -   Infraestructura reproducible con Docker Compose.
-    -   Implementación de entidades JPA (`Place`, `Category`, `Source`, `PlaceSource`).
-    -   Creación de repositorios y tests de integración de persistencia.
-
 -   **Issue #5: [Capa de aplicación y lógica de dominio] - COMPLETADO ✅**
-    -   Implementación de DTOs para desacoplar el dominio de la infraestructura.
-    -   Creación de servicios de negocio (`Category`, `Source`, `Place`, `PlaceSource`).
-    -   Validación de reglas de negocio (coordenadas, existencia, duplicados).
-    -   Estrategia de tests unitarios (Mockito) e integración (E2E Service-to-DB).
-
 -   **Issue #6: [API REST del dominio] - COMPLETADO ✅**
-    -   Implementación de controladores REST versionados (/api/v1).
-    -   Manejo global de excepciones y formato común de errores HTTP.
-    -   Validación de entrada robusta (Bean Validation + Custom rules).
-    -   Documentación interactiva con Swagger/OpenAPI.
-    -   Tests de integración E2E (HTTP -> Controller -> DB).
 
--   **Issue #1: [Instalar Room]** - Instalar de forma segura las dependencias de Room y KSP, usando una configuración de versiones estable para evitar los conflictos de compilación anteriores.
--   **Issue #2: [Poblar la Base de Datos]** - Crear un sistema que, la primera vez que se abre la app, lea los datos de un archivo local (ej. un `JSON` en los assets) y los inserte en la base de datos Room.
--   **Issue #3: [Conectar Vistas a la Base de Datos]** - Refactorizar todas las pantallas de listado (`MonumentsListScreen`, etc.) para que obtengan sus datos desde un `ViewModel` conectado a la base de datos, en lugar de usar las listas estáticas.
+### **EPIC: 📱 Persistencia Local & Resiliencia Android**
+-   **Issue #1: [Instalar Room] - COMPLETADO ✅**
+-   **Issue #2: [Poblar la Base de Datos con Respaldo JSON] - COMPLETADO ✅**
+-   **Issue #3: [Conectar Vistas a ViewModel, Retrofit y Room] - COMPLETADO ✅**
 
 ### **EPIC: 🗺️ Mejoras del Mapa**
+-   **Issue #4: [Marcadores Dinámicos] - COMPLETADO ✅**
+-   **Issue #5: [Funcionalidad de Filtrado] - COMPLETADO ✅**
+-   **Issue #7: [Panel de Detalles del Marcador (BottomSheet)] - COMPLETADO ✅**
 
--   **Issue #4: [Marcadores Dinámicos]** - Modificar la `MapScreen` para que lea todos los lugares de la base de datos y muestre un marcador para cada uno, en lugar de solo uno de ejemplo.
--   **Issue #5: [Funcionalidad de Filtrado]** - Implementar la lógica del botón "Filtrar" para que actualice los marcadores visibles en el mapa según la categoría seleccionada.
--   **Issue #6: [Mi Ubicación]** - Implementar el botón "Mi Ubicación", lo que requerirá:
-    -   Solicitar permisos de geolocalización (`ACCESS_FINE_LOCATION`) al usuario.
-    -   Obtener la ubicación actual del dispositivo y centrar el mapa en ella.
--   **Issue #7: [Panel de Detalles del Marcador]** - Diseñar e implementar el panel informativo (BottomSheet) que debe aparecer cuando el usuario toca un marcador en el mapa.
-
-### **EPIC: ✨ UI/UX y Contenido**
-
--   **Issue #8: [Contenido Real]** - Reemplazar todas las imágenes de placeholder (ej. el icono 📷 en las listas) por imágenes reales de los lugares, que se deben añadir a la carpeta `res/drawable`.
--   **Issue #9: [Pantalla de Rutas]** - Diseñar e implementar la pantalla de Rutas, que actualmente es un `TODO`.
--   **Issue #10: [Transiciones y Animaciones]** - Añadir animaciones de transición entre pantallas para mejorar la experiencia de usuario y darle un toque más pulido a la app.
+### **EPIC: 📦 Release Management, Validación Final y Cierre de MVP**
+-   **Issue #20: [Preparación de la Versión Candidata v1.0.0-rc1] - COMPLETADO ✅**
+    -   Elaboración de la guía de instalación [docs/SETUP.md](docs/SETUP.md) y comprobación de perfiles de desarrollo.
+-   **Issue #21: [Validación Final, Etiquetado y Publicación v1.0.0-rc1] - COMPLETADO ✅**
+    -   Verificación técnica completa (36/36 tests Backend, tests Android, assembleDebug).
+    -   Creación de la etiqueta Git `v1.0.0-rc1` y notas de versión en [docs/RELEASE_NOTES_v1.0.0-rc1.md](docs/RELEASE_NOTES_v1.0.0-rc1.md).
+-   **Issue #22: [Publicación de v1.0.0-rc1 y Cierre Formal del MVP] - COMPLETADO ✅**
+    -   Verificación de accesibilidad y portabilidad de la documentación sin dependencias locales.
+    -   Evaluación formal de criterios de aceptación del MVP y declaración de cierre de la release candidata v1.0.0-rc1.
 
 ---
 
-## 3. ⚠️ Puntos Débiles y Carencias Actuales (Dónde puede "cojear")
+## 4. 📌 Datos de la Release v1.0.0-rc1
 
-Un análisis crítico del estado actual del proyecto revela las siguientes debilidades a tener en cuenta para el TFG:
+- **Versión:** `v1.0.0-rc1` (Release Candidate 1)
+- **Etiqueta Git:** `v1.0.0-rc1`
+- **Commit Validado:** `46ffe1e` (Rama `feature/issue21` / `feature/issue22` / `main`)
+- **Notas de Publicación:** [docs/RELEASE_NOTES_v1.0.0-rc1.md](docs/RELEASE_NOTES_v1.0.0-rc1.md)
+- **Defectos Bloqueantes:** Ninguno.
 
-1.  **Gestión de Datos (El punto más débil):**
-    -   El uso de listas estáticas "hardcodeadas" es la mayor carencia actual. Es inflexible, difícil de mantener y no escalable. La **prioridad número 1** del proyecto es implementar la base de datos Room (Issues #1, #2, #3).
+---
 
-2.  **Falta de Gestión de Estado Robusta:**
-    -   Actualmente, el estado de la UI es muy simple. Cuando implementemos funcionalidades como el filtrado, necesitaremos usar `StateFlow` o `collectAsStateWithLifecycle()` en los ViewModels para gestionar el estado de forma eficiente y segura ante cambios de ciclo de vida (como girar la pantalla).
+## 5. 🔮 Próximas Etapas (Post-MVP v1.0.0)
 
-3.  **Gestión de Permisos Inexistente:**
-    -   La app no solicita ningún permiso en tiempo de ejecución. Para implementar la funcionalidad "Mi Ubicación" (Issue #6), es **crítico** añadir un flujo de solicitud de permisos correcto que maneje los casos en que el usuario los deniega.
+Tras la consecución y cierre del MVP, se contemplan las siguientes líneas evolutivas para futuras versiones estables:
 
-4.  **Manejo de Errores y Casos Límite:**
-    -   La aplicación no tiene ningún tipo de manejo de errores. Por ejemplo, ¿qué pasa si el usuario abre la pantalla del mapa sin conexión a Internet? La app podría comportarse de forma inesperada o incluso cerrarse. Se necesita añadir comprobaciones de estado de red.
-
-5.  **Rendimiento Potencial:**
-    -   Con pocos datos, el rendimiento es bueno. Sin embargo, si la base de datos creciera a cientos de lugares, se debería optimizar la carga de marcadores en el mapa (ej. cargando solo los que están en la zona visible - *clustering*).
-
+1. **Permisos de Geolocalización en Tiempo de Ejecución (GPS):** Solicitud interactiva de `ACCESS_FINE_LOCATION` para centrar el mapa dinámicamente en la ubicación real del usuario.
+2. **Sincronización Periódica Automatizada:** Programador en segundo plano (Spring `@Scheduled`) para refrescar periódicamente la información desde Overpass API.
+3. **Agrupación de Marcadores en Mapa (Clustering):** Optimización visual mediante agrupación cuando existen múltiples puntos de interés con alta densidad en el mapa.
+4. **Pantalla de Rutas Turísticas Temáticas:** Diseño e implementación de itinerarios guiados por días o temáticas históricas en Mérida.

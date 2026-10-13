@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface PlaceRepository extends JpaRepository<Place, Long> {
-    List<Place> findByCategoryNameIgnoreCase(String name);
+    List<Place> findByCategoryNameContainingIgnoreCase(String name);
 }

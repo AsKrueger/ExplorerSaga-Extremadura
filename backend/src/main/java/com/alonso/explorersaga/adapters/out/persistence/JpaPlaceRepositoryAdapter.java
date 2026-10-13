@@ -34,6 +34,6 @@ public class JpaPlaceRepositoryAdapter implements PlaceRepositoryPort {
 
     @Override
     public List<Place> findByCategoryNameIgnoreCase(String name) {
-        return placeRepository.findByCategoryNameIgnoreCase(name);
+        return placeRepository.findByCategoryNameContainingIgnoreCase(name);
     }
 }
