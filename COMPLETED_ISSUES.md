@@ -53,3 +53,15 @@ Este documento sirve como un registro del trabajo de desarrollo completado, docu
 -   **Issue #10: [Configuración Inicial de `osmdroid`] - CERRADO ✅**
     -   **Descripción:** La aplicación se cerraba al abrir el mapa debido a que `osmdroid` requiere una configuración explícita del `User-Agent` para prevenir abusos.
     -   **Resultado:** Se añadió el bloque de configuración de `osmdroid` en el método `onCreate` de la `MainActivity`, solucionando el cierre inesperado.
+
+---
+
+### **EPIC: 📦 Release Management y Validación Final**
+
+-   **Issue #20: [Preparación de la Versión Candidata v1.0.0-rc1] - CERRADO ✅**
+    -   **Descripción:** Documentar los procedimientos de instalación y puesta en marcha del sistema completo (PostgreSQL, Spring Boot 3, Android Retrofit/Room) y verificar la configuración de desarrollo.
+    -   **Resultado:** Se elaboró el documento [docs/SETUP.md](docs/SETUP.md) detallando paso a paso el despliegue con Docker Compose, ejecución de suites de pruebas, importación desde Overpass API y pruebas de resiliencia.
+
+-   **Issue #21: [Validación Final, Etiquetado y Publicación v1.0.0-rc1] - CERRADO ✅**
+    -   **Descripción:** Ejecutar la suite completa de pruebas sobre el Backend y Android, verificar que el repositorio está limpio y sin datos sensibles, formalizar la etiqueta Git `v1.0.0-rc1`, publicar las notas de release y actualizar el seguimiento del proyecto.
+    -   **Resultado:** Se validó satisfactoriamente el Backend (36/36 tests OK), las pruebas unitarias de Android y el ensamblado Debug (`app:assembleDebug`). Se creó la etiqueta Git anotada `v1.0.0-rc1`, se subió al repositorio remoto y se generó el documento de notas de publicación `docs/RELEASE_NOTES_v1.0.0-rc1.md`.
