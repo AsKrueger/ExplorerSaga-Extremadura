@@ -54,10 +54,10 @@ class RestPersistenceIntegrationTest {
 
     @BeforeEach
     void cleanUp() {
-        placeSourceRepository.deleteAll();
-        placeRepository.deleteAll();
-        sourceRepository.deleteAll();
-        categoryRepository.deleteAll();
+        placeSourceRepository.deleteAllInBatch();
+        placeRepository.deleteAllInBatch();
+        sourceRepository.deleteAllInBatch();
+        categoryRepository.deleteAllInBatch();
     }
 
     @Test

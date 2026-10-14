@@ -1,8 +1,8 @@
 [
-    {
+  {
     "id": 67,
     "name": "Emérita Cómics",
-    "description": "Somos un equipo apasionado que comparte el amor por la literatura gráfica, los juegos de mesa y la creación de experiencias únicas. Fundada hace más de 5 años en el corazón de Mérida, nos enorgullece ser un punto de encuentro para la comunidad amante del cómic y el entretenimiento alternativo.",
+    "description": "Punto de encuentro en el corazón de Mérida para amantes del cómic, juegos de mesa y literatura gráfica.",
     "category": "libreria",
     "horarios": "11:00–14:00 / 17:30–21:00",
     "direccion": "Calle Berzocana, 3",
@@ -10,6 +10,54 @@
     "longitude": -6.343872,
     "photo": "emeritacomics",
     "website": "https://emeritacomics.com/"
+  },
+  {
+    "id": 75,
+    "name": "Librería Mercader de Sedas",
+    "description": "Librería especializada en narrativa, novedades editoriales y literatura infantil en la principal calle comercial de Mérida.",
+    "category": "libreria",
+    "horarios": "10:00–14:00 / 17:30–20:30",
+    "direccion": "Calle Santa Eulalia, 34",
+    "latitude": 38.917450,
+    "longitude": -6.343510,
+    "photo": "",
+    "website": null
+  },
+  {
+    "id": 76,
+    "name": "Librería Solís",
+    "description": "Librería de referencia en Mérida con amplio catálogo de libros, libros de texto y prensa.",
+    "category": "libreria",
+    "horarios": "09:30–14:00 / 17:00–20:30",
+    "direccion": "Calle Camilo José Cela, 8",
+    "latitude": 38.918120,
+    "longitude": -6.342890,
+    "photo": "",
+    "website": null
+  },
+  {
+    "id": 77,
+    "name": "Librería Dinos",
+    "description": "Librería y papelería tradicional con atención personalizada y material de lectura.",
+    "category": "libreria",
+    "horarios": "09:30–14:00 / 17:30–20:30",
+    "direccion": "Calle Santa Eulalia, 68",
+    "latitude": 38.918910,
+    "longitude": -6.342100,
+    "photo": "",
+    "website": null
+  },
+  {
+    "id": 78,
+    "name": "Librería Papelería San Francisco",
+    "description": "Librería local con gran selección de literatura, regalos y material escolar.",
+    "category": "libreria",
+    "horarios": "09:30–14:00 / 17:00–20:00",
+    "direccion": "Calle San Francisco, 22",
+    "latitude": 38.918650,
+    "longitude": -6.345210,
+    "photo": "",
+    "website": null
   },
   {
     "id": 68,
@@ -26,19 +74,19 @@
   {
     "id": 69,
     "name": "Supermercado Spar",
-    "description": "",
+    "description": "Supermercado de alimentación y productos locales.",
     "category": "supermercado",
     "horarios": "09:00–14:30 / 17:00–20:30",
     "direccion": "Calle José Ramón Mélida, 21",
     "latitude": 38.917621,
     "longitude": -6.341394,
     "photo": "spar",
-    "website": "https://lacasadeljamon.com/"
+    "website": null
   },
   {
     "id": 70,
     "name": "Supermercado Covirán",
-    "description": "",
+    "description": "Supermercado de proximidad en el centro de Mérida.",
     "category": "supermercado",
     "horarios": "09:15–21:00",
     "direccion": "Calle Sagasta, 4",
@@ -50,7 +98,7 @@
   {
     "id": 71,
     "name": "Supermercado Día",
-    "description": "",
+    "description": "Alimentación y productos variados.",
     "category": "supermercado",
     "horarios": "09:00–21:30",
     "direccion": "Calle Marquesa de Pinares, 1",
@@ -62,19 +110,19 @@
   {
     "id": 72,
     "name": "Carrefour Express",
-    "description": "",
+    "description": "Supermercado urbano.",
     "category": "supermercado",
     "horarios": "09:00–22:00",
     "direccion": "Calle San Salvador, 1",
     "latitude": 38.916498,
     "longitude": -6.347812,
     "photo": "carrefourexpress",
-    "website": "https://www.carrefour.es/tiendas-carrefour/supermercados/carrefour-express/plaza-de-santa-maria-s.aspx"
+    "website": null
   },
   {
     "id": 73,
     "name": "OVAL a tu gusto",
-    "description": "Tu tienda de productos Típicos Extremeños, orgullosos de llevar el sabor de Extremadura a cada rincón de España.",
+    "description": "Tu tienda de productos Típicos Extremeños, orgullosos de llevar el sabor de Extremadura a cada rincón.",
     "category": "alimentos",
     "horarios": "09:00–14:30 / 17:30–20:30",
     "direccion": "Calle San Francisco, 16",
@@ -86,7 +134,7 @@
   {
     "id": 74,
     "name": "Feliciano Becerra Jiménez",
-    "description": "Especialistas en jamones y productos extremeños de alta calidad, ofreciendo una experiencia gastronómica única.",
+    "description": "Especialistas en jamones y productos extremeños de alta calidad.",
     "category": "alimentos",
     "horarios": "10:00–14:30 / 17:30–20:30",
     "direccion": "Calle José Ramón Mélida, 56",

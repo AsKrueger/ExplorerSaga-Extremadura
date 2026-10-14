@@ -35,11 +35,12 @@ public class OverpassAdapter implements TourismDataProvider {
         String query = """
                 [out:json][timeout:25];
                 (
-                  node["tourism"="attraction"](38.88,-6.36,38.95,-6.30);
-                  way["tourism"="attraction"](38.88,-6.36,38.95,-6.30);
-                  node["historic"="monument"](38.88,-6.36,38.95,-6.30);
-                  way["historic"="monument"](38.88,-6.36,38.95,-6.30);
-                  node["amenity"="place_of_worship"](38.88,-6.36,38.95,-6.30);
+                  node["tourism"](38.88,-6.36,38.95,-6.30);
+                  way["tourism"](38.88,-6.36,38.95,-6.30);
+                  node["historic"](38.88,-6.36,38.95,-6.30);
+                  way["historic"](38.88,-6.36,38.95,-6.30);
+                  node["amenity"~"place_of_worship|restaurant|cafe|bar|pub|ice_cream"](38.88,-6.36,38.95,-6.30);
+                  node["shop"](38.88,-6.36,38.95,-6.30);
                 );
                 out body;
                 >;
@@ -74,14 +75,7 @@ public class OverpassAdapter implements TourismDataProvider {
                     address = tags.get("address");
                 }
 
-                String categoryName = "Monument";
-                if (tags.containsKey("historic")) {
-                    categoryName = "Historical Monument";
-                } else if (tags.containsKey("tourism")) {
-                    categoryName = "Tourism Attraction";
-                } else if (tags.containsKey("amenity") && "place_of_worship".equals(tags.get("amenity"))) {
-                    categoryName = "Religious Site";
-                }
+                String categoryName = mapTagsToCategory(tags);
 
                 normalizedList.add(new NormalizedPlaceData(
                         externalId,
@@ -99,5 +93,48 @@ public class OverpassAdapter implements TourismDataProvider {
             logger.error("Failed to fetch tourism places from Overpass API: {}", e.getMessage(), e);
             return Collections.emptyList();
         }
+    }
+
+    private String mapTagsToCategory(Map<String, String> tags) {
+        if (tags.containsKey("shop")) {
+            String shopType = tags.get("shop");
+            if ("books".equalsIgnoreCase(shopType)) {
+                return "libreria";
+            } else if ("gift".equalsIgnoreCase(shopType) || "souvenir".equalsIgnoreCase(shopType)) {
+                return "souvenir";
+            } else if ("supermarket".equalsIgnoreCase(shopType) || "convenience".equalsIgnoreCase(shopType)) {
+                return "supermercado";
+            } else if ("food".equalsIgnoreCase(shopType) || "bakery".equalsIgnoreCase(shopType) || "deli".equalsIgnoreCase(shopType) || "greengrocer".equalsIgnoreCase(shopType) || "butcher".equalsIgnoreCase(shopType)) {
+                return "tienda_alimentos";
+            } else if ("clothes".equalsIgnoreCase(shopType) || "fashion".equalsIgnoreCase(shopType)) {
+                return "ropa";
+            }
+            return "tiendasGenerales";
+        }
+
+        if (tags.containsKey("amenity")) {
+            String amenityType = tags.get("amenity");
+            if ("restaurant".equalsIgnoreCase(amenityType)) {
+                return "restaurante";
+            } else if ("cafe".equalsIgnoreCase(amenityType)) {
+                return "cafeteria";
+            } else if ("bar".equalsIgnoreCase(amenityType) || "pub".equalsIgnoreCase(amenityType)) {
+                return "bar";
+            } else if ("ice_cream".equalsIgnoreCase(amenityType)) {
+                return "heladeria";
+            } else if ("place_of_worship".equalsIgnoreCase(amenityType)) {
+                return "Religious Site";
+            }
+        }
+
+        if (tags.containsKey("historic")) {
+            return "Historical Monument";
+        }
+
+        if (tags.containsKey("tourism")) {
+            return "Tourism Attraction";
+        }
+
+        return "Historical Monument";
     }
 }

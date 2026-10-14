@@ -1,7 +1,6 @@
 package com.alonso.explorersaga.ui.composables
 
 import android.content.Context
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
@@ -34,7 +33,11 @@ import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
 
 @Composable
-fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
+fun PlaceListItem(
+    place: Place,
+    userLocation: Pair<Double, Double> = Pair(38.916111, -6.343611),
+    onItemClicked: (Place) -> Unit
+) {
     val context = LocalContext.current
     val imageResId = remember(place.photo) {
         if (place.photo?.startsWith("http") == false) {
@@ -42,6 +45,11 @@ fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
         } else {
             null
         }
+    }
+
+    // Cálculo dinámico de distancia desde la ubicación GPS real del usuario
+    val distanceText = remember(place.latitude, place.longitude, userLocation) {
+        formatDistance(userLocation.first, userLocation.second, place.latitude, place.longitude)
     }
 
     Card(
@@ -70,7 +78,6 @@ fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
                 error = painterResource(id = R.drawable.teatro_merida)
             )
 
-
             Spacer(modifier = Modifier.width(16.dp))
 
             // 2. Columna con la Información
@@ -90,11 +97,21 @@ fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
                 Text(
                     text = place.description,
                     style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1, // <-- CAMBIO APLICADO AQUÍ
-                    overflow = TextOverflow.Ellipsis // Puntos suspensivos si es más largo
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+
+                // Distancia por cercanía GPS real
+                Text(
+                    text = distanceText,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Spacer(modifier = Modifier.height(2.dp))
 
                 // Dirección
                 place.direccion?.let {
@@ -108,6 +125,23 @@ fun PlaceListItem(place: Place, onItemClicked: (Place) -> Unit) {
                 }
             }
         }
+    }
+}
+
+private fun formatDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): String {
+    val earthRadiusKm = 6371.0088
+    val dLat = Math.toRadians(lat2 - lat1)
+    val dLon = Math.toRadians(lon2 - lon1)
+    val a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2)
+    val c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    val meters = (earthRadiusKm * c * 1000.0).toInt()
+    return if (meters < 1000) {
+        "📍 a $meters m"
+    } else {
+        val km = meters / 1000.0
+        "📍 a %.1f km".format(km)
     }
 }
 

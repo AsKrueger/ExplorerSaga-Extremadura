@@ -7,6 +7,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -28,12 +29,24 @@ data class PlaceResponseDto(
     val category: CategoryResponseDto? = null
 )
 
+@Serializable
+data class ImportResultDto(
+    val processed: Int = 0,
+    val inserted: Int = 0,
+    val updated: Int = 0,
+    val skipped: Int = 0,
+    val failed: Int = 0
+)
+
 interface ExplorerSagaApi {
     @GET("api/v1/places")
     suspend fun getPlaces(@Query("category") category: String? = null): List<PlaceResponseDto>
 
     @GET("api/v1/places/{id}")
     suspend fun getPlaceById(@Path("id") id: Long): PlaceResponseDto
+
+    @POST("api/v1/places/import")
+    suspend fun importPlaces(): ImportResultDto
 }
 
 object RetrofitClient {
