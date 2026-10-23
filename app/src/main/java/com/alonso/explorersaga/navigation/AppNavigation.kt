@@ -23,7 +23,6 @@ fun AppNavigation() {
     val placesViewModel: PlacesViewModel = viewModel(factory = appContainer.placesViewModelFactory)
 
     NavHost(navController = navController, startDestination = AppScreens.Home.route) {
-        // ... (otras rutas sin cambios)
         composable(AppScreens.Home.route) {
             HomeScreen(onExploreClicked = { navController.navigate(AppScreens.Informacion.route) })
         }
@@ -37,8 +36,6 @@ fun AppNavigation() {
             MapScreen(
                 viewModel = placesViewModel,
                 onFilterClicked = { navController.navigate(AppScreens.Filtrado.route) },
-                onRoutesClicked = { /* TODO */ },
-                onCenterLocationClicked = { /* TODO */ },
                 onInfoClicked = { navController.navigate(AppScreens.Informacion.route) },
                 onPlacesClicked = { navController.navigate(AppScreens.Lugares.route) }
             )
@@ -53,16 +50,14 @@ fun AppNavigation() {
         composable(AppScreens.Lugares.route) {
             PlacesScreen(
                 onCategorySelected = { category ->
-                    // Lógica de filtrado actualizada para TODAS las categorías
                     val newState = when (category) {
-                        "historico" -> FilterState(monuments = true, iglesias = true, museos = true, restaurants = false, cafeterias = false, bar = false, helados = false, tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = false, ropa = false, tiendasGenerales = false)
-                        "gastronomia" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = true, cafeterias = true, bar = true, helados = true, tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = false, ropa = false, tiendasGenerales = false)
-                        "tienda" -> FilterState(monuments = false, iglesias = false, museos = false, restaurants = false, cafeterias = false, bar = false, helados = false, tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true)
-                        else -> FilterState(monuments=true, iglesias=true, museos=true, restaurants=true, cafeterias=true, bar = true, helados = true, tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true) // Estado por defecto: todo activo
+                        "historico" -> FilterState.HISTORICO
+                        "gastronomia" -> FilterState.GASTRONOMIA
+                        "tienda" -> FilterState.TIENDAS
+                        else -> FilterState.ALL
                     }
                     placesViewModel.updateFilters(newState)
-                    
-                    navController.navigate(AppScreens.PlacesList.route) 
+                    navController.navigate(AppScreens.PlacesList.route)
                 },
                 onMapClicked = { navController.navigate(AppScreens.Mapa.route) },
                 onInfoClicked = { navController.navigate(AppScreens.Informacion.route) }
