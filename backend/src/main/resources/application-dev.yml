@@ -19,7 +19,7 @@ explorersaga:
   providers:
     overpass:
       base-url: https://overpass-api.de/api/interpreter
-      timeout-ms: 10000
+      timeout-ms: 30000
 
 logging:
   level:

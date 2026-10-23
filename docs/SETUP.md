@@ -77,7 +77,7 @@ Antes de iniciar el servidor, se puede validar la suite completa de pruebas unit
   ./mvnw test
   ```
 
-*Resultado esperado:* **36/36 tests pasando exitosamente (`BUILD SUCCESS`).**
+*Resultado esperado:* **39/39 tests pasando exitosamente (`BUILD SUCCESS`).**
 
 ### Iniciar el Backend Spring Boot
 Para arrancar la aplicación backend:
@@ -152,14 +152,16 @@ curl "http://localhost:8080/api/v1/places?category=Monument"
 ### 2. Ejecutar Pruebas Automatizadas de Android
 - Desde la raíz del repositorio o usando Gradle:
   ```bash
-  ./gradlew test
+  ./gradlew testDebugUnitTest lintDebug
   ```
+- Las pruebas unitarias cubren el filtrado por categorías (`FilterStateTest`), el cálculo de distancias (`GeoTest`) y el mapeo de datos remotos/locales (`PlaceMappingTest`).
 
 ### 3. Iniciar la App en el Emulador
 1. Abrir la carpeta raíz del proyecto `ExplorerSaga-Extremadura` en Android Studio.
 2. Sincronizar Gradle (`Gradle Sync`).
 3. Seleccionar un dispositivo AVD en el Device Manager (ej. *Pixel 8 - API 35*).
 4. Pulsar **Run 'app'** (`Shift + F10`).
+5. Al abrir un listado de lugares la app solicita el permiso de ubicación. Si se concede, los lugares se ordenan por cercanía a la última ubicación conocida del dispositivo (en el emulador puede fijarse desde *Extended Controls → Location*); si se deniega, se usa el centro de Mérida como referencia.
 
 ---
 
