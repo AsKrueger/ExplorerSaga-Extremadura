@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Scaffold
-import androidx.compose.ui.Modifier
 import com.alonso.explorersaga.navigation.AppNavigation
 import com.alonso.explorersaga.ui.theme.ExplorerSagaTheme
 import org.osmdroid.config.Configuration
@@ -25,10 +22,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ExplorerSagaTheme {
-                // No usamos el padding aquí; omitir el parámetro evita la advertencia de parámetro no usado
-                Scaffold(modifier = Modifier.fillMaxSize()) {
-                    AppNavigation()
-                }
+                // Cada pantalla define su propio Scaffold y gestiona sus insets
+                AppNavigation()
             }
         }
     }

@@ -1,16 +1,24 @@
 package com.alonso.explorersaga.ui.viewmodels
 
+import android.content.Context
+import android.location.LocationManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alonso.explorersaga.data.DataSourceOrigin
 import com.alonso.explorersaga.data.PlaceEntity
 import com.alonso.explorersaga.data.PlaceRepository
-import com.alonso.explorersaga.data.PlacesResult
+import com.alonso.explorersaga.data.toPlaceModel
 import com.alonso.explorersaga.model.Place
+import com.alonso.explorersaga.util.MERIDA_CENTER
+import com.alonso.explorersaga.util.distanceInMeters
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -20,123 +28,104 @@ data class PlacesUiState(
     val selectedPlace: Place? = null,
     val isLoading: Boolean = false,
     val dataSourceOrigin: DataSourceOrigin = DataSourceOrigin.NONE,
-    val errorMessage: String? = null
-)
-
-// El estado de filtro definitivo con todas las subcategorías
-data class FilterState(
-    val monuments: Boolean = true,
-    val iglesias: Boolean = false,
-    val museos: Boolean = false,
-    val restaurants: Boolean = false,
-    val cafeterias: Boolean = false,
-    val bar: Boolean = false,
-    val helados: Boolean = false,
-    val tiendaAlimentos: Boolean = false,
-    val souvenirs: Boolean = false,
-    val supermercados: Boolean = false,
-    val libreria: Boolean = false,
-    val ropa: Boolean = false,
-    val tiendasGenerales: Boolean = false,
-    val popularFirst: Boolean = false
+    val errorMessage: String? = null,
+    val userLocation: Pair<Double, Double> = MERIDA_CENTER
 )
 
 class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
-    private val _filterState = MutableStateFlow(FilterState(monuments = true, iglesias = true, museos = true, restaurants = true, cafeterias = true, bar = true, helados = true, tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true))
+    private val _filterState = MutableStateFlow(FilterState())
     val filterState: StateFlow<FilterState> = _filterState
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery
+
+    // Ubicación real GPS del usuario (si está disponible en el dispositivo)
+    private val _userLocation = MutableStateFlow(MERIDA_CENTER)
+    val userLocation: StateFlow<Pair<Double, Double>> = _userLocation
 
     private val _uiState = MutableStateFlow(PlacesUiState())
     val uiState: StateFlow<PlacesUiState> = _uiState
 
+    // Cada incremento fuerza una nueva consulta al backend (o al respaldo local)
+    private val refreshTrigger = MutableStateFlow(0)
+
     init {
-        loadPlaces()
+        observePlaces()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
+    private fun observePlaces() {
+        val results = refreshTrigger.mapLatest {
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            repository.getPlacesResult()
+        }
+
         viewModelScope.launch {
-            updateFilters(FilterState(monuments = true))
+            // Los filtros, la búsqueda y la ubicación se aplican en local: no requieren volver a consultar la red
+            combine(results, _filterState, _searchQuery.debounce(250), _userLocation) { result, filters, query, location ->
+                val places = result.places
+                    .filter { filters.matches(it.category) }
+                    .filter { it.matchesQuery(query) }
+                    .map { it.toPlaceModel() }
+                    .sortedBy { distanceInMeters(location.first, location.second, it.latitude, it.longitude) }
+
+                _uiState.update {
+                    it.copy(
+                        places = places,
+                        filterState = filters,
+                        isLoading = false,
+                        dataSourceOrigin = result.origin,
+                        userLocation = location
+                    )
+                }
+            }.collect()
         }
     }
 
-    fun loadPlaces() {
+    fun importFromWeb() {
         viewModelScope.launch {
-            _filterState.flatMapLatest { filters ->
-                _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-                val activeCategories = mutableListOf<String>()
-                if (filters.monuments) {
-                    activeCategories.add("monumento")
-                    activeCategories.add("monument")
-                    activeCategories.add("historical")
-                }
-                if (filters.iglesias) {
-                    activeCategories.add("iglesia")
-                    activeCategories.add("religious")
-                    activeCategories.add("worship")
-                }
-                if (filters.museos) {
-                    activeCategories.add("museo")
-                    activeCategories.add("museum")
-                    activeCategories.add("attraction")
-                    activeCategories.add("tourism")
-                }
-                if (filters.restaurants) {
-                    activeCategories.add("restaurante")
-                    activeCategories.add("restaurant")
-                }
-                if (filters.cafeterias) {
-                    activeCategories.add("cafeteria")
-                    activeCategories.add("cafe")
-                }
-                if (filters.bar) {
-                    activeCategories.add("bar")
-                }
-                if (filters.helados) {
-                    activeCategories.add("heladeria")
-                    activeCategories.add("ice_cream")
-                }
-                if (filters.tiendaAlimentos) {
-                    activeCategories.add("tienda_alimentos")
-                    activeCategories.add("food")
-                }
-                if (filters.souvenirs) {
-                    activeCategories.add("souvenir")
-                }
-                if (filters.supermercados) {
-                    activeCategories.add("supermercado")
-                    activeCategories.add("supermarket")
-                }
-                if (filters.libreria) {
-                    activeCategories.add("libreria")
-                    activeCategories.add("book")
-                }
-                if (filters.ropa) {
-                    activeCategories.add("ropa")
-                    activeCategories.add("clothes")
-                }
-                if (filters.tiendasGenerales) {
-                    activeCategories.add("tienda_general")
-                    activeCategories.add("shop")
-                    activeCategories.add("store")
-                }
-
-                if (activeCategories.isEmpty()) {
-                    flowOf(PlacesResult(emptyList(), DataSourceOrigin.NONE))
-                } else {
-                    repository.getPlacesByCategories(activeCategories)
-                }
-            }.collect { result ->
-                _uiState.update { currentState ->
-                    currentState.copy(
-                        places = result.places.map { it.toPlaceUiModel() },
-                        filterState = _filterState.value,
-                        isLoading = false,
-                        dataSourceOrigin = result.origin
-                    )
-                }
-            }
+            _uiState.update { it.copy(isLoading = true) }
+            repository.importPlacesFromWeb()
+            refresh()
         }
     }
 
     fun retry() {
-        loadPlaces()
+        refresh()
+    }
+
+    private fun refresh() {
+        refreshTrigger.update { it + 1 }
+    }
+
+    // Actualiza la ubicación GPS real del usuario desde el sensor del dispositivo
+    fun updateUserLocation(latitude: Double, longitude: Double) {
+        _userLocation.value = Pair(latitude, longitude)
+    }
+
+    // Obtiene la última ubicación conocida usando el LocationManager del sistema Android
+    fun fetchDeviceLocation(context: Context) {
+        try {
+            val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as? LocationManager ?: return
+            val providers = listOf(
+                LocationManager.GPS_PROVIDER,
+                LocationManager.NETWORK_PROVIDER,
+                LocationManager.PASSIVE_PROVIDER
+            )
+            val bestLocation = providers
+                .filter { locationManager.isProviderEnabled(it) || it == LocationManager.PASSIVE_PROVIDER }
+                .firstNotNullOfOrNull { locationManager.getLastKnownLocation(it) }
+
+            bestLocation?.let { updateUserLocation(it.latitude, it.longitude) }
+        } catch (e: SecurityException) {
+            // Sin permiso de ubicación: se mantiene la ubicación por defecto
+            e.printStackTrace()
+        }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        _searchQuery.value = query
     }
 
     fun updateFilters(newFilterState: FilterState) {
@@ -144,12 +133,15 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
     }
 
     fun loadPlaceById(id: Int) {
+        // Se prioriza el lugar ya cargado en la lista para mostrarlo al instante y evitar
+        // confundirlo con otro lugar con el mismo id procedente de una fuente distinta
+        val placeFromList = _uiState.value.places.find { it.id == id }
+        _uiState.update { it.copy(selectedPlace = placeFromList) }
+        if (placeFromList != null) return
+
         viewModelScope.launch {
-            repository.getPlaceByIdFlow(id).collect { placeEntity ->
-                _uiState.update { currentState ->
-                    currentState.copy(selectedPlace = placeEntity?.toPlaceUiModel())
-                }
-            }
+            val place = repository.getPlaceById(id.toLong())?.toPlaceModel()
+            _uiState.update { it.copy(selectedPlace = place) }
         }
     }
 
@@ -158,17 +150,9 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
     }
 }
 
-fun PlaceEntity.toPlaceUiModel(): Place {
-    return Place(
-        id = this.id,
-        name = this.name,
-        description = this.description,
-        category = this.category,
-        horarios = this.horarios,
-        direccion = this.direccion,
-        latitude = this.latitude,
-        longitude = this.longitude,
-        photo = this.photo,
-        website = this.website
-    )
+private fun PlaceEntity.matchesQuery(query: String): Boolean {
+    if (query.isBlank()) return true
+    return name.contains(query, ignoreCase = true) ||
+            description.contains(query, ignoreCase = true) ||
+            direccion?.contains(query, ignoreCase = true) == true
 }

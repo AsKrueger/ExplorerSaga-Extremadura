@@ -73,3 +73,19 @@ Este documento sirve como un registro del trabajo de desarrollo completado, docu
 -   **Issue #23: [Corrección de Configuración Local de Android SDK (`local.properties`)] - CERRADO ✅**
     -   **Descripción:** Resolver el error de compilación `SDK location not found` producido cuando se ejecuta Gradle desde la línea de comandos o en un entorno recién clonado sin la variable `ANDROID_HOME` o el archivo `local.properties`.
     -   **Resultado:** Se creó una plantilla `local.properties.example` en la raíz del proyecto, se configuró `local.properties` con la ruta válida del SDK de Android escapada correctamente para Windows/Linux/macOS y se documentó detalladamente la solución en la Sección 8 de [docs/SETUP.md](docs/SETUP.md).
+
+---
+
+### **EPIC: 🧹 Mantenimiento y Calidad (Post-MVP)**
+
+-   **Issue #24: [Limpieza del Repositorio: Artefactos, Configuración Local y Recursos sin Uso] - CERRADO ✅**
+    -   **Descripción:** Eliminar del control de versiones los logs de compilación, informes de error de Kotlin, artefactos de asistentes, la configuración personal del IDE, un submódulo roto y `google-services.json` (Firebase no se utiliza), así como el código muerto y los recursos sin referencias.
+    -   **Resultado:** Se consolidó el `.gitignore` raíz, se eliminaron `SampleDao.kt`, `SampleEntity.kt` y `Shared.kt`, el set de iconos duplicado `ic_explorersaga*`, drawables, strings, colores y familias de fuentes sin uso (verificado con `lintDebug`), y el arte original del logo se trasladó a `docs/assets/branding/`.
+
+-   **Issue #25: [Corrección de Defectos y Refactorización de la App Android] - CERRADO ✅**
+    -   **Descripción:** Corregir los defectos detectados tras la sincronización web y la ordenación por cercanía GPS: colectores de `Flow` duplicados en cada reintento, peticiones de red en cada pulsación del buscador, permiso de ubicación nunca solicitado, botón de sitio web con URL vacía, paleta corporativa sin aplicar y ausencia de pruebas unitarias reales.
+    -   **Resultado:** `PlacesViewModel` pasa a un único flujo (la red solo se consulta al iniciar, reintentar o importar), `FilterState` centraliza las palabras clave y los presets de categorías, la app solicita el permiso de ubicación en tiempo de ejecución, los campos remotos vacíos se mapean a `null`, el tema aplica la paleta verde de ExplorerSaga y se añaden 13 pruebas unitarias (`FilterStateTest`, `GeoTest`, `PlaceMappingTest`).
+
+-   **Issue #26: [Corrección de la Importación desde Overpass API] - CERRADO ✅**
+    -   **Descripción:** La importación `POST /api/v1/places/import` terminaba "con éxito" con 0 lugares frente a la API pública: la consulta se codificaba dos veces (`URLEncoder` + plantilla URI de `RestTemplate`), las `way` llegaban sin coordenadas con `out body; >; out skel qt;` y el timeout configurado no se aplicaba.
+    -   **Resultado:** El adaptador envía un `URI` ya codificado y usa `out center;`, lo que incorpora 44 áreas con nombre adicionales en Mérida (Acueducto de los Milagros, Circo Romano, MNAR…). `HttpClientConfig` aplica `timeout-ms` (30 000 ms) al `RestTemplate` y se añade `OverpassAdapterTest` (3 pruebas). La suite del backend pasa de 36 a 39 pruebas.

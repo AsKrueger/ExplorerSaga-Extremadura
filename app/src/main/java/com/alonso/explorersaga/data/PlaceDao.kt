@@ -12,9 +12,14 @@ interface PlaceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPlace(place: PlaceEntity)
 
-    // NUEVA FUNCIÓN EFICIENTE
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(places: List<PlaceEntity>)
+
+    @Query("SELECT * FROM places")
+    suspend fun getAllPlacesList(): List<PlaceEntity>
+
+    @Query("SELECT * FROM places WHERE category LIKE '%' || :categoryName || '%'")
+    suspend fun getPlacesByCategoryList(categoryName: String): List<PlaceEntity>
 
     @Query("SELECT * FROM places WHERE category = :categoryName")
     fun getPlacesByCategory(categoryName: String): Flow<List<PlaceEntity>>
