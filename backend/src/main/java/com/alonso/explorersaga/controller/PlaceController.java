@@ -52,10 +52,12 @@ public class PlaceController {
     }
 
     @PostMapping("/import")
-    @Operation(summary = "Importar lugares turísticos de Overpass API", description = "Ejecuta la importación y normalización de lugares de interés desde OpenStreetMap/Overpass API.")
+    @Operation(summary = "Importar lugares turísticos de Overpass API", description = "Ejecuta la importación y normalización de lugares de interés desde OpenStreetMap/Overpass API. Es idempotente: los elementos ya importados se omiten y los que coinciden por nombre y cercanía con un lugar existente se enlazan a él (merged).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Importación ejecutada con éxito",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ImportResult.class)))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ImportResult.class))),
+            @ApiResponse(responseCode = "502", description = "Overpass API no disponible tras agotar los reintentos",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class)))
     })
     public ResponseEntity<ImportResult> importPlaces() {
         ImportResult result = importTourismPlacesUseCase.importPlaces();

@@ -110,6 +110,15 @@ fun PlacesListScreen(
                 }
             }
 
+            uiState.errorMessage?.let { message ->
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
+                )
+            }
+
             // Búsqueda interactiva en tiempo real ("Live Web Search")
             TextField(
                 value = searchQuery,

@@ -6,6 +6,7 @@ import com.alonso.explorersaga.application.port.in.PlaceUseCase;
 import com.alonso.explorersaga.dto.category.CategoryResponse;
 import com.alonso.explorersaga.dto.place.PlaceCreateRequest;
 import com.alonso.explorersaga.dto.place.PlaceResponse;
+import com.alonso.explorersaga.exception.ExternalProviderException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,7 +100,7 @@ class PlaceControllerTest {
 
     @Test
     void importPlaces_Success() throws Exception {
-        ImportResult importResult = new ImportResult(10, 8, 1, 1, 0);
+        ImportResult importResult = new ImportResult(10, 8, 1, 1, 0, 0);
         when(importTourismPlacesUseCase.importPlaces()).thenReturn(importResult);
 
         mockMvc.perform(post("/api/v1/places/import"))
@@ -107,5 +108,16 @@ class PlaceControllerTest {
                 .andExpect(jsonPath("$.processed").value(10))
                 .andExpect(jsonPath("$.inserted").value(8))
                 .andExpect(jsonPath("$.updated").value(1));
+    }
+
+    @Test
+    void importPlaces_ProviderUnavailable_ReturnsBadGateway() throws Exception {
+        when(importTourismPlacesUseCase.importPlaces())
+                .thenThrow(new ExternalProviderException("Overpass API no está disponible"));
+
+        mockMvc.perform(post("/api/v1/places/import"))
+                .andExpect(status().isBadGateway())
+                .andExpect(jsonPath("$.status").value(502))
+                .andExpect(jsonPath("$.message").value("Overpass API no está disponible"));
     }
 }

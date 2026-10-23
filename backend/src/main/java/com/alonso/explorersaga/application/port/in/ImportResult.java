@@ -5,5 +5,6 @@ public record ImportResult(
         int inserted,
         int updated,
         int skipped,
-        int failed
+        int failed,
+        int merged
 ) {}
