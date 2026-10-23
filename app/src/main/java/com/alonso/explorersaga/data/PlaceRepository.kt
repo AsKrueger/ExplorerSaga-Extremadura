@@ -33,7 +33,7 @@ class PlaceRepository(
     suspend fun importPlacesFromWeb(): ImportResultDto? = withContext(Dispatchers.IO) {
         try {
             // Los lugares importados se descargan y guardan en local en la siguiente llamada a getPlacesResult()
-            RetrofitClient.api.importPlaces()
+            RetrofitClient.importApi.importPlaces()
         } catch (e: Exception) {
             e.printStackTrace()
             null

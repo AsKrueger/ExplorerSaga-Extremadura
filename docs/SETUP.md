@@ -77,7 +77,7 @@ Antes de iniciar el servidor, se puede validar la suite completa de pruebas unit
   ./mvnw test
   ```
 
-*Resultado esperado:* **39/39 tests pasando exitosamente (`BUILD SUCCESS`).**
+*Resultado esperado:* **48/48 tests pasando exitosamente (`BUILD SUCCESS`).**
 
 ### Iniciar el Backend Spring Boot
 Para arrancar la aplicación backend:
@@ -114,23 +114,27 @@ Para poblar la base de datos PostgreSQL con los lugares turísticos reales de M�
 curl -X POST http://localhost:8080/api/v1/places/import
 ```
 
-*Respuesta esperada (JSON con métricas de la importación):*
+*Respuesta esperada (JSON con métricas de la importación; los valores dependen del estado actual de OpenStreetMap):*
 ```json
 {
-  "processed": 42,
-  "inserted": 42,
+  "processed": 220,
+  "inserted": 202,
   "updated": 0,
   "skipped": 0,
-  "failed": 0
+  "failed": 0,
+  "merged": 18
 }
 ```
+`merged` cuenta los elementos de OSM que coinciden con un lugar ya registrado (por ejemplo, del seed) y se enlazan a él en lugar de duplicarlo. Ver [docs/api/API.md](api/API.md).
+
+La importación puede tardar hasta un par de minutos: si la instancia pública principal de Overpass está saturada, el backend prueba la instancia alternativa y reintenta con espera progresiva. Si ninguna responde, devuelve `502 Bad Gateway`.
 
 ### Probar Idempotencia:
 Si se vuelve a ejecutar la misma petición inmediatamente:
 ```bash
 curl -X POST http://localhost:8080/api/v1/places/import
 ```
-*Respuesta esperada:* `processed: 42`, `inserted: 0`, `updated: 0`, `skipped: 42`. Ningún registro se duplica gracias al identificador unívoco de fuente externa.
+*Respuesta esperada:* `inserted: 0`, `updated: 0`, `merged: 0` y todos los elementos en `skipped`. Ningún registro se duplica gracias al identificador unívoco de fuente externa.
 
 ### Consultar Lugares Almacenados:
 ```bash
@@ -138,7 +142,7 @@ curl -X POST http://localhost:8080/api/v1/places/import
 curl http://localhost:8080/api/v1/places
 
 # Filtrar por categoría (ej. Monumentos)
-curl "http://localhost:8080/api/v1/places?category=Monument"
+curl "http://localhost:8080/api/v1/places?category=monumento"
 ```
 
 ---
@@ -189,7 +193,8 @@ curl "http://localhost:8080/api/v1/places?category=Monument"
    - Recordar que en el emulador de Android debe usarse la IP `10.0.2.2` en lugar de `localhost`. Si se utiliza un dispositivo físico conectado por USB, se debe configurar `adb reverse tcp:8080 tcp:8080` o cambiar la URL base en `RetrofitClient` a la IP local de la red Wi-Fi.
 
 3. **Límite de peticiones de Overpass API (HTTP 429 / 504 Gateway Timeout):**
-   - Overpass API es una API pública compartida con límites de frecuencia. Si la importación falla por timeout, reintentar tras unos segundos. La lógica del backend captura el error amigablemente y no corrompe la base de datos.
+   - Overpass API es una API pública compartida y se satura con frecuencia. El backend ya reintenta y prueba una instancia alternativa; si aun así responde `502 Bad Gateway` (en la app: aviso en rojo sobre el listado), reintentar pasados unos minutos. Un fallo no modifica la base de datos.
+   - Las instancias, el timeout y los reintentos se configuran en `application-dev.yml` (`explorersaga.providers.overpass`).
 
 4. **Error de compilación en Gradle (`SDK location not found`):**
    - **Causa:** El archivo `local.properties` no existe o no define la ruta válida del SDK de Android en el sistema anfitrión (`sdk.dir`). Este archivo está excluido del control de versiones (`.gitignore`) por contener rutas específicas de cada desarrollador.
@@ -205,5 +210,6 @@ curl "http://localhost:8080/api/v1/places?category=Monument"
 ## 📌 9. Limitaciones Conocidas del MVP
 
 - **Llamada manual de importación:** La sincronización con Overpass API se desencadena actualmente mediante una petición HTTP POST manual (`/api/v1/places/import`), reservando la automatización periódica en segundo plano para fases posteriores.
-- **Formato de categorías:** Las categorías de OpenStreetMap importadas utilizan nombres estándar en inglés (`Historical Monument`, `Tourism Attraction`, `Religious Site`), las cuales han sido mapeadas en la UI de Android para convivir de forma transparente con los datos locales en español.
+- **Categorías:** Las etiquetas de OpenStreetMap se normalizan al mismo vocabulario en español que el seed y los datos locales (`monumento`, `museo`, `iglesia`, `restaurante`…). La migración `V3` adapta las bases de datos con categorías antiguas en inglés.
+- **Datos de OSM incompletos:** Muchos lugares importados carecen de descripción, dirección, horarios o foto, porque OpenStreetMap no siempre los incluye.
 - **Rutas turísticas:** La función de rutas en el mapa está planificada como una extensión futura.

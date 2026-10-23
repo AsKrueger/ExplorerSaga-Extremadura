@@ -32,6 +32,9 @@ data class PlacesUiState(
     val userLocation: Pair<Double, Double> = MERIDA_CENTER
 )
 
+private const val IMPORT_ERROR_MESSAGE =
+    "No se pudo importar desde OpenStreetMap. El servicio puede estar saturado: inténtalo de nuevo en unos minutos."
+
 class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     private val _filterState = MutableStateFlow(FilterState())
@@ -85,9 +88,14 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     fun importFromWeb() {
         viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            repository.importPlacesFromWeb()
-            refresh()
+            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+            if (repository.importPlacesFromWeb() != null) {
+                refresh()
+            } else {
+                _uiState.update {
+                    it.copy(isLoading = false, errorMessage = IMPORT_ERROR_MESSAGE)
+                }
+            }
         }
     }
 
