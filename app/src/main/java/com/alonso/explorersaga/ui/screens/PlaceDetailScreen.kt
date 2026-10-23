@@ -1,6 +1,6 @@
 package com.alonso.explorersaga.ui.screens
 
-import android.content.Context
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -44,6 +44,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import coil.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
+import com.alonso.explorersaga.ui.composables.rememberPlaceImageModel
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapView
@@ -52,13 +53,7 @@ import org.osmdroid.views.overlay.Marker
 @Composable
 fun PlaceDetailScreen(place: Place) {
     val context = LocalContext.current
-    val imageResId = remember(place.photo) {
-        if (place.photo?.startsWith("http") == false) {
-            getDrawableResourceId(context, place.photo)
-        } else {
-            null
-        }
-    }
+    val imageModel = rememberPlaceImageModel(place.photo)
 
     Scaffold {
         Column(
@@ -75,7 +70,7 @@ fun PlaceDetailScreen(place: Place) {
             ) {
                 // La Imagen
                 AsyncImage(
-                    model = imageResId ?: place.photo ?: R.drawable.teatro_merida,
+                    model = imageModel ?: R.drawable.teatro_merida,
                     contentDescription = place.name,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop,
@@ -122,12 +117,12 @@ fun PlaceDetailScreen(place: Place) {
                 HorizontalDivider()
 
                 // Horarios
-                place.horarios?.let {
+                place.horarios?.takeIf { it.isNotBlank() }?.let {
                     InfoRow(label = "Horarios:", value = it)
                 }
 
                 // Dirección
-                place.direccion?.let {
+                place.direccion?.takeIf { it.isNotBlank() }?.let {
                     InfoRow(label = "Dirección:", value = it)
                 }
 
@@ -145,11 +140,14 @@ fun PlaceDetailScreen(place: Place) {
                 )
 
                 // Botón para visitar el sitio web
-                place.website?.let { url ->
+                place.website?.takeIf { it.isNotBlank() }?.let { url ->
                     Button(
                         onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            context.startActivity(intent)
+                            try {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            } catch (e: ActivityNotFoundException) {
+                                e.printStackTrace()
+                            }
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -179,11 +177,6 @@ private fun InfoRow(label: String, value: String) {
             style = MaterialTheme.typography.bodyMedium
         )
     }
-}
-
-private fun getDrawableResourceId(context: Context, name: String): Int? {
-    val resourceId = context.resources.getIdentifier(name, "drawable", context.packageName)
-    return if (resourceId == 0) null else resourceId
 }
 
 @Composable

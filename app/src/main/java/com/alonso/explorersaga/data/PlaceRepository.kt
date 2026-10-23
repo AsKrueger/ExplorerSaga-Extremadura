@@ -6,8 +6,6 @@ import com.alonso.explorersaga.data.remote.PlaceResponseDto
 import com.alonso.explorersaga.data.remote.RetrofitClient
 import com.alonso.explorersaga.model.Place
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -34,25 +32,18 @@ class PlaceRepository(
 
     suspend fun importPlacesFromWeb(): ImportResultDto? = withContext(Dispatchers.IO) {
         try {
-            val result = RetrofitClient.api.importPlaces()
-            // Tras la importación web, recupera los nuevos lugares de internet y actualiza el JSON local
-            val remotePlaces = RetrofitClient.api.getPlaces()
-            if (remotePlaces.isNotEmpty()) {
-                val entities = remotePlaces.map { it.toPlaceEntity() }
-                placeDao.insertAll(entities)
-                saveAndSyncToLocalJson(entities)
-            }
-            result
+            // Los lugares importados se descargan y guardan en local en la siguiente llamada a getPlacesResult()
+            RetrofitClient.api.importPlaces()
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
     }
 
-    suspend fun getPlacesResult(category: String? = null): PlacesResult = withContext(Dispatchers.IO) {
+    suspend fun getPlacesResult(): PlacesResult = withContext(Dispatchers.IO) {
         try {
             // 1. ONLINE: Busca automáticamente en internet / backend
-            val remotePlaces = RetrofitClient.api.getPlaces(category)
+            val remotePlaces = RetrofitClient.api.getPlaces()
             if (remotePlaces.isNotEmpty()) {
                 val entities = remotePlaces.map { it.toPlaceEntity() }
                 // Guarda y actualiza los resultados de internet en la BD local y en el archivo JSON local
@@ -65,13 +56,11 @@ class PlaceRepository(
                 PlacesResult(entities, DataSourceOrigin.REMOTE)
             } else {
                 // Si no hay respuesta online, carga la última versión guardada en el JSON local
-                val localPlaces = getLocalPlacesFromPersistentJson(category)
-                PlacesResult(localPlaces, DataSourceOrigin.LOCAL_FALLBACK)
+                PlacesResult(getLocalPlacesFromPersistentJson(), DataSourceOrigin.LOCAL_FALLBACK)
             }
         } catch (e: Exception) {
             // 2. OFFLINE (Sin Internet): Carga únicamente la última actualización guardada en el JSON local
-            val localPlaces = getLocalPlacesFromPersistentJson(category)
-            PlacesResult(localPlaces, DataSourceOrigin.LOCAL_FALLBACK)
+            PlacesResult(getLocalPlacesFromPersistentJson(), DataSourceOrigin.LOCAL_FALLBACK)
         }
     }
 
@@ -114,10 +103,10 @@ class PlaceRepository(
     }
 
     // Carga la última versión guardada del archivo JSON local (o cae a assets si aún no se ha creado)
-    private fun getLocalPlacesFromPersistentJson(category: String? = null): List<PlaceEntity> {
+    private fun getLocalPlacesFromPersistentJson(): List<PlaceEntity> {
         return try {
             val jsonFile = File(context.filesDir, "saved_places.json")
-            val places = if (jsonFile.exists()) {
+            if (jsonFile.exists()) {
                 val text = jsonFile.readText()
                 if (text.isNotBlank()) {
                     val placesModel = json.decodeFromString<List<Place>>(text)
@@ -128,16 +117,9 @@ class PlaceRepository(
             } else {
                 loadPlacesFromAssets()
             }
-
-            if (category != null) {
-                places.filter { it.category.contains(category, ignoreCase = true) }
-            } else {
-                places
-            }
         } catch (e: Exception) {
             e.printStackTrace()
-            val localPlaces = loadPlacesFromAssets()
-            if (category != null) localPlaces.filter { it.category.contains(category, ignoreCase = true) } else localPlaces
+            loadPlacesFromAssets()
         }
     }
 
@@ -157,24 +139,6 @@ class PlaceRepository(
             val persistentPlaces = getLocalPlacesFromPersistentJson()
             persistentPlaces.find { it.id.toLong() == id }
         }
-    }
-
-    fun getPlacesByCategories(categories: List<String>): Flow<PlacesResult> = flow {
-        val categoryQuery = if (categories.size == 1) categories.first() else null
-        val result = getPlacesResult(categoryQuery)
-        val filtered = if (categoryQuery != null) {
-            result.places
-        } else {
-            result.places.filter { place ->
-                categories.any { cat -> place.category.contains(cat, ignoreCase = true) }
-            }
-        }
-        emit(PlacesResult(filtered, result.origin))
-    }
-
-    fun getPlaceByIdFlow(id: Int): Flow<PlaceEntity?> = flow {
-        val place = getPlaceById(id.toLong())
-        emit(place)
     }
 
     private fun loadAllPlacesFromAssetsModel(): List<Place> {
@@ -218,14 +182,15 @@ fun PlaceResponseDto.toPlaceEntity(): PlaceEntity {
     return PlaceEntity(
         id = this.id.toInt(),
         name = this.name,
-        description = this.description ?: "",
+        description = this.description.orEmpty(),
         category = this.category?.name ?: "Monument",
-        horarios = "",
-        direccion = this.address ?: "",
+        // El backend todavía no expone horarios, fotos ni web: se dejan a null para que la UI los oculte
+        horarios = null,
+        direccion = this.address?.takeIf { it.isNotBlank() },
         latitude = this.latitude,
         longitude = this.longitude,
-        photo = "",
-        website = ""
+        photo = null,
+        website = null
     )
 }
 

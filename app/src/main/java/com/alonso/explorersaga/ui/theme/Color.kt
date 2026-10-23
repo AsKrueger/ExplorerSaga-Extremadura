@@ -2,40 +2,49 @@ package com.alonso.explorersaga.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// Colores de la paleta de Material Design 3
-val Primary = Color(0xFF007A33) // Verde principal
-val OnPrimary = Color(0xFFFFFFFF) // Texto sobre color primario
+// Paleta Material Design 3 de ExplorerSaga (verde de la bandera de Extremadura) - tema claro
+val Primary = Color(0xFF007A33)
+val OnPrimary = Color(0xFFFFFFFF)
 val PrimaryContainer = Color(0xFF9FFB9F)
 val OnPrimaryContainer = Color(0xFF00210A)
 
-val Secondary = Color(0xFF52634F) // Color secundario
+val Secondary = Color(0xFF52634F)
 val OnSecondary = Color(0xFFFFFFFF)
 val SecondaryContainer = Color(0xFFD5E8D0)
 val OnSecondaryContainer = Color(0xFF101F10)
 
-val Tertiary = Color(0xFF38656A) // Color terciario
+val Tertiary = Color(0xFF38656A)
 val OnTertiary = Color(0xFFFFFFFF)
 val TertiaryContainer = Color(0xFFBCEBEF)
 val OnTertiaryContainer = Color(0xFF002022)
 
-val Error = Color(0xFFBA1A1A) // Color para errores
+val Error = Color(0xFFBA1A1A)
 val OnError = Color(0xFFFFFFFF)
 val ErrorContainer = Color(0xFFFFDAD6)
 val OnErrorContainer = Color(0xFF410002)
 
-val Background = Color(0xFFFCFDF6) // Color de fondo de la app
+val Background = Color(0xFFFCFDF6)
 val OnBackground = Color(0xFF1A1C19)
-val Surface = Color(0xFFFCFDF6) // Color de las superficies (cards, etc.)
+val Surface = Color(0xFFFCFDF6)
 val OnSurface = Color(0xFF1A1C19)
 
-// Colores antiguos, los mantenemos por si se usan en algún lugar
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Tonos equivalentes para el tema oscuro
+val PrimaryDark = Color(0xFF83DE85)
+val OnPrimaryDark = Color(0xFF003914)
+val PrimaryContainerDark = Color(0xFF005323)
+val OnPrimaryContainerDark = Color(0xFF9FFB9F)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val SecondaryDark = Color(0xFFB9CCB4)
+val OnSecondaryDark = Color(0xFF253423)
+val SecondaryContainerDark = Color(0xFF3B4B39)
+val OnSecondaryContainerDark = Color(0xFFD5E8D0)
 
-// El color verde de la bandera, ahora parte del tema como 'Primary'
-val VerdeBandera = Primary
+val TertiaryDark = Color(0xFFA0CFD3)
+val OnTertiaryDark = Color(0xFF00363A)
+val TertiaryContainerDark = Color(0xFF1E4D51)
+val OnTertiaryContainerDark = Color(0xFFBCEBEF)
+
+val BackgroundDark = Color(0xFF1A1C19)
+val OnBackgroundDark = Color(0xFFE2E3DD)
+val SurfaceDark = Color(0xFF1A1C19)
+val OnSurfaceDark = Color(0xFFE2E3DD)

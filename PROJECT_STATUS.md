@@ -62,6 +62,8 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 ### **EPIC: 🧹 Mantenimiento y Calidad (Post-MVP)**
 -   **Issue #24: [Limpieza del Repositorio] - COMPLETADO ✅**
     -   Eliminación de artefactos locales, configuración personal del IDE, código muerto y recursos sin uso.
+-   **Issue #25: [Corrección de Defectos y Refactorización Android] - COMPLETADO ✅**
+    -   ViewModel con un único flujo reactivo, permiso de ubicación en tiempo de ejecución, paleta corporativa y 13 pruebas unitarias.
 
 ---
 

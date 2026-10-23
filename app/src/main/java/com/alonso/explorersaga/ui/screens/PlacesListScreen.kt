@@ -1,5 +1,9 @@
 package com.alonso.explorersaga.ui.screens
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,12 +33,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.alonso.explorersaga.data.DataSourceOrigin
 import com.alonso.explorersaga.navigation.AppScreens
 import com.alonso.explorersaga.ui.composables.PlaceListItem
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
+
+private val LOCATION_PERMISSIONS = arrayOf(
+    Manifest.permission.ACCESS_FINE_LOCATION,
+    Manifest.permission.ACCESS_COARSE_LOCATION
+)
 
 @Composable
 fun PlacesListScreen(
@@ -46,9 +56,21 @@ fun PlacesListScreen(
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
     val filterState = uiState.filterState
 
-    // Solicitar ubicación GPS real del dispositivo al cargar la pantalla
+    // Solicitar el permiso de ubicación en tiempo de ejecución y, si se concede, leer la ubicación GPS real
+    val locationPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { grants ->
+        if (grants.values.any { it }) viewModel.fetchDeviceLocation(context)
+    }
     LaunchedEffect(Unit) {
-        viewModel.fetchDeviceLocation(context)
+        val hasLocationPermission = LOCATION_PERMISSIONS.any {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+        if (hasLocationPermission) {
+            viewModel.fetchDeviceLocation(context)
+        } else {
+            locationPermissionLauncher.launch(LOCATION_PERMISSIONS)
+        }
     }
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -143,7 +165,7 @@ fun PlacesListScreen(
                         item { FilterChip(selected = filterState.tiendaAlimentos && filterState.souvenirs && filterState.supermercados && filterState.libreria && filterState.ropa && filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = true, souvenirs = true, supermercados = true, libreria = true, ropa = true, tiendasGenerales = true)) }, label = { Text("Todas") }) }
                         item { FilterChip(selected = filterState.tiendaAlimentos && !filterState.souvenirs && !filterState.supermercados && !filterState.libreria && !filterState.ropa && !filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = true, souvenirs = false, supermercados = false, libreria = false, ropa = false, tiendasGenerales = false)) }, label = { Text("Alimentos") }) }
                         item { FilterChip(selected = !filterState.tiendaAlimentos && filterState.souvenirs && !filterState.supermercados && !filterState.libreria && !filterState.ropa && !filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = false, souvenirs = true, supermercados = false, libreria = false, ropa = false, tiendasGenerales = false)) }, label = { Text("Souvenirs") }) }
-                        item { FilterChip(selected = !filterState.tiendaAlimentos && !filterState.souvenirs && filterState.supermercados && filterState.libreria && !filterState.ropa && !filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = false, souvenirs = false, supermercados = true, libreria = false, ropa = false, tiendasGenerales = false)) }, label = { Text("Supermercados") }) }
+                        item { FilterChip(selected = !filterState.tiendaAlimentos && !filterState.souvenirs && filterState.supermercados && !filterState.libreria && !filterState.ropa && !filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = false, souvenirs = false, supermercados = true, libreria = false, ropa = false, tiendasGenerales = false)) }, label = { Text("Supermercados") }) }
                         item { FilterChip(selected = !filterState.tiendaAlimentos && !filterState.souvenirs && !filterState.supermercados && filterState.libreria && !filterState.ropa && !filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = true, ropa = false, tiendasGenerales = false)) }, label = { Text("Librería") }) }
                         item { FilterChip(selected = !filterState.tiendaAlimentos && !filterState.souvenirs && !filterState.supermercados && !filterState.libreria && filterState.ropa && !filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = false, ropa = true, tiendasGenerales = false)) }, label = { Text("Ropa") }) }
                         item { FilterChip(selected = !filterState.tiendaAlimentos && !filterState.souvenirs && !filterState.supermercados && !filterState.libreria && !filterState.ropa && filterState.tiendasGenerales, onClick = { viewModel.updateFilters(filterState.copy(tiendaAlimentos = false, souvenirs = false, supermercados = false, libreria = false, ropa = false, tiendasGenerales = true)) }, label = { Text("General") }) }

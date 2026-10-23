@@ -1,10 +1,10 @@
 package com.alonso.explorersaga.ui.screens
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.net.Uri
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +52,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -65,6 +64,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
+import com.alonso.explorersaga.ui.composables.rememberPlaceImageModel
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 import kotlinx.coroutines.launch
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
@@ -77,8 +77,6 @@ import org.osmdroid.views.overlay.Marker
 fun MapScreen(
     viewModel: PlacesViewModel,
     onFilterClicked: () -> Unit,
-    onRoutesClicked: () -> Unit, // TODO
-    onCenterLocationClicked: () -> Unit, // TODO
     onInfoClicked: () -> Unit,
     onPlacesClicked: () -> Unit
 ) {
@@ -255,6 +253,7 @@ fun MapScreen(
 private fun PlaceDetailSheet(place: Place) {
     val scrollState = rememberScrollState()
     val context = LocalContext.current
+    val imageModel = rememberPlaceImageModel(place.photo)
 
     Column(
         modifier = Modifier
@@ -264,30 +263,15 @@ private fun PlaceDetailSheet(place: Place) {
     ) {
         // Imagen y Título
         Box(contentAlignment = Alignment.BottomStart) {
-            place.photo?.let {
-                val photoUri = it
-                if (photoUri.startsWith("http")) {
-                    AsyncImage(
-                        model = photoUri,
-                        contentDescription = place.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    val resourceId = context.resources.getIdentifier(photoUri, "drawable", context.packageName)
-                    if (resourceId != 0) {
-                        Image(
-                            painter = painterResource(id = resourceId),
-                            contentDescription = place.name,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(250.dp),
-                            contentScale = ContentScale.Crop
-                        )
-                    }
-                }
+            imageModel?.let {
+                AsyncImage(
+                    model = it,
+                    contentDescription = place.name,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(250.dp),
+                    contentScale = ContentScale.Crop
+                )
             }
             Box(
                 modifier = Modifier
@@ -315,13 +299,13 @@ private fun PlaceDetailSheet(place: Place) {
 
             // Detalles
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                place.horarios?.let {
+                place.horarios?.takeIf { it.isNotBlank() }?.let {
                     Row {
                         Text("Horarios:", fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
                         Text(it)
                     }
                 }
-                place.direccion?.let {
+                place.direccion?.takeIf { it.isNotBlank() }?.let {
                     Row {
                         Text("Dirección:", fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
                         Text(it)
@@ -336,8 +320,11 @@ private fun PlaceDetailSheet(place: Place) {
                 if (url.isNotBlank()) {
                     Button(
                         onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                            context.startActivity(intent)
+                            try {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+                            } catch (e: ActivityNotFoundException) {
+                                e.printStackTrace()
+                            }
                         },
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(12.dp)
