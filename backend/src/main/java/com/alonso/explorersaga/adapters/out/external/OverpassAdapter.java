@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -42,14 +43,13 @@ public class OverpassAdapter implements TourismDataProvider {
                   node["amenity"~"place_of_worship|restaurant|cafe|bar|pub|ice_cream"](38.88,-6.36,38.95,-6.30);
                   node["shop"](38.88,-6.36,38.95,-6.30);
                 );
-                out body;
-                >;
-                out skel qt;
+                out center;
                 """;
 
         try {
-            String requestUrl = baseUrl + "?data=" + URLEncoder.encode(query, StandardCharsets.UTF_8);
-            OverpassResponseDto response = restTemplate.getForObject(requestUrl, OverpassResponseDto.class);
+            // Se pasa un URI ya codificado para que RestTemplate no vuelva a codificar la consulta
+            URI requestUri = URI.create(baseUrl + "?data=" + URLEncoder.encode(query, StandardCharsets.UTF_8));
+            OverpassResponseDto response = restTemplate.getForObject(requestUri, OverpassResponseDto.class);
 
             if (response == null || response.getElements() == null) {
                 return Collections.emptyList();

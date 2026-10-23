@@ -23,7 +23,7 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 | **4. API REST y Filtrado por Categorías** | ✅ | Controladores `/api/v1/places` con filtros y especificación OpenAPI/Swagger interactiva. |
 | **5. Consumo Remoto desde Android** | ✅ | `RetrofitClient` integrado consumiendo API REST v1 y mapeando entidades a modelos Composable. |
 | **6. Resiliencia & Respaldo Local (Offline)** | ✅ | Conmutación transparente a assets JSON locales y base de datos Room con indicadores de estado (`🟢` / `🟡`). |
-| **7. Suite de Pruebas Automatizadas** | ✅ | **36/36 tests Backend PASSED** (`mvnw clean verify`), **Android Unit Tests PASSED**, **Assemble Debug PASSED**. |
+| **7. Suite de Pruebas Automatizadas** | ✅ | **39/39 tests Backend PASSED** (`mvnw clean verify`), **13 Android Unit Tests PASSED**, **Assemble Debug y Lint PASSED**. |
 | **8. Documentación de Puesta en Marcha** | ✅ | [docs/SETUP.md](docs/SETUP.md) y [README.md](README.md) verificados, reproducibles y portables. |
 | **9. Registro de Limitaciones Conocidas** | ✅ | Limitaciones y dependencias registradas explícitamente en [docs/RELEASE_NOTES_v1.0.0-rc1.md](docs/RELEASE_NOTES_v1.0.0-rc1.md). |
 | **10. Ausencia de Dependencias de Pago** | ✅ | Stack 100% de código abierto (OpenStreetMap, osmdroid, PostgreSQL, Spring Boot, Retrofit, Room). |
@@ -64,6 +64,8 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
     -   Eliminación de artefactos locales, configuración personal del IDE, código muerto y recursos sin uso.
 -   **Issue #25: [Corrección de Defectos y Refactorización Android] - COMPLETADO ✅**
     -   ViewModel con un único flujo reactivo, permiso de ubicación en tiempo de ejecución, paleta corporativa y 13 pruebas unitarias.
+-   **Issue #26: [Corrección de la Importación desde Overpass API] - COMPLETADO ✅**
+    -   Consulta codificada una sola vez, `out center;` para importar monumentos modelados como áreas, timeouts efectivos y pruebas del adaptador (39/39 tests backend).
 
 ---
 
