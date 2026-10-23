@@ -1,15 +1,30 @@
-*.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
+# --- Gradle / Android ---
+.gradle/
+build/
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+
+# --- Kotlin ---
+.kotlin/
+
+# --- IDE ---
+.idea/
+*.iml
+.vscode/
+
+# --- Configuración de Firebase (no se usa; no versionar claves) ---
+google-services.json
+
+# --- Logs y salidas de compilación locales ---
+*.log
+build_log*.txt
+kotlin_errors*.txt
+
+# --- Artefactos de asistentes / herramientas ---
+.artifacts/
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db

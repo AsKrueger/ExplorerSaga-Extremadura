@@ -83,7 +83,7 @@ fun HomeScreen(onExploreClicked: () -> Unit) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = stringResource(id = R.string.home_title_new),
+                        text = stringResource(id = R.string.home_title),
                         fontFamily = playfairDisplayFamily,
                         fontSize = 48.sp,
                         fontWeight = FontWeight.Bold,
@@ -91,7 +91,7 @@ fun HomeScreen(onExploreClicked: () -> Unit) {
                         textAlign = TextAlign.Center
                     )
                     Text(
-                        text = stringResource(id = R.string.home_subtitle_new),
+                        text = stringResource(id = R.string.home_subtitle),
                         fontFamily = montserratFamily,
                         fontSize = 18.sp,
                         color = Color.White,
@@ -111,7 +111,7 @@ fun HomeScreen(onExploreClicked: () -> Unit) {
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1DB954))
                     ) {
                         Text(
-                            text = stringResource(id = R.string.home_button_new),
+                            text = stringResource(id = R.string.home_button),
                             fontFamily = montserratFamily,
                             color = Color.White,
                             fontSize = 18.sp,

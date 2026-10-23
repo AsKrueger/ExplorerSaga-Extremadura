@@ -59,6 +59,10 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
     -   Verificación de accesibilidad y portabilidad de la documentación sin dependencias locales.
     -   Evaluación formal de criterios de aceptación del MVP y declaración de cierre de la release candidata v1.0.0-rc1.
 
+### **EPIC: 🧹 Mantenimiento y Calidad (Post-MVP)**
+-   **Issue #24: [Limpieza del Repositorio] - COMPLETADO ✅**
+    -   Eliminación de artefactos locales, configuración personal del IDE, código muerto y recursos sin uso.
+
 ---
 
 ## 4. 📌 Datos de la Release v1.0.0-rc1

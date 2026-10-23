@@ -73,3 +73,11 @@ Este documento sirve como un registro del trabajo de desarrollo completado, docu
 -   **Issue #23: [Corrección de Configuración Local de Android SDK (`local.properties`)] - CERRADO ✅**
     -   **Descripción:** Resolver el error de compilación `SDK location not found` producido cuando se ejecuta Gradle desde la línea de comandos o en un entorno recién clonado sin la variable `ANDROID_HOME` o el archivo `local.properties`.
     -   **Resultado:** Se creó una plantilla `local.properties.example` en la raíz del proyecto, se configuró `local.properties` con la ruta válida del SDK de Android escapada correctamente para Windows/Linux/macOS y se documentó detalladamente la solución en la Sección 8 de [docs/SETUP.md](docs/SETUP.md).
+
+---
+
+### **EPIC: 🧹 Mantenimiento y Calidad (Post-MVP)**
+
+-   **Issue #24: [Limpieza del Repositorio: Artefactos, Configuración Local y Recursos sin Uso] - CERRADO ✅**
+    -   **Descripción:** Eliminar del control de versiones los logs de compilación, informes de error de Kotlin, artefactos de asistentes, la configuración personal del IDE, un submódulo roto y `google-services.json` (Firebase no se utiliza), así como el código muerto y los recursos sin referencias.
+    -   **Resultado:** Se consolidó el `.gitignore` raíz, se eliminaron `SampleDao.kt`, `SampleEntity.kt` y `Shared.kt`, el set de iconos duplicado `ic_explorersaga*`, drawables, strings, colores y familias de fuentes sin uso (verificado con `lintDebug`), y el arte original del logo se trasladó a `docs/assets/branding/`.
