@@ -22,8 +22,8 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 | **3. Ingesta Idempotente Sin Duplicados** | ✅ | Verificado con importaciones reales repetidas (Issue #27): `inserted`, `updated` y `merged` a 0 en la segunda ejecución. Los duplicados con el seed se enlazan por nombre y cercanía. Cubierto por `ImportIdempotencyIntegrationTest`. |
 | **4. API REST y Filtrado por Categorías** | ✅ | Controladores `/api/v1/places` con filtros y especificación OpenAPI/Swagger interactiva. |
 | **5. Consumo Remoto desde Android** | ✅ | `RetrofitClient` integrado consumiendo API REST v1 y mapeando entidades a modelos Composable. |
-| **6. Resiliencia & Respaldo Local (Offline)** | ✅ | Conmutación transparente a assets JSON locales y base de datos Room con indicadores de estado (`🟢` / `🟡`). |
-| **7. Suite de Pruebas Automatizadas** | ✅ | **48/48 tests Backend PASSED** (`mvnw clean verify`), **13 Android Unit Tests PASSED**, **Assemble Debug y Lint PASSED**. |
+| **6. Resiliencia & Respaldo Local (Offline)** | ✅ | Caché única en Room con la última sincronización correcta y carga desde `assets` en el primer arranque sin red (Issue #28), con indicadores de estado (`🟢` / `🟡`). Cubierto por `PlaceRepositoryTest`. |
+| **7. Suite de Pruebas Automatizadas** | ✅ | **48/48 tests Backend PASSED** (`mvnw clean verify`), **19 Android Unit Tests PASSED**, **Assemble Debug y Lint PASSED**. |
 | **8. Documentación de Puesta en Marcha** | ✅ | [docs/SETUP.md](docs/SETUP.md) y [README.md](README.md) verificados, reproducibles y portables. |
 | **9. Registro de Limitaciones Conocidas** | ✅ | Limitaciones y dependencias registradas explícitamente en [docs/RELEASE_NOTES_v1.0.0-rc1.md](docs/RELEASE_NOTES_v1.0.0-rc1.md). |
 | **10. Ausencia de Dependencias de Pago** | ✅ | Stack 100% de código abierto (OpenStreetMap, osmdroid, PostgreSQL, Spring Boot, Retrofit, Room). |
@@ -68,6 +68,8 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
     -   Consulta codificada una sola vez, `out center;` para importar monumentos modelados como áreas, timeouts efectivos y pruebas del adaptador (39/39 tests backend).
 -   **Issue #27: [Importación Robusta, Deduplicada e Idempotente] - COMPLETADO ✅**
     -   Reintentos con instancia alternativa y `502` visible, categorías unificadas en español (`V3`), deduplicación por nombre y cercanía, y corrección de `equals()` con proxies de Hibernate (48/48 tests backend).
+-   **Issue #28: [Persistencia Local Unificada en Room] - COMPLETADO ✅**
+    -   Room como única caché offline (última sincronización o `assets` en el primer arranque), eliminación de `saved_places.json` y pruebas del repositorio (19 tests Android).
 
 ---
 
@@ -85,7 +87,8 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 
 Tras la consecución y cierre del MVP, se contemplan las siguientes líneas evolutivas para futuras versiones estables:
 
-1. **Permisos de Geolocalización en Tiempo de Ejecución (GPS):** Solicitud interactiva de `ACCESS_FINE_LOCATION` para centrar el mapa dinámicamente en la ubicación real del usuario.
+1. **Ubicación del Usuario en el Mapa:** El permiso de ubicación ya se solicita en tiempo de ejecución y ordena el listado por cercanía (Issue #25). Falta centrar el mapa y mostrar en él la posición del usuario.
 2. **Sincronización Periódica Automatizada:** Programador en segundo plano (Spring `@Scheduled`) para refrescar periódicamente la información desde Overpass API.
-3. **Agrupación de Marcadores en Mapa (Clustering):** Optimización visual mediante agrupación cuando existen múltiples puntos de interés con alta densidad en el mapa.
+3. **Agrupación de Marcadores en Mapa (Clustering):** Optimización visual mediante agrupación cuando existen múltiples puntos de interés con alta densidad en el mapa. Es más necesaria tras la Issue #27, que eleva el catálogo a unos 240 lugares.
 4. **Pantalla de Rutas Turísticas Temáticas:** Diseño e implementación de itinerarios guiados por días o temáticas históricas en Mérida.
+5. **Pruebas en Dispositivo:** Pruebas instrumentadas y de UI, y verificación manual en emulador del permiso de ubicación, el tema y el modo offline introducidos en las Issues #25–#28.

@@ -1,9 +1,6 @@
 package com.alonso.explorersaga.model
 
-import kotlinx.serialization.Serializable
-
-// Modelo de datos para la UI. Ahora los campos que pueden ser nulos están marcados con ?
-@Serializable
+// Modelo de datos para la UI. Los campos que pueden faltar son nulos
 data class Place(
     val id: Int,
     val name: String,

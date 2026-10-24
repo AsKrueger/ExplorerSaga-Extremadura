@@ -32,20 +32,27 @@ class PlaceMappingTest {
     }
 
     @Test
-    fun remotePlaceWithoutCategory_usesMonumentFallback() {
+    fun remotePlaceWithoutCategory_usesMonumentoFallback() {
         val dto = PlaceResponseDto(id = 1, name = "Sin categoría", latitude = 0.0, longitude = 0.0)
 
-        assertEquals("Monument", dto.toPlaceEntity().category)
+        assertEquals("monumento", dto.toPlaceEntity().category)
     }
 
     @Test
-    fun entityToModelAndBack_preservesAllFields() {
+    fun entityToModel_preservesAllFields() {
         val entity = PlaceEntity(
             id = 3, name = "Bar", description = "Tapas", category = "bar",
             horarios = "12:00–16:00", direccion = "Calle Mayor, 1",
             latitude = 38.9, longitude = -6.3, photo = "elbar", website = "https://example.com"
         )
 
-        assertEquals(entity, entity.toPlaceModel().toPlaceEntity())
+        val model = entity.toPlaceModel()
+
+        assertEquals(
+            listOf(entity.id, entity.name, entity.description, entity.category, entity.horarios,
+                entity.direccion, entity.latitude, entity.longitude, entity.photo, entity.website),
+            listOf(model.id, model.name, model.description, model.category, model.horarios,
+                model.direccion, model.latitude, model.longitude, model.photo, model.website)
+        )
     }
 }

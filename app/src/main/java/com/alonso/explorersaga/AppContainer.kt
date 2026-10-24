@@ -3,7 +3,10 @@ package com.alonso.explorersaga
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.alonso.explorersaga.data.AppDatabase
+import com.alonso.explorersaga.data.BundledPlacesLoader
 import com.alonso.explorersaga.data.PlaceRepository
+import com.alonso.explorersaga.data.remote.RetrofitClient
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
 
 /**
@@ -20,7 +23,12 @@ interface AppContainer {
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
     override val placesRepository: PlaceRepository by lazy {
-        PlaceRepository(context)
+        PlaceRepository(
+            placeDao = AppDatabase.getDatabase(context).placeDao(),
+            api = RetrofitClient.api,
+            importApi = RetrofitClient.importApi,
+            loadBundledPlaces = BundledPlacesLoader(context)::load
+        )
     }
 
     override val placesViewModelFactory: ViewModelProvider.Factory by lazy {

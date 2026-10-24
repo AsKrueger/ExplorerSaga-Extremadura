@@ -71,12 +71,13 @@ Consulta la documentación detallada de puesta en marcha en [docs/SETUP.md](docs
 Como parte de la evolución natural del proyecto, se proponen las siguientes mejoras:
 
 -   [x] **Implementar mapa funcional con OpenStreetMap.**
--   [x] **Persistencia de Datos**: Integración completa de la biblioteca **Room** para la gestión de una base de datos local (SQLite).
--   [x] **Carga de Datos Inicial**: Desarrollo de un mecanismo para poblar la base de datos a partir de un fichero JSON local en el primer arranque de la app.
+-   [x] **Persistencia de Datos**: **Room** como única caché offline: refleja la última sincronización con el backend.
+-   [x] **Carga de Datos Inicial**: La caché se puebla con los JSON incluidos en la app en el primer arranque sin conexión.
 -   [ ] **Contenido Multimedia**: Reemplazo de las imágenes de marcador de posición (placeholders) por recursos visuales de alta calidad de Mérida.
 -   [ ] **Funcionalidad de Rutas**: Implementación de un sistema que sugiera al usuario rutas turísticas personalizadas por días o temáticas.
 -   [ ] **Internacionalización (i18n)**: Adaptación de la aplicación para soportar múltiples idiomas (ej. inglés), permitiendo un mayor alcance.
--   [ ] **Testing**: Creación de pruebas unitarias y de instrumentación para garantizar la calidad, robustez y corrección del código.
+-   [x] **Testing (unitario)**: Pruebas unitarias del backend (48) y de Android (19), incluida la caché offline.
+-   [ ] **Testing (instrumentación)**: Pruebas de UI y de instrumentación en dispositivo/emulador.
 -   [ ] **Accesibilidad (a11y)**: Aplicación de mejoras para asegurar la usabilidad de la aplicación por parte de personas con diversidad funcional.
 
 ---
