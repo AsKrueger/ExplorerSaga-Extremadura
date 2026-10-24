@@ -158,7 +158,7 @@ curl "http://localhost:8080/api/v1/places?category=monumento"
   ```bash
   ./gradlew testDebugUnitTest lintDebug
   ```
-- Las pruebas unitarias cubren el filtrado por categorías (`FilterStateTest`), el cálculo de distancias (`GeoTest`) y el mapeo de datos remotos/locales (`PlaceMappingTest`).
+- Las pruebas unitarias (19) cubren el filtrado por categorías (`FilterStateTest`), el cálculo de distancias (`GeoTest`), el mapeo de datos remotos (`PlaceMappingTest`) y el repositorio con la caché offline de Room (`PlaceRepositoryTest`).
 
 ### 3. Iniciar la App en el Emulador
 1. Abrir la carpeta raíz del proyecto `ExplorerSaga-Extremadura` en Android Studio.
@@ -175,7 +175,7 @@ curl "http://localhost:8080/api/v1/places?category=monumento"
 | :--- | :--- | :--- |
 | **Backend Activo + Datos Cargados** | Abrir la app Android con el backend Spring Boot corriendo. | Se muestran los lugares remotos importados de OSM. En la parte superior de los listados aparece el indicador verde `🟢 Conectado al Backend`. |
 | **Navegación y Filtrado** | Seleccionar la categoría "Monumentos" o aplicar un filtro. | La app muestra los monumentos filtrados recibidos del backend. |
-| **Caída del Backend / Modo Offline** | Detener el backend (`Ctrl+C` en la terminal del backend) o apagar la red en el emulador. | La app detecta el fallo de red sin cerrarse de forma abrupta y conmuta transparentemente al respaldo local basado en archivos JSON en assets. |
+| **Caída del Backend / Modo Offline** | Detener el backend (`Ctrl+C` en la terminal del backend) o apagar la red en el emulador. | La app detecta el fallo de red sin cerrarse y muestra los lugares de la última sincronización guardados en Room. En el primer arranque sin conexión usa los datos incluidos en la app (`assets`). |
 | **Indicador de Origen de Datos** | Comprobar la UI en modo offline. | En la pantalla de listados se muestra el indicador amarillo `🟡 Modo Local (Respaldo)`. |
 | **Reintento de Conexión** | Volver a iniciar el backend y pulsar el botón **"Reintentar"** en la app. | La app realiza una nueva petición HTTP y restablece la conexión remota con el backend (`🟢 Conectado al Backend`). |
 | **Persistencia tras Reinicio** | Detener y reiniciar el contenedor de PostgreSQL (`docker compose restart db`). | Los datos previamente importados de OSM permanecen guardados intactos en la base de datos PostgreSQL. |

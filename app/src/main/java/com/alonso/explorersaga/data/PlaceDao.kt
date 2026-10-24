@@ -4,32 +4,30 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
+import androidx.room.Transaction
 
 @Dao
-interface PlaceDao {
+abstract class PlaceDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertPlace(place: PlaceEntity)
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(places: List<PlaceEntity>)
+    abstract suspend fun insertAll(places: List<PlaceEntity>)
 
     @Query("SELECT * FROM places")
-    suspend fun getAllPlacesList(): List<PlaceEntity>
-
-    @Query("SELECT * FROM places WHERE category LIKE '%' || :categoryName || '%'")
-    suspend fun getPlacesByCategoryList(categoryName: String): List<PlaceEntity>
-
-    @Query("SELECT * FROM places WHERE category = :categoryName")
-    fun getPlacesByCategory(categoryName: String): Flow<List<PlaceEntity>>
-
-    @Query("SELECT * FROM places WHERE category IN (:categories)")
-    fun getPlacesByCategories(categories: List<String>): Flow<List<PlaceEntity>>
+    abstract suspend fun getAll(): List<PlaceEntity>
 
     @Query("SELECT * FROM places WHERE id = :id")
-    fun getPlaceById(id: Int): Flow<PlaceEntity?>
+    abstract suspend fun getById(id: Int): PlaceEntity?
+
+    @Query("SELECT COUNT(*) FROM places")
+    abstract suspend fun count(): Int
 
     @Query("DELETE FROM places")
-    suspend fun deleteAll()
+    abstract suspend fun deleteAll()
+
+    // Sustituye la caché completa en una única transacción para no dejarla nunca a medias
+    @Transaction
+    open suspend fun replaceAll(places: List<PlaceEntity>) {
+        deleteAll()
+        insertAll(places)
+    }
 }
