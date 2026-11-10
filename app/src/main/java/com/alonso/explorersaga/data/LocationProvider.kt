@@ -35,9 +35,29 @@ class LocationProvider(private val context: Context) {
             ).filter { manager.isProviderEnabled(it) || it == LocationManager.PASSIVE_PROVIDER }
                 .mapNotNull { manager.getLastKnownLocation(it) }
                 .maxByOrNull { it.time }
-            best?.let { _location.value = LatLon(it.latitude, it.longitude) }
+            if (best != null) {
+                _location.value = LatLon(best.latitude, best.longitude)
+            } else {
+                // Sin última ubicación (móvil recién encendido): se pide una nueva
+                requestFresh(manager)
+            }
         } catch (_: SecurityException) {
             // El permiso se retiró mientras la app estaba abierta
+        }
+    }
+
+    @Suppress("MissingPermission") // refresh() comprueba el permiso antes de llamar
+    private fun requestFresh(manager: LocationManager) {
+        val provider = listOf(LocationManager.NETWORK_PROVIDER, LocationManager.GPS_PROVIDER)
+            .firstOrNull { manager.isProviderEnabled(it) } ?: return
+        val onLocation: (android.location.Location?) -> Unit = { location ->
+            location?.let { _location.value = LatLon(it.latitude, it.longitude) }
+        }
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            manager.getCurrentLocation(provider, null, ContextCompat.getMainExecutor(context), onLocation)
+        } else {
+            @Suppress("DEPRECATION")
+            manager.requestSingleUpdate(provider, { onLocation(it) }, android.os.Looper.getMainLooper())
         }
     }
 

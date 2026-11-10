@@ -108,6 +108,7 @@
 
     <!-- Mapa -->
     <string name="map_open_detail">Ver ficha</string>
+    <string name="map_search_chip">Búsqueda: %1$s</string>
     <string name="cd_my_location">Ir a mi ubicación</string>
     <string name="cd_close">Cerrar</string>
 
