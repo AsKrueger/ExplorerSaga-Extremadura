@@ -1,0 +1,10 @@
+{
+  "schema": 1,
+  "version": 20261110,
+  "file": "pack.json.gz",
+  "sha256": "ce3d5fa23d0f77d41f018716b8f86892d04502207590aa1c51c3b45371d457f5",
+  "size": 400890,
+  "places": 5706,
+  "routes": 8,
+  "events": 14
+}

@@ -1,131 +1,116 @@
 package com.alonso.explorersaga.ui.composables
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NearMe
+import androidx.compose.material.icons.filled.Verified
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
 import com.alonso.explorersaga.R
-import com.alonso.explorersaga.model.Place
-import com.alonso.explorersaga.util.MERIDA_CENTER
-import com.alonso.explorersaga.util.distanceInMeters
+import com.alonso.explorersaga.data.db.Place
+import com.alonso.explorersaga.ui.model.PlaceGroup
+import com.alonso.explorersaga.ui.model.categoryInfo
 
 @Composable
-fun PlaceListItem(
-    place: Place,
-    userLocation: Pair<Double, Double> = MERIDA_CENTER,
-    onItemClicked: (Place) -> Unit
-) {
-    val imageModel = rememberPlaceImageModel(place.photo)
-
-    // Cálculo dinámico de distancia desde la ubicación GPS real del usuario
-    val distanceText = remember(place.latitude, place.longitude, userLocation) {
-        formatDistance(userLocation.first, userLocation.second, place.latitude, place.longitude)
-    }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(),
-                onClick = { onItemClicked(place) }
-            ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-    ) {
+fun PlaceListItem(place: Place, distanceMeters: Double?, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val english = isEnglish()
+    Card(onClick = onClick, modifier = modifier.fillMaxWidth()) {
         Row(
-            modifier = Modifier.padding(12.dp),
-            verticalAlignment = Alignment.CenterVertically
+            Modifier.padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            // 1. Imagen en Miniatura
-            AsyncImage(
-                model = imageModel ?: R.drawable.teatro_merida,
-                contentDescription = place.name,
-                modifier = Modifier
-                    .size(88.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(id = R.drawable.teatro_merida),
-                error = painterResource(id = R.drawable.teatro_merida)
-            )
-
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // 2. Columna con la Información
-            Column(modifier = Modifier.weight(1f)) {
-                // Nombre del lugar
+            PlaceThumbnail(place, size = 72.dp)
+            Column(Modifier.weight(1f)) {
                 Text(
-                    text = place.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
+                    place.displayName(english),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    "${stringResource(categoryInfo(place.category).label)} · ${place.municipality}",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                // Descripción breve
-                Text(
-                    text = place.description,
-                    style = MaterialTheme.typography.bodyMedium,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
-
-                Spacer(modifier = Modifier.height(6.dp))
-
-                // Distancia por cercanía GPS real
-                Text(
-                    text = distanceText,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(2.dp))
-
-                // Dirección
-                place.direccion?.let {
-                    Text(
-                        text = it,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
-                    )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.padding(top = 4.dp)
+                ) {
+                    distanceMeters?.let {
+                        Icon(Icons.Filled.NearMe, null, tint = MaterialTheme.colorScheme.primary, modifier = Modifier.size(14.dp))
+                        Text(formatDistance(it), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.primary)
+                    }
+                    if (place.heritage) {
+                        Icon(Icons.Filled.Verified, null, tint = MaterialTheme.colorScheme.tertiary, modifier = Modifier.size(14.dp))
+                        Text(
+                            stringResource(R.string.badge_heritage),
+                            style = MaterialTheme.typography.labelMedium,
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
                 }
             }
         }
     }
 }
 
-private fun formatDistance(lat1: Double, lon1: Double, lat2: Double, lon2: Double): String {
-    val meters = distanceInMeters(lat1, lon1, lat2, lon2).toInt()
-    return if (meters < 1000) {
-        "📍 a $meters m"
-    } else {
-        "📍 a %.1f km".format(meters / 1000.0)
+/** Foto del lugar o, si no tiene (o sin conexión), el icono de su categoría. */
+@Composable
+fun PlaceThumbnail(place: Place, size: Dp, modifier: Modifier = Modifier) {
+    val shape = RoundedCornerShape(12.dp)
+    Box(modifier.size(size).clip(shape)) {
+        if (place.imageUrl != null) {
+            SubcomposeAsyncImage(
+                model = place.imageUrl,
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize(),
+                loading = { CategoryIconBox(place) },
+                error = { CategoryIconBox(place) }
+            )
+        } else {
+            CategoryIconBox(place)
+        }
     }
 }
+
+@Composable
+fun CategoryIconBox(place: Place, modifier: Modifier = Modifier) {
+    val color = PlaceGroup.fromKey(place.groupKey)?.color ?: MaterialTheme.colorScheme.primary
+    Box(
+        modifier.fillMaxSize().background(color.copy(alpha = 0.18f)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(categoryInfo(place.category).icon, contentDescription = null, tint = color.darken())
+    }
+}
+
+private fun Color.darken() = Color(red * 0.8f, green * 0.8f, blue * 0.8f, alpha)

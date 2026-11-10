@@ -89,3 +89,29 @@ Este documento sirve como un registro del trabajo de desarrollo completado, docu
 -   **Issue #26: [Corrección de la Importación desde Overpass API] - CERRADO ✅**
     -   **Descripción:** La importación `POST /api/v1/places/import` terminaba "con éxito" con 0 lugares frente a la API pública: la consulta se codificaba dos veces (`URLEncoder` + plantilla URI de `RestTemplate`), las `way` llegaban sin coordenadas con `out body; >; out skel qt;` y el timeout configurado no se aplicaba.
     -   **Resultado:** El adaptador envía un `URI` ya codificado y usa `out center;`, lo que incorpora 44 áreas con nombre adicionales en Mérida (Acueducto de los Milagros, Circo Romano, MNAR…). `HttpClientConfig` aplica `timeout-ms` (30 000 ms) al `RestTemplate` y se añade `OverpassAdapterTest` (3 pruebas). La suite del backend pasa de 36 a 39 pruebas.
+
+-   **Issue #27: [Importación desde Overpass: Errores Visibles, Deduplicación, Categorías Unificadas e Idempotencia Real] - CERRADO ✅**
+    -   **Descripción:** La primera ejecución completa (PostgreSQL + backend + importación real) destapó un fallo silencioso ante la saturación de Overpass (`200 OK` con 0 lugares), duplicados entre el seed y OSM (el Acueducto aparecía 6 veces), categorías mezcladas en inglés y español, hoteles y campings bajo "Museos" y una importación que no era idempotente (200 lugares `updated` sin cambios en OSM) porque `equals()` fallaba con los proxies de Hibernate.
+    -   **Resultado:** El adaptador recorre varias instancias de Overpass con reintentos y `User-Agent`, y responde `502 Bad Gateway` si todas fallan. Las etiquetas OSM se normalizan al vocabulario en español (migración `V3`), descartando alojamientos y servicios. Se deduplica por nombre normalizado y cercanía (contador `merged`) y `equals()` es compatible con proxies, con un test de integración que importa dos veces. La app avisa de los fallos de importación. `docs/api/API.md` se reescribe con la API real. Backend: 48/48 pruebas.
+
+-   **Issue #28: [Unificación de la Persistencia Local de Android en Room] - CERRADO ✅**
+    -   **Descripción:** La app mantenía dos almacenes locales para los mismos datos: Room, que se escribía en cada consulta pero nunca se leía, y `saved_places.json`, que era lo que realmente se leía sin conexión y se reescribía entero con una fusión manual entre datos remotos y `assets`. Además, el `DatabaseCallback` poblaba Room de forma asíncrona y la documentación de arquitectura describía todavía la app anterior al backend.
+    -   **Resultado:** Room pasa a ser la única caché. Se sustituye en una transacción con cada respuesta del backend, se lee sin conexión y se puebla desde `assets` en el primer arranque sin red. Se eliminan `saved_places.json` (también de los dispositivos que ya lo tenían), la fusión manual, el callback asíncrono y las consultas del DAO sin uso. `PlaceRepository` recibe sus dependencias por constructor y se añade `PlaceRepositoryTest` (6 pruebas). `CURRENT_STATE.md` y `README.md` se actualizan al estado real.
+
+---
+
+### **EPIC: 🌍 ExplorerSaga v2 — La guía de toda Extremadura**
+
+-   **Issue #29: [Base Técnica v2: Actualización, Español/Inglés, Ajustes, Almacenamiento y Comentarios] - CERRADO ✅**
+    -   **Descripción:** Preparar la base de la v2 (guía de toda Extremadura) y cubrir los requisitos de usuario que no dependen del contenido: interfaz bilingüe con selector de idioma, ajustes, control del almacenamiento sin conexión y envío de comentarios. Las herramientas (Kotlin 1.9, AGP 8.4, Compose 2024.04) estaban desfasadas para los requisitos actuales de Google Play.
+    -   **Resultado:** Gradle 9.6, AGP 9.4.1, Kotlin 2.4.21, KSP 2.3.13, Room 2.8.5, Navigation 2.10.2 con rutas tipadas, Coil 3 y `targetSdk` 37. Nueva navegación con barra inferior (Inicio, Explorar, Mapa, Ajustes) y bienvenida solo en el primer arranque. Todos los textos de la interfaz pasan a `strings.xml` en español e inglés con idioma por app (`AppCompatDelegate` + `generateLocaleConfig`). Ajustes con DataStore: idioma, tema, guardar imágenes sin conexión (interceptor de Coil), espacio usado, borrar caché y borrar datos con confirmación, comentarios por correo (`FeedbackComposer`, destinatario en `local.properties`), valorar y compartir la app, y pantalla de privacidad y licencias (OSM ODbL, Wikipedia CC BY-SA, tipografías OFL). La caché del mapa se mueve a `cacheDir` para que también se pueda borrar. El detalle añade "Cómo llegar" y "Compartir". Se retira de la interfaz la importación manual desde OSM, que era una acción de administración. 31 pruebas unitarias Android.
+
+-   **Issues #30–#35: [Catálogo regional, contenido sin conexión, mapa MapLibre, Mi viaje, rutas y publicación] - CERRADO ✅**
+    -   **Descripción:** Convertir la guía de Mérida en la guía de toda Extremadura sin coste de servidor y dejar el MVP v2 listo para Google Play.
+    -   **Resultado:**
+        -   **Datos:** fábrica de datos abiertos con 5.706 lugares, 661 fotos con licencia libre y textos de Wikipedia en español e inglés.
+        -   **Contenido:** paquete versionado en GitHub Releases, con Room + FTS y sincronización con WorkManager.
+        -   **Mapa:** mapa vectorial MapLibre con modo sin conexión.
+        -   **Pantallas:** Inicio con temporada, Mi viaje, rutas, agenda y servicios útiles.
+        -   **Licencias:** se eliminaron las 77 fotos sin licencia y el cliente del backend.
+        -   **Pruebas:** 26 unitarias Android, 3 de interfaz y 16 de la fábrica.

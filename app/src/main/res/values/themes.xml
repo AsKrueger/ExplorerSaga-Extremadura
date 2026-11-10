@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.ExplorerSaga" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- AppCompat es necesario para el idioma por app en versiones anteriores a Android 13 -->
+    <style name="Theme.ExplorerSaga" parent="Theme.AppCompat.DayNight.NoActionBar" />
 </resources>

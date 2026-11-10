@@ -1,0 +1,56 @@
+name: Content pack
+
+# Genera el paquete de contenido de Extremadura y lo publica en la release
+# "content-pack". La app lo descarga de:
+# https://github.com/<owner>/<repo>/releases/download/content-pack/manifest.json
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 4 * * 1" # lunes a las 04:00 UTC
+  pull_request:
+    paths:
+      - "tools/datafactory/**"
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit tests
+        working-directory: tools/datafactory
+        run: python -m unittest discover -s tests -v
+
+  publish:
+    needs: test
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Fetch open data
+        working-directory: tools/datafactory
+        env:
+          DATAFACTORY_USER_AGENT: "ExplorerSaga-datafactory/1.0 (+https://github.com/${{ github.repository }})"
+        run: python factory.py fetch --refresh
+      - name: Build pack
+        working-directory: tools/datafactory
+        run: python factory.py build --version "$(date -u +%Y%m%d)"
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release view content-pack >/dev/null 2>&1 || \
+            gh release create content-pack --title "Content pack" --latest=false \
+              --notes "Paquete de contenido generado automáticamente por la fábrica de datos."
+          # Primero el paquete y después el manifiesto que lo referencia
+          gh release upload content-pack tools/datafactory/dist/pack.json.gz --clobber
+          gh release upload content-pack tools/datafactory/dist/manifest.json --clobber

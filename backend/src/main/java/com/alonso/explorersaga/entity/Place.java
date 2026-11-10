@@ -119,9 +119,10 @@ public class Place {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Place place = (Place) o;
-        return Objects.equals(id, place.id);
+        // instanceof y getId() en lugar de getClass() y el campo: las relaciones LAZY devuelven
+        // proxies de Hibernate (subclases) cuyo campo id no está inicializado
+        if (!(o instanceof Place other)) return false;
+        return id != null && id.equals(other.getId());
     }
 
     @Override

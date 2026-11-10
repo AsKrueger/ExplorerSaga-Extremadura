@@ -1,0 +1,257 @@
+<resources>
+    <string name="app_name">ExplorerSaga</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_trip">My trip</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Welcome -->
+    <string name="logo_content_description">ExplorerSaga logo</string>
+    <string name="welcome_title">Extremadura</string>
+    <string name="welcome_subtitle">Your next adventure starts here</string>
+    <string name="welcome_features">Monuments, nature, routes and food across Extremadura, in English and Spanish, and offline too.</string>
+    <string name="welcome_button">Start exploring</string>
+    <string name="welcome_copyright">© %1$d ExplorerSaga</string>
+
+    <!-- Home -->
+    <string name="home_hero_title">Discover Extremadura</string>
+    <plurals name="home_hero_subtitle">
+        <item quantity="one">%1$d place to discover</item>
+        <item quantity="other">%1$d places to discover</item>
+    </plurals>
+    <string name="cd_hero">Roman theatre of Mérida</string>
+    <string name="home_open_map">View on the map</string>
+    <string name="home_season">In season now</string>
+    <string name="home_nearby">Near you</string>
+    <string name="home_nearby_permission">Turn on location to see what to visit around you. It is only used on your phone.</string>
+    <string name="home_nearby_empty">No highlights nearby. Try the map or Explore.</string>
+    <string name="home_routes">Routes</string>
+    <string name="home_featured">Must-sees</string>
+    <string name="action_see_all">See all</string>
+    <string name="action_use_location">Use my location</string>
+    <string name="event_now">Now</string>
+    <plurals name="event_in_days">
+        <item quantity="one">Tomorrow</item>
+        <item quantity="other">In %1$d days</item>
+    </plurals>
+
+    <!-- Groups and categories -->
+    <string name="group_all">All</string>
+    <string name="group_heritage">Heritage</string>
+    <string name="group_museums">Museums</string>
+    <string name="group_nature">Nature</string>
+    <string name="group_bathing">Swimming spots</string>
+    <string name="group_food">Food and drink</string>
+    <string name="group_sleep">Stay</string>
+    <string name="group_shops">Shopping</string>
+    <string name="group_services">Services</string>
+    <string name="cat_castle">Castle or fortress</string>
+    <string name="cat_monument">Monument</string>
+    <string name="cat_archaeology">Archaeological site</string>
+    <string name="cat_religious">Church or chapel</string>
+    <string name="cat_palace">Palace or manor house</string>
+    <string name="cat_bridge">Bridge</string>
+    <string name="cat_museum">Museum</string>
+    <string name="cat_gallery">Art gallery</string>
+    <string name="cat_viewpoint">Viewpoint</string>
+    <string name="cat_protected_area">Natural area</string>
+    <string name="cat_waterfall">Waterfall</string>
+    <string name="cat_cave">Cave</string>
+    <string name="cat_peak">Peak</string>
+    <string name="cat_attraction">Point of interest</string>
+    <string name="cat_bathing">Swimming spot</string>
+    <string name="cat_restaurant">Restaurant</string>
+    <string name="cat_cafe">Café</string>
+    <string name="cat_bar">Bar</string>
+    <string name="cat_ice_cream">Ice cream</string>
+    <string name="cat_hotel">Hotel</string>
+    <string name="cat_hostel">Hostel</string>
+    <string name="cat_rural">Rural guest house</string>
+    <string name="cat_apartment">Holiday apartment</string>
+    <string name="cat_camping">Campsite</string>
+    <string name="cat_gift">Souvenirs</string>
+    <string name="cat_local_products">Local produce</string>
+    <string name="cat_books">Bookshop</string>
+    <string name="cat_tourist_info">Tourist office</string>
+    <string name="cat_pharmacy">Pharmacy</string>
+    <string name="cat_charging">EV charger</string>
+    <string name="cat_health">Hospital or health centre</string>
+    <string name="badge_heritage">Protected heritage</string>
+    <string name="badge_official">Official register: %1$s</string>
+    <string name="province_badajoz">Badajoz</string>
+    <string name="province_caceres">Cáceres</string>
+
+    <!-- Explore -->
+    <string name="search_label">Search places or towns</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="filter_municipality">Town</string>
+    <string name="search_municipality">Search town</string>
+    <string name="cd_clear_municipality">Remove town</string>
+    <plurals name="results_count">
+        <item quantity="one">%1$d place</item>
+        <item quantity="other">%1$d places</item>
+    </plurals>
+    <string name="action_sort_nearby">Sort by distance</string>
+    <string name="sorted_by_distance">Sorted by distance</string>
+    <string name="empty_title">No matching places</string>
+    <string name="empty_text">Try a different search or remove the filters.</string>
+    <string name="action_clear_filters">Clear filters</string>
+    <string name="distance_m">%1$d m away</string>
+    <string name="distance_km">%1$s km away</string>
+
+    <!-- Map -->
+    <string name="map_open_detail">Details</string>
+    <string name="cd_my_location">Go to my location</string>
+    <string name="cd_close">Close</string>
+
+    <!-- Detail -->
+    <string name="cd_back">Back</string>
+    <string name="cd_add_favorite">Add to My trip</string>
+    <string name="cd_remove_favorite">Remove from My trip</string>
+    <string name="detail_missing">This place is no longer in the catalogue.</string>
+    <string name="detail_hours">Opening hours</string>
+    <string name="detail_address">Address</string>
+    <string name="detail_wheelchair">Wheelchair access</string>
+    <string name="wheelchair_yes">Accessible</string>
+    <string name="wheelchair_limited">Partly accessible</string>
+    <string name="wheelchair_no">Not accessible</string>
+    <string name="wheelchair_unknown">No data</string>
+    <string name="detail_website">Website</string>
+    <string name="detail_call">Call</string>
+    <string name="detail_directions">Directions</string>
+    <string name="detail_show_on_map">On the map</string>
+    <string name="detail_share">Share</string>
+    <string name="detail_share_text">%1$s (%2$s, Extremadura, Spain): %3$s</string>
+    <string name="detail_spanish_only">Description available in Spanish only.</string>
+    <string name="detail_english_only">Description available in English only.</string>
+    <string name="detail_generic_description">%1$s in %2$s, province of %3$s (Extremadura, Spain).</string>
+    <string name="detail_read_more_wikipedia">Read more on Wikipedia</string>
+    <string name="detail_photo_credit">Photo: %1$s (Wikimedia Commons)</string>
+    <string name="detail_sources">Sources: %1$s</string>
+    <string name="detail_report_hint">Spotted a mistake? Let us know in Settings › Send feedback.</string>
+
+    <!-- My trip -->
+    <string name="trip_title">My trip</string>
+    <string name="trip_intro">Your saved places, available offline too. Assign each one to a day to plan your trip.</string>
+    <string name="trip_no_day">No day assigned</string>
+    <string name="trip_day">Day %1$d</string>
+    <string name="cd_set_day">Choose day</string>
+    <string name="trip_empty_title">No saved places yet</string>
+    <string name="trip_empty_text">Tap the heart on any place to add it to your trip.</string>
+    <string name="action_explore">Explore places</string>
+    <string name="action_see_routes">See routes</string>
+
+    <!-- Routes -->
+    <string name="routes_title">Routes around Extremadura</string>
+    <string name="route_km">%1$d km</string>
+    <string name="route_navigate">Open in maps app</string>
+    <string name="route_stops">Stops</string>
+
+    <!-- Agenda -->
+    <string name="agenda_title">Seasonal calendar</string>
+    <string name="agenda_intro">Festivals, events and natural spectacles throughout the year. Dates are approximate: check them before you go.</string>
+
+    <!-- Useful services -->
+    <string name="services_title">Useful services</string>
+    <string name="services_teaser">Nearest pharmacy, health centre, tourist office and EV charger</string>
+    <string name="services_emergency">Emergencies</string>
+    <string name="services_emergency_text">Free, 24 hours, anywhere in Europe</string>
+    <string name="services_permission">Turn on location to see the nearest services.</string>
+    <string name="services_none">None listed nearby.</string>
+    <string name="services_disclaimer">Data from OpenStreetMap. Check opening hours and on-duty pharmacies before you go.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_general">General</string>
+    <string name="settings_language">Language</string>
+    <string name="language_system">System language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <string name="settings_content">Content and offline map</string>
+    <string name="settings_sync_now">Check for content updates</string>
+    <string name="settings_content_version">Installed version: %1$s</string>
+    <string name="settings_content_none">Preparing content…</string>
+    <string name="settings_sync_updated">Content updated</string>
+    <string name="settings_sync_up_to_date">You already have the latest version</string>
+    <string name="settings_sync_failed">Couldn\'t check. Please check your connection.</string>
+    <string name="settings_sync_wifi">Update on Wi-Fi only</string>
+    <string name="settings_sync_wifi_desc">Automatic updates take up less than 1 MB.</string>
+    <string name="settings_offline_map">Download the map of Extremadura</string>
+    <string name="settings_offline_map_retry">Retry map download</string>
+    <string name="settings_offline_map_desc">To see the map without signal. About 60 MB: Wi-Fi recommended.</string>
+    <string name="settings_offline_map_downloading">Downloading map: %1$d %%</string>
+    <string name="settings_offline_map_ready">Map of Extremadura downloaded</string>
+    <string name="settings_offline_map_delete">%1$s · Tap to delete</string>
+    <string name="settings_offline_map_confirm_title">Delete the downloaded map?</string>
+    <string name="settings_offline_map_confirm_text">Offline you will only see the map areas you have already viewed. You can download it again at any time.</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="settings_storage">Storage</string>
+    <string name="settings_offline_images">Save images for offline use</string>
+    <string name="settings_offline_images_desc">Photos you view are saved on your phone and stay available without signal. Turning this off deletes the saved ones.</string>
+    <string name="settings_usage">Storage used</string>
+    <string name="settings_usage_value">Cache: %1$s · Saved data: %2$s</string>
+    <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_clear_cache_desc">Deletes images and viewed map areas. They will be downloaded again when you use them.</string>
+    <string name="settings_clear_cache_confirm_title">Clear the cache?</string>
+    <string name="settings_clear_cache_confirm_text">Images and viewed map areas will be deleted. Your favourites and the downloaded map are kept.</string>
+    <string name="settings_clear_cache_done">Cache cleared: %1$s freed</string>
+    <string name="settings_clear_data">Delete saved data</string>
+    <string name="settings_clear_data_desc">Deletes My trip, the downloaded map, content updates and the cache. Language and theme are kept.</string>
+    <string name="settings_clear_data_confirm_title">Delete saved data?</string>
+    <string name="settings_clear_data_confirm_text">Your saved places in My trip, the downloaded map, images and content updates will be deleted. This cannot be undone.</string>
+    <string name="settings_clear_data_done">Saved data deleted</string>
+    <string name="action_clear_cache">Clear cache</string>
+    <string name="action_clear_data">Delete data</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="settings_support">Help and feedback</string>
+    <string name="settings_feedback">Send feedback</string>
+    <string name="settings_feedback_desc">An idea, a bug or wrong information: it helps us improve</string>
+    <string name="settings_rate">Rate the app</string>
+    <string name="settings_rate_desc">Your Google Play rating helps more people discover Extremadura</string>
+    <string name="settings_share">Share the app</string>
+    <string name="settings_share_desc">Recommend it to anyone visiting Extremadura</string>
+    <string name="share_app_text">Discover Extremadura with ExplorerSaga: %1$s</string>
+
+    <string name="settings_about">About</string>
+    <string name="settings_licenses">Privacy, licences and credits</string>
+    <string name="settings_licenses_desc">What data the app uses and where its content comes from</string>
+    <string name="settings_version">Version %1$s</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Send feedback</string>
+    <string name="feedback_intro">We read every message. If opening hours or other details are wrong, tell us which place and we will fix it.</string>
+    <string name="feedback_type">Feedback type</string>
+    <string name="feedback_type_suggestion">Suggestion</string>
+    <string name="feedback_type_bug">Bug</string>
+    <string name="feedback_type_wrong_data">Wrong information</string>
+    <string name="feedback_type_other">Other</string>
+    <string name="feedback_message_label">Your message</string>
+    <string name="feedback_message_hint">E.g. the opening hours of Mérida\'s Roman Theatre have changed</string>
+    <string name="feedback_include_device">Include technical details (app version, Android version and phone model)</string>
+    <string name="feedback_send">Send by email</string>
+    <string name="feedback_note">Your email app will open with the message ready to send.</string>
+    <string name="feedback_no_email_app">No email app is installed.</string>
+
+    <!-- About -->
+    <string name="about_title">Privacy and licences</string>
+    <string name="privacy_title">Privacy</string>
+    <string name="privacy_text">ExplorerSaga has no user accounts, analytics or ad trackers. If you allow location, it is only used on your phone to sort places by distance and is never sent to any server. Your favourites, the content and the downloaded map are stored on your phone and you can delete them in Settings.</string>
+    <string name="about_open_privacy">Read the full privacy policy</string>
+    <string name="about_data_title">Data and maps</string>
+    <string name="about_data_text">Places and maps: © OpenStreetMap contributors (ODbL licence), with tiles from OpenFreeMap. Descriptions from Wikipedia (CC BY-SA 4.0) and data from Wikidata (CC0). Photos from Wikimedia Commons, each credited with its author and licence on its page. Accommodation register: Junta de Extremadura open data (CC BY 4.0).</string>
+    <string name="about_open_osm">View the OpenStreetMap licence</string>
+    <string name="about_photo_title">Cover photo</string>
+    <string name="about_photo_text">“Teatro romano de Mérida. España-3” by Lmbuga (Luis Miguel Bugallo Sánchez), Wikimedia Commons, CC BY-SA 4.0 licence.</string>
+    <string name="about_fonts_title">Fonts</string>
+    <string name="about_fonts_text">Montserrat and Playfair Display, under the SIL Open Font License 1.1.</string>
+    <string name="about_software_title">Open-source software</string>
+    <string name="about_software_text">Android Jetpack (Compose, Room, Navigation, DataStore, WorkManager), Kotlin, Coil and OkHttp, under the Apache 2.0 licence. MapLibre Native, under the 2-clause BSD licence.</string>
+</resources>

@@ -18,8 +18,12 @@ spring:
 explorersaga:
   providers:
     overpass:
-      base-url: https://overpass-api.de/api/interpreter
+      # Instancias públicas separadas por comas, en orden de preferencia:
+      # si la principal está saturada se prueba la siguiente
+      base-urls: https://overpass-api.de/api/interpreter,https://overpass.kumi.systems/api/interpreter
       timeout-ms: 30000
+      max-attempts: 2
+      retry-backoff-ms: 2000
 
 logging:
   level:

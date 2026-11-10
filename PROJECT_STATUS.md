@@ -19,11 +19,11 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 | :--- | :---: | :--- |
 | **1. Ingesta de Datos Abiertos (OSM/Overpass API)** | ✅ | Adaptador `OverpassAdapter` e importación desde OpenStreetMap operativa (`POST /api/v1/places/import`). |
 | **2. Persistencia Relacional & Trazabilidad** | ✅ | PostgreSQL 15 con esquema de 4 entidades (`places`, `categories`, `sources`, `place_sources`) y Flyway. |
-| **3. Ingesta Idempotente Sin Duplicados** | ✅ | Verificado: peticiones repetidas actualizan/omitirán registros sin duplicar gracias a claves de fuentes externas. |
+| **3. Ingesta Idempotente Sin Duplicados** | ✅ | Verificado con importaciones reales repetidas (Issue #27): `inserted`, `updated` y `merged` a 0 en la segunda ejecución. Los duplicados con el seed se enlazan por nombre y cercanía. Cubierto por `ImportIdempotencyIntegrationTest`. |
 | **4. API REST y Filtrado por Categorías** | ✅ | Controladores `/api/v1/places` con filtros y especificación OpenAPI/Swagger interactiva. |
 | **5. Consumo Remoto desde Android** | ✅ | `RetrofitClient` integrado consumiendo API REST v1 y mapeando entidades a modelos Composable. |
-| **6. Resiliencia & Respaldo Local (Offline)** | ✅ | Conmutación transparente a assets JSON locales y base de datos Room con indicadores de estado (`🟢` / `🟡`). |
-| **7. Suite de Pruebas Automatizadas** | ✅ | **39/39 tests Backend PASSED** (`mvnw clean verify`), **13 Android Unit Tests PASSED**, **Assemble Debug y Lint PASSED**. |
+| **6. Resiliencia & Respaldo Local (Offline)** | ✅ | Caché única en Room con la última sincronización correcta y carga desde `assets` en el primer arranque sin red (Issue #28), con indicadores de estado (`🟢` / `🟡`). Cubierto por `PlaceRepositoryTest`. |
+| **7. Suite de Pruebas Automatizadas** | ✅ | **48/48 tests Backend PASSED** (`mvnw clean verify`), **19 Android Unit Tests PASSED**, **Assemble Debug y Lint PASSED**. |
 | **8. Documentación de Puesta en Marcha** | ✅ | [docs/SETUP.md](docs/SETUP.md) y [README.md](README.md) verificados, reproducibles y portables. |
 | **9. Registro de Limitaciones Conocidas** | ✅ | Limitaciones y dependencias registradas explícitamente en [docs/RELEASE_NOTES_v1.0.0-rc1.md](docs/RELEASE_NOTES_v1.0.0-rc1.md). |
 | **10. Ausencia de Dependencias de Pago** | ✅ | Stack 100% de código abierto (OpenStreetMap, osmdroid, PostgreSQL, Spring Boot, Retrofit, Room). |
@@ -66,6 +66,28 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
     -   ViewModel con un único flujo reactivo, permiso de ubicación en tiempo de ejecución, paleta corporativa y 13 pruebas unitarias.
 -   **Issue #26: [Corrección de la Importación desde Overpass API] - COMPLETADO ✅**
     -   Consulta codificada una sola vez, `out center;` para importar monumentos modelados como áreas, timeouts efectivos y pruebas del adaptador (39/39 tests backend).
+-   **Issue #27: [Importación Robusta, Deduplicada e Idempotente] - COMPLETADO ✅**
+    -   Reintentos con instancia alternativa y `502` visible, categorías unificadas en español (`V3`), deduplicación por nombre y cercanía, y corrección de `equals()` con proxies de Hibernate (48/48 tests backend).
+-   **Issue #28: [Persistencia Local Unificada en Room] - COMPLETADO ✅**
+    -   Room como única caché offline (última sincronización o `assets` en el primer arranque), eliminación de `saved_places.json` y pruebas del repositorio (19 tests Android).
+
+### **EPIC: 🌍 ExplorerSaga v2 — La guía de toda Extremadura (hito "MVP v2 — Extremadura")**
+-   **Issue #29: [Base técnica v2: actualización, español/inglés, ajustes, almacenamiento y comentarios] - COMPLETADO ✅**
+    -   Gradle 9.6, AGP 9.4.1, Kotlin 2.4.21, Compose BOM 2026.09 y `targetSdk` 37. Navegación tipada con barra inferior (Inicio, Explorar, Mapa, Ajustes) y bienvenida solo en el primer arranque.
+    -   Interfaz completa en español e inglés con idioma por app. Ajustes con tema, imágenes sin conexión, espacio usado, borrar caché, borrar datos, comentarios por correo, valorar, compartir, privacidad y licencias (31 tests Android).
+-   **Issue #30: [Catálogo de toda Extremadura y fábrica de datos abiertos] - COMPLETADO ✅**
+    -   Fábrica en Python (sin dependencias): OSM, Wikidata, Wikipedia en español e inglés, Commons (solo licencias libres) y registro de alojamientos de la Junta. 5.706 lugares en 388 municipios, generación reproducible, 16 pruebas y publicación semanal con GitHub Actions.
+-   **Issue #31: [Paquete de contenido, sincronización y búsqueda] - COMPLETADO ✅**
+    -   Paquete incluido en la app para el primer arranque sin red, actualización con WorkManager (sha256, opción solo wifi), Room v3 con FTS sin tildes y Explorar por grupo, provincia y municipio.
+-   **Issue #32: [Mapa vectorial MapLibre con clustering, ubicación y modo sin conexión] - COMPLETADO ✅**
+    -   MapLibre + OpenFreeMap, agrupación por zonas, posición del usuario, mapa de Extremadura descargable (unos 60 MB) probado en modo avión.
+-   **Issue #33: [Inicio, Mi viaje, agenda y servicios útiles] - COMPLETADO ✅**
+    -   Temporada según la fecha, cerca de ti, imprescindibles (Mérida primero), favoritos por días y servicios más cercanos con el 112.
+-   **Issue #34: [Rutas temáticas] - COMPLETADO ✅**
+    -   8 rutas en español e inglés con mapa, paradas enlazadas a sus fichas y navegación en la app de mapas.
+-   **Issue #35: [Accesibilidad, pruebas de interfaz y publicación] - COMPLETADO ✅ (pendiente la subida a Play Console)**
+    -   3 pruebas de interfaz, release con R8 y firma configurable, política de privacidad, ficha de Play en español e inglés y formulario de seguridad de los datos.
+-   **Issue #36 (post-MVP):** barra publicitaria superior que solo aparece cuando hay un anuncio.
 
 ---
 
@@ -83,7 +105,8 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 
 Tras la consecución y cierre del MVP, se contemplan las siguientes líneas evolutivas para futuras versiones estables:
 
-1. **Permisos de Geolocalización en Tiempo de Ejecución (GPS):** Solicitud interactiva de `ACCESS_FINE_LOCATION` para centrar el mapa dinámicamente en la ubicación real del usuario.
+1. **Ubicación del Usuario en el Mapa:** El permiso de ubicación ya se solicita en tiempo de ejecución y ordena el listado por cercanía (Issue #25). Falta centrar el mapa y mostrar en él la posición del usuario.
 2. **Sincronización Periódica Automatizada:** Programador en segundo plano (Spring `@Scheduled`) para refrescar periódicamente la información desde Overpass API.
-3. **Agrupación de Marcadores en Mapa (Clustering):** Optimización visual mediante agrupación cuando existen múltiples puntos de interés con alta densidad en el mapa.
+3. **Agrupación de Marcadores en Mapa (Clustering):** Optimización visual mediante agrupación cuando existen múltiples puntos de interés con alta densidad en el mapa. Es más necesaria tras la Issue #27, que eleva el catálogo a unos 240 lugares.
 4. **Pantalla de Rutas Turísticas Temáticas:** Diseño e implementación de itinerarios guiados por días o temáticas históricas en Mérida.
+5. **Pruebas en Dispositivo:** Pruebas instrumentadas y de UI, y verificación manual en emulador del permiso de ubicación, el tema y el modo offline introducidos en las Issues #25–#28.
