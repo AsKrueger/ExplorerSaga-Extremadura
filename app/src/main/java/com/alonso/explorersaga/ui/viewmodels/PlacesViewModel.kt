@@ -28,12 +28,8 @@ data class PlacesUiState(
     val selectedPlace: Place? = null,
     val isLoading: Boolean = false,
     val dataSourceOrigin: DataSourceOrigin = DataSourceOrigin.NONE,
-    val errorMessage: String? = null,
     val userLocation: Pair<Double, Double> = MERIDA_CENTER
 )
-
-private const val IMPORT_ERROR_MESSAGE =
-    "No se pudo importar desde OpenStreetMap. El servicio puede estar saturado: inténtalo de nuevo en unos minutos."
 
 class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
@@ -59,8 +55,9 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
 
     @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
     private fun observePlaces() {
-        val results = refreshTrigger.mapLatest {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
+        // Se recarga al reintentar y cuando se borran los datos guardados desde Ajustes
+        val results = combine(refreshTrigger, repository.invalidations) { _, _ -> }.mapLatest {
+            _uiState.update { it.copy(isLoading = true) }
             repository.getPlacesResult()
         }
 
@@ -86,24 +83,7 @@ class PlacesViewModel(private val repository: PlaceRepository) : ViewModel() {
         }
     }
 
-    fun importFromWeb() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true, errorMessage = null) }
-            if (repository.importPlacesFromWeb() != null) {
-                refresh()
-            } else {
-                _uiState.update {
-                    it.copy(isLoading = false, errorMessage = IMPORT_ERROR_MESSAGE)
-                }
-            }
-        }
-    }
-
     fun retry() {
-        refresh()
-    }
-
-    private fun refresh() {
         refreshTrigger.update { it + 1 }
     }
 

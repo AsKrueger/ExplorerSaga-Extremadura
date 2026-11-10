@@ -5,6 +5,10 @@ import com.alonso.explorersaga.data.remote.ImportResultDto
 import com.alonso.explorersaga.data.remote.PlaceResponseDto
 import com.alonso.explorersaga.model.Place
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
 
 enum class DataSourceOrigin {
@@ -26,6 +30,15 @@ class PlaceRepository(
     private val importApi: ExplorerSagaApi,
     private val loadBundledPlaces: () -> List<PlaceEntity>
 ) {
+
+    // Cambia cada vez que se borran los datos locales, para que las pantallas vuelvan a cargarlos
+    private val _invalidations = MutableStateFlow(0)
+    val invalidations: StateFlow<Int> = _invalidations.asStateFlow()
+
+    suspend fun clearLocalData() = withContext(Dispatchers.IO) {
+        placeDao.deleteAll()
+        _invalidations.update { it + 1 }
+    }
 
     suspend fun importPlacesFromWeb(): ImportResultDto? = withContext(Dispatchers.IO) {
         try {

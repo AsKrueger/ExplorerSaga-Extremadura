@@ -7,3 +7,7 @@
 # - macOS: sdk.dir=/Users/TU_USUARIO/Library/Android/sdk
 
 sdk.dir=C\:/Users/TU_USUARIO/AppData/Local/Android/Sdk
+
+# Dirección que recibe los comentarios enviados desde Ajustes > Enviar comentarios.
+# Si se deja vacía, la app abre el correo sin destinatario.
+feedback.email=

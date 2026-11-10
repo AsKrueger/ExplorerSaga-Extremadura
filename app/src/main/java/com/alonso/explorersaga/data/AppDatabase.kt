@@ -11,6 +11,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun placeDao(): PlaceDao
 
     companion object {
+        const val NAME = "explorer_saga_database"
+
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -21,7 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java,
-                    "explorer_saga_database"
+                    NAME
                 )
                 .fallbackToDestructiveMigration()
                 .build()

@@ -57,7 +57,7 @@ Diseñar e implementar una aplicación Android nativa que sirva como guía turí
 
 Consulta la documentación detallada de puesta en marcha en [docs/SETUP.md](docs/SETUP.md), la cual incluye:
 
-- Requisitos de entorno (JDK 17/21, Docker/PostgreSQL, Android Studio, SDK 35).
+- Requisitos de entorno (JDK 17/21, Docker/PostgreSQL, Android Studio, SDK 37).
 - Despliegue de la base de datos PostgreSQL con Docker Compose.
 - Ejecución de la suite de pruebas del backend (`mvnw test`) y Android (`gradlew test`).
 - Arranque del backend Spring Boot e importación manual desde Overpass API.
@@ -75,8 +75,8 @@ Como parte de la evolución natural del proyecto, se proponen las siguientes mej
 -   [x] **Carga de Datos Inicial**: La caché se puebla con los JSON incluidos en la app en el primer arranque sin conexión.
 -   [ ] **Contenido Multimedia**: Reemplazo de las imágenes de marcador de posición (placeholders) por recursos visuales de alta calidad de Mérida.
 -   [ ] **Funcionalidad de Rutas**: Implementación de un sistema que sugiera al usuario rutas turísticas personalizadas por días o temáticas.
--   [ ] **Internacionalización (i18n)**: Adaptación de la aplicación para soportar múltiples idiomas (ej. inglés), permitiendo un mayor alcance.
--   [x] **Testing (unitario)**: Pruebas unitarias del backend (48) y de Android (19), incluida la caché offline.
+-   [x] **Internacionalización (i18n)**: Interfaz en español e inglés con selector de idioma en Ajustes (Issue #29). Las descripciones de los lugares se traducen en la Issue #30.
+-   [x] **Testing (unitario)**: Pruebas unitarias del backend (48) y de Android (31), incluida la caché offline.
 -   [ ] **Testing (instrumentación)**: Pruebas de UI y de instrumentación en dispositivo/emulador.
 -   [ ] **Accesibilidad (a11y)**: Aplicación de mejoras para asegurar la usabilidad de la aplicación por parte de personas con diversidad funcional.
 

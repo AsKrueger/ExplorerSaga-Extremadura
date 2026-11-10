@@ -71,6 +71,13 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
 -   **Issue #28: [Persistencia Local Unificada en Room] - COMPLETADO ✅**
     -   Room como única caché offline (última sincronización o `assets` en el primer arranque), eliminación de `saved_places.json` y pruebas del repositorio (19 tests Android).
 
+### **EPIC: 🌍 ExplorerSaga v2 — La guía de toda Extremadura (hito "MVP v2 — Extremadura")**
+-   **Issue #29: [Base técnica v2: actualización, español/inglés, ajustes, almacenamiento y comentarios] - COMPLETADO ✅**
+    -   Gradle 9.6, AGP 9.4.1, Kotlin 2.4.21, Compose BOM 2026.09 y `targetSdk` 37. Navegación tipada con barra inferior (Inicio, Explorar, Mapa, Ajustes) y bienvenida solo en el primer arranque.
+    -   Interfaz completa en español e inglés con idioma por app. Ajustes con tema, imágenes sin conexión, espacio usado, borrar caché, borrar datos, comentarios por correo, valorar, compartir, privacidad y licencias (31 tests Android).
+-   **Issues #30–#35:** catálogo regional y fábrica de datos abiertos, paquete de contenido y búsqueda, mapa MapLibre offline, Inicio/Mi viaje/agenda, rutas, y accesibilidad y publicación en Google Play.
+-   **Issue #36 (post-MVP):** barra publicitaria superior que solo aparece cuando hay un anuncio.
+
 ---
 
 ## 4. 📌 Datos de la Release v1.0.0-rc1

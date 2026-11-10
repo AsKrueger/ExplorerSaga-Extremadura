@@ -1,27 +1,156 @@
 <resources>
     <string name="app_name">ExplorerSaga</string>
+    <string name="brand_name" translatable="false">EXPLORERSAGA</string>
 
-    <!-- HomeScreen -->
-    <string name="home_title">Extremadura</string>
-    <string name="home_subtitle">Tu próxima aventura empieza aquí</string>
-    <string name="home_button">Explorar Mérida</string>
-    <string name="home_copyright">© 2025 ExplorerSaga. Todos los derechos reservados.</string>
-    <string name="logo_content_description">Logo</string>
+    <!-- Navegación -->
+    <string name="nav_home">Inicio</string>
+    <string name="nav_explore">Explorar</string>
+    <string name="nav_map">Mapa</string>
+    <string name="nav_settings">Ajustes</string>
 
-    <!-- InformacionScreen -->
-    <string name="info_title">Descubre Mérida</string>
-    <string name="info_subtitle">Historia viva de Extremadura</string>
-    <string name="info_description">Mérida, la antigua Emerita Augusta, fue fundada en el 25 a.C. y es hoy uno de los conjuntos arqueológicos más importantes de España. Pasea por sus calles y descubre su impresionante legado romano.</string>
-    <string name="info_map_button">🗺️ Mapa</string>
-    <string name="info_places_button">📍 Lugares</string>
+    <!-- Bienvenida -->
+    <string name="logo_content_description">Logotipo de ExplorerSaga</string>
+    <string name="welcome_title">Extremadura</string>
+    <string name="welcome_subtitle">Tu próxima aventura empieza aquí</string>
+    <string name="welcome_features">Monumentos, gastronomía y rincones con encanto, en español e inglés y también sin conexión.</string>
+    <string name="welcome_button">Empezar a explorar</string>
+    <string name="welcome_copyright">© %1$d ExplorerSaga</string>
 
-    <!-- PlacesScreen -->
-    <string name="places_title">Explora por categoría</string>
-    <string name="places_monuments">🏛️ Monumentos históricos</string>
-    <string name="places_restaurants">☕ Restaurantes y cafeterías</string>
-    <string name="places_shops">🛍️ Tiendas y souvenirs</string>
+    <!-- Inicio -->
+    <string name="home_hero_title">Descubre Mérida</string>
+    <string name="home_hero_subtitle">Historia viva de Extremadura</string>
+    <string name="home_intro">Mérida, la antigua Emerita Augusta, fue fundada en el 25 a. C. y es hoy uno de los conjuntos arqueológicos más importantes de España. Pasea por sus calles y descubre su impresionante legado romano.</string>
+    <string name="home_open_map">Ver en el mapa</string>
+    <string name="home_categories_title">¿Qué te apetece hoy?</string>
+    <string name="category_heritage">Monumentos e historia</string>
+    <string name="category_heritage_desc">Teatro, templos, iglesias y museos</string>
+    <string name="category_food">Comer y beber</string>
+    <string name="category_food_desc">Restaurantes, cafeterías, bares y heladerías</string>
+    <string name="category_shops">Tiendas y recuerdos</string>
+    <string name="category_shops_desc">Productos locales, souvenirs y compras</string>
+    <string name="home_roadmap_title">Muy pronto: toda Extremadura</string>
+    <string name="home_roadmap_text">Cáceres, Trujillo, Guadalupe, Monfragüe, el Valle del Jerte y cientos de lugares más, con rutas y agenda de temporada.</string>
 
-    <!-- MapScreen -->
-    <string name="map_filter_icon">🔍</string>
+    <!-- Explorar -->
+    <string name="explore_title">Explorar</string>
+    <string name="search_label">Buscar lugares</string>
+    <string name="cd_clear_search">Borrar búsqueda</string>
+    <string name="offline_notice">Sin conexión: se muestran los lugares guardados en el móvil.</string>
+    <string name="empty_title">No hay lugares que coincidan</string>
+    <string name="empty_text">Prueba con otra búsqueda o quita los filtros.</string>
+    <string name="action_clear_filters">Quitar filtros</string>
+    <string name="action_retry">Reintentar</string>
+    <string name="distance_m">A %1$d m</string>
+    <string name="distance_km">A %1$s km</string>
 
+    <!-- Filtros -->
+    <string name="group_all">Todo</string>
+    <string name="group_heritage">Patrimonio</string>
+    <string name="group_food">Gastronomía</string>
+    <string name="group_shops">Tiendas</string>
+    <string name="filter_all">Todos</string>
+    <string name="filter_monuments">Monumentos</string>
+    <string name="filter_churches">Iglesias</string>
+    <string name="filter_museums">Museos</string>
+    <string name="filter_restaurants">Restaurantes</string>
+    <string name="filter_cafes">Cafeterías</string>
+    <string name="filter_bars">Bares</string>
+    <string name="filter_ice_cream">Heladerías</string>
+    <string name="filter_food_shops">Alimentación</string>
+    <string name="filter_souvenirs">Souvenirs</string>
+    <string name="filter_supermarkets">Supermercados</string>
+    <string name="filter_bookshops">Librerías</string>
+    <string name="filter_clothes">Ropa</string>
+    <string name="filter_general">Otras tiendas</string>
+    <string name="filters_title">Filtros</string>
+    <string name="filters_select_all">Marcar todo</string>
+    <string name="filters_apply">Aplicar filtros</string>
+    <string name="cd_filters">Filtros</string>
+
+    <!-- Mapa -->
+    <string name="map_search_label">Buscar en el mapa</string>
+    <string name="map_attribution">© colaboradores de OpenStreetMap</string>
+    <string name="map_open_detail">Ver ficha completa</string>
+
+    <!-- Detalle -->
+    <string name="cd_back">Volver</string>
+    <string name="detail_hours">Horario</string>
+    <string name="detail_address">Dirección</string>
+    <string name="detail_website">Sitio web oficial</string>
+    <string name="detail_directions">Cómo llegar</string>
+    <string name="detail_share">Compartir</string>
+    <string name="detail_share_text">%1$s, en Extremadura: %2$s</string>
+    <string name="detail_spanish_only">Esta descripción solo está disponible en español por ahora.</string>
+
+    <!-- Ajustes -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_general">General</string>
+    <string name="settings_language">Idioma</string>
+    <string name="language_system">Idioma del sistema</string>
+    <string name="language_es" translatable="false">Español</string>
+    <string name="language_en" translatable="false">English</string>
+    <string name="settings_theme">Tema</string>
+    <string name="theme_system">Según el sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+
+    <string name="settings_storage">Almacenamiento y uso sin conexión</string>
+    <string name="settings_offline_images">Guardar imágenes para usar sin conexión</string>
+    <string name="settings_offline_images_desc">Las fotos que veas se guardan en el móvil y siguen disponibles sin cobertura. Al desactivarlo se borran las guardadas.</string>
+    <string name="settings_usage">Espacio usado</string>
+    <string name="settings_usage_value">Caché: %1$s · Datos guardados: %2$s</string>
+    <string name="settings_clear_cache">Borrar caché</string>
+    <string name="settings_clear_cache_desc">Elimina las imágenes y los mapas descargados. Se volverán a descargar cuando los uses.</string>
+    <string name="settings_clear_cache_confirm_title">¿Borrar la caché?</string>
+    <string name="settings_clear_cache_confirm_text">Se eliminarán las imágenes y los mapas descargados. Sin conexión no podrás verlos hasta volver a descargarlos.</string>
+    <string name="settings_clear_cache_done">Caché borrada: %1$s liberados</string>
+    <string name="settings_clear_data">Borrar datos guardados</string>
+    <string name="settings_clear_data_desc">Elimina los lugares guardados para usar sin conexión y la caché. Tus ajustes se mantienen.</string>
+    <string name="settings_clear_data_confirm_title">¿Borrar los datos guardados?</string>
+    <string name="settings_clear_data_confirm_text">Se eliminarán los lugares guardados, las imágenes y los mapas descargados. El idioma y el tema se mantienen. La app volverá a descargar los lugares cuando tengas conexión.</string>
+    <string name="settings_clear_data_done">Datos guardados borrados</string>
+    <string name="action_clear_cache">Borrar caché</string>
+    <string name="action_clear_data">Borrar datos</string>
+    <string name="action_cancel">Cancelar</string>
+
+    <string name="settings_support">Ayuda y comentarios</string>
+    <string name="settings_feedback">Enviar comentarios</string>
+    <string name="settings_feedback_desc">Una idea, un error o un dato incorrecto: nos ayuda a mejorar</string>
+    <string name="settings_rate">Valorar la app</string>
+    <string name="settings_rate_desc">Tu valoración en Google Play ayuda a que más gente descubra Extremadura</string>
+    <string name="settings_share">Compartir la app</string>
+    <string name="settings_share_desc">Recomiéndala a quien vaya a visitar Extremadura</string>
+    <string name="share_app_text">Descubre Extremadura con ExplorerSaga: %1$s</string>
+
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_licenses">Privacidad, licencias y atribuciones</string>
+    <string name="settings_licenses_desc">Qué datos usa la app y de dónde salen sus contenidos</string>
+    <string name="settings_version">Versión %1$s</string>
+
+    <!-- Comentarios -->
+    <string name="feedback_title">Enviar comentarios</string>
+    <string name="feedback_intro">Leemos cada mensaje. Si un horario o un dato no es correcto, dinos qué lugar es y lo corregiremos.</string>
+    <string name="feedback_type">Tipo de comentario</string>
+    <string name="feedback_type_suggestion">Sugerencia</string>
+    <string name="feedback_type_bug">Error</string>
+    <string name="feedback_type_wrong_data">Dato incorrecto</string>
+    <string name="feedback_type_other">Otro</string>
+    <string name="feedback_message_label">Tu mensaje</string>
+    <string name="feedback_message_hint">Ej.: el horario del Teatro Romano ha cambiado</string>
+    <string name="feedback_include_device">Incluir datos técnicos (versión de la app, de Android y modelo del móvil)</string>
+    <string name="feedback_send">Enviar por correo</string>
+    <string name="feedback_note">Se abrirá tu app de correo con el mensaje listo para enviar.</string>
+    <string name="feedback_no_email_app">No hay ninguna app de correo instalada.</string>
+
+    <!-- Acerca de -->
+    <string name="about_title">Privacidad y licencias</string>
+    <string name="privacy_title">Privacidad</string>
+    <string name="privacy_text">ExplorerSaga no tiene cuentas de usuario ni rastreadores publicitarios. Si das permiso de ubicación, se usa solo en tu móvil para ordenar los lugares por cercanía y nunca se envía a ningún servidor. Los lugares guardados, las imágenes y los mapas se almacenan en tu móvil y puedes borrarlos desde Ajustes. Los mapas se descargan de los servidores de OpenStreetMap.</string>
+    <string name="about_data_title">Datos y mapas</string>
+    <string name="about_data_text">Mapas y parte de los lugares: © colaboradores de OpenStreetMap, disponibles bajo la licencia Open Database License (ODbL). Algunas descripciones proceden de Wikipedia y se publican bajo la licencia CC BY-SA 4.0.</string>
+    <string name="about_open_osm">Ver la licencia de OpenStreetMap</string>
+    <string name="about_fonts_title">Tipografías</string>
+    <string name="about_fonts_text">Montserrat y Playfair Display, bajo la licencia SIL Open Font License 1.1.</string>
+    <string name="about_software_title">Software de código abierto</string>
+    <string name="about_software_text">Android Jetpack (Compose, Room, Navigation, DataStore), Kotlin, Coil, Retrofit, OkHttp y osmdroid, bajo la licencia Apache 2.0.</string>
 </resources>
