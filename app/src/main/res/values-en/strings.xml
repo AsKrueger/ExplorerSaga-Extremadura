@@ -104,6 +104,7 @@
 
     <!-- Map -->
     <string name="map_open_detail">Details</string>
+    <string name="map_search_chip">Search: %1$s</string>
     <string name="cd_my_location">Go to my location</string>
     <string name="cd_close">Close</string>
 
