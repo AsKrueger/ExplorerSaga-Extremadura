@@ -17,6 +17,9 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Directions
 import androidx.compose.material.icons.filled.MyLocation
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -87,13 +90,16 @@ fun MapScreen(viewModel: ExploreViewModel, darkTheme: Boolean, onOpenPlace: (Str
     var map by remember { mutableStateOf<MapLibreMap?>(null) }
     var style by remember { mutableStateOf<Style?>(null) }
     var selected by remember { mutableStateOf<Place?>(null) }
+    val location by viewModel.location.collectAsStateWithLifecycle()
+    // Pulsado "mi ubicación" sin ubicación conocida: se centra en cuanto llegue
+    var pendingCenter by remember { mutableStateOf(false) }
     val itemsById = remember(results) { results.items.associateBy { it.place.id } }
     // El listener del mapa se registra una vez: así lee siempre los últimos resultados
     val currentItems by rememberUpdatedState(itemsById)
     val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         viewModel.refreshLocation()
         map?.let { m -> style?.let { s -> enableLocation(context, m, s) } }
-        centerOnUser(viewModel, map)
+        pendingCenter = !centerOnUser(viewModel, map)
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -129,15 +135,25 @@ fun MapScreen(viewModel: ExploreViewModel, darkTheme: Boolean, onOpenPlace: (Str
             style = loadedStyle
         }
 
-        GroupChips(
-            selected = filters.group,
-            onSelect = viewModel::setGroup,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )
+        Column(Modifier.align(Alignment.TopCenter)) {
+            GroupChips(selected = filters.group, onSelect = viewModel::setGroup)
+            // La búsqueda de Explorar también filtra el mapa: se muestra para poder quitarla
+            if (filters.query.isNotBlank()) {
+                InputChip(
+                    selected = true,
+                    onClick = { viewModel.setQuery("") },
+                    label = { Text(stringResource(R.string.map_search_chip, filters.query.trim())) },
+                    leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                    trailingIcon = { Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_clear_search)) },
+                    colors = InputChipDefaults.inputChipColors(selectedContainerColor = MaterialTheme.colorScheme.surface),
+                    modifier = Modifier.padding(start = 16.dp)
+                )
+            }
+        }
 
         SmallFloatingActionButton(
             onClick = {
-                if (LocationProvider(context).hasPermission()) centerOnUser(viewModel, map)
+                if (LocationProvider(context).hasPermission()) pendingCenter = !centerOnUser(viewModel, map)
                 else permission.launch(LocationProvider.PERMISSIONS)
             },
             modifier = Modifier
@@ -165,6 +181,14 @@ fun MapScreen(viewModel: ExploreViewModel, darkTheme: Boolean, onOpenPlace: (Str
         (style?.getLayer(SELECTED) as? CircleLayer)?.setFilter(
             Expression.eq(Expression.get("id"), Expression.literal(selected?.id ?: ""))
         )
+    }
+    LaunchedEffect(map, location, pendingCenter) {
+        val target = map ?: return@LaunchedEffect
+        val here = location ?: return@LaunchedEffect
+        if (pendingCenter) {
+            target.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(here.latitude, here.longitude), 14.0))
+            pendingCenter = false
+        }
     }
     // Lugar pedido desde una ficha: se centra y se selecciona aunque no pase los filtros
     LaunchedEffect(map, focused) {
@@ -304,13 +328,15 @@ private fun enableLocation(context: Context, map: MapLibreMap, style: Style) {
     }
 }
 
+/** Centra el mapa en el usuario. Devuelve false si aún no hay ubicación (llegará después). */
 @SuppressLint("MissingPermission")
-private fun centerOnUser(viewModel: ExploreViewModel, map: MapLibreMap?) {
+private fun centerOnUser(viewModel: ExploreViewModel, map: MapLibreMap?): Boolean {
     viewModel.refreshLocation()
-    val target = map ?: return
+    val target = map ?: return false
     val fromMap = runCatching { target.locationComponent.lastKnownLocation }.getOrNull()
     val latLng = fromMap?.let { LatLng(it.latitude, it.longitude) }
         ?: viewModel.location.value?.let { LatLng(it.latitude, it.longitude) }
-        ?: return
+        ?: return false
     target.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0))
+    return true
 }

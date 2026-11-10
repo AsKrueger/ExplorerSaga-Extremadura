@@ -105,7 +105,7 @@ Data: © OpenStreetMap contributors, Wikidata, Wikipedia, Wikimedia Commons and 
 | Categoría | Viajes y guías |
 | Etiquetas | Guías de viaje, Mapas, Turismo |
 | Correo de contacto | El de `feedback.email` (no se publica en el repositorio) |
-| Política de privacidad | https://github.com/AsKrueger/ExplorerSaga-Extremadura/blob/main/docs/privacy-policy.md |
+| Política de privacidad | https://askrueger.github.io/ExplorerSaga-Extremadura/privacy/ |
 | Precio | Gratis |
 | Anuncios | No (hasta la barra publicitaria posterior al MVP; entonces hay que cambiarlo a «Sí») |
 
