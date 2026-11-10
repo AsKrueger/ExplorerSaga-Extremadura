@@ -71,7 +71,7 @@ fun AboutScreen(onBack: () -> Unit) {
 }
 
 private const val PRIVACY_URL =
-    "https://github.com/AsKrueger/ExplorerSaga-Extremadura/blob/main/docs/privacy-policy.md"
+    "https://askrueger.github.io/ExplorerSaga-Extremadura/privacy/"
 
 @Composable
 private fun Section(@StringRes title: Int, @StringRes text: Int) {
