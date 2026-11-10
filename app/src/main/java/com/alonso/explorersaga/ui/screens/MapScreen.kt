@@ -1,10 +1,7 @@
 package com.alonso.explorersaga.ui.screens
 
-import android.content.ActivityNotFoundException
-import android.content.Intent
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,7 +20,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -46,22 +45,22 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.model.Place
 import com.alonso.explorersaga.ui.composables.rememberPlaceImageModel
@@ -77,8 +76,7 @@ import org.osmdroid.views.overlay.Marker
 fun MapScreen(
     viewModel: PlacesViewModel,
     onFilterClicked: () -> Unit,
-    onInfoClicked: () -> Unit,
-    onPlacesClicked: () -> Unit
+    onOpenDetail: (Place) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var selectedPlace by remember { mutableStateOf<Place?>(null) }
@@ -98,7 +96,7 @@ fun MapScreen(
         scaffoldState = bottomSheetScaffoldState,
         sheetContent = {
             selectedPlace?.let { place ->
-                PlaceDetailSheet(place = place)
+                PlaceDetailSheet(place = place, onOpenDetail = { onOpenDetail(place) })
             }
         },
         sheetPeekHeight = 0.dp // Oculta el panel por defecto
@@ -110,7 +108,8 @@ fun MapScreen(
         ) {
             val mapView = rememberMapViewWithLifecycle()
 
-            AndroidView({ mapView })
+            // osmdroid pinta fuera de su vista si no se recorta (p. ej. bajo la barra de estado)
+            AndroidView({ mapView }, modifier = Modifier.fillMaxSize().clipToBounds())
 
             val filteredPlaces = uiState.places.filter {
                 it.name.contains(searchQuery, ignoreCase = true)
@@ -157,7 +156,9 @@ fun MapScreen(
                             searchQuery = it
                             showSuggestions = true
                         },
-                        label = { Text("Buscar por nombre") },
+                        label = { Text(stringResource(R.string.map_search_label)) },
+                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
+                        singleLine = true,
                         modifier = Modifier.weight(1f)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -165,10 +166,10 @@ fun MapScreen(
                         onClick = onFilterClicked,
                         containerColor = MaterialTheme.colorScheme.primary
                     ) {
-                        Text(
-                            text = stringResource(id = R.string.map_filter_icon),
-                            fontSize = 24.sp,
-                            color = MaterialTheme.colorScheme.onPrimary
+                        Icon(
+                            Icons.Filled.FilterList,
+                            contentDescription = stringResource(R.string.cd_filters),
+                            tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
                 }
@@ -211,48 +212,23 @@ fun MapScreen(
                 }
             }
 
-            Row(
+            // Atribución obligatoria de los datos del mapa (licencia ODbL de OpenStreetMap)
+            Text(
+                text = stringResource(R.string.map_attribution),
+                style = MaterialTheme.typography.labelSmall,
+                color = Color.DarkGray,
                 modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                Button(
-                    onClick = onInfoClicked,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp)
-                ) {
-                    Text(
-                        text = "🏛️ Info",
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 16.sp
-                    )
-                }
-                Button(
-                    onClick = onPlacesClicked,
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                    modifier = Modifier
-                        .weight(1f)
-                        .padding(start = 8.dp)
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.info_places_button),
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 16.sp
-                    )
-                }
-            }
+                    .align(Alignment.BottomEnd)
+                    .background(Color.White.copy(alpha = 0.8f))
+                    .padding(horizontal = 6.dp, vertical = 2.dp)
+            )
         }
     }
 }
 
 @Composable
-private fun PlaceDetailSheet(place: Place) {
+private fun PlaceDetailSheet(place: Place, onOpenDetail: () -> Unit) {
     val scrollState = rememberScrollState()
-    val context = LocalContext.current
     val imageModel = rememberPlaceImageModel(place.photo)
 
     Column(
@@ -301,13 +277,13 @@ private fun PlaceDetailSheet(place: Place) {
             Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 place.horarios?.takeIf { it.isNotBlank() }?.let {
                     Row {
-                        Text("Horarios:", fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
+                        Text(stringResource(R.string.detail_hours), fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
                         Text(it)
                     }
                 }
                 place.direccion?.takeIf { it.isNotBlank() }?.let {
                     Row {
-                        Text("Dirección:", fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
+                        Text(stringResource(R.string.detail_address), fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
                         Text(it)
                     }
                 }
@@ -315,25 +291,14 @@ private fun PlaceDetailSheet(place: Place) {
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Botón del sitio web
-            place.website?.let { url ->
-                if (url.isNotBlank()) {
-                    Button(
-                        onClick = {
-                            try {
-                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                            } catch (e: ActivityNotFoundException) {
-                                e.printStackTrace()
-                            }
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp)
-                    ) {
-                        Icon(Icons.Default.Info, contentDescription = null)
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(text = "Visitar Sitio Web")
-                    }
-                }
+            Button(
+                onClick = onOpenDetail,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Icon(Icons.Filled.Info, contentDescription = null)
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(text = stringResource(R.string.map_open_detail))
             }
         }
     }
@@ -382,6 +347,8 @@ private fun rememberMapViewWithLifecycle(): MapView {
     val mapView = remember {
         MapView(context).apply {
             setTileSource(TileSourceFactory.MAPNIK)
+            // Los controles de zoom propios de osmdroid se solapan con la interfaz; se usa el pellizco
+            zoomController.setVisibility(org.osmdroid.views.CustomZoomButtonsController.Visibility.NEVER)
             setMultiTouchControls(true)
             controller.setZoom(17.0)
             controller.setCenter(GeoPoint(38.915, -6.345))

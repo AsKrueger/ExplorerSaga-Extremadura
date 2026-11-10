@@ -10,12 +10,12 @@ Para ejecutar el entorno completo de desarrollo de forma reproducible, se requie
 
 | Herramienta | Versión Recomendada | Propósito |
 | :--- | :--- | :--- |
-| **Java Development Kit (JDK)** | JDK 17 o JDK 21 | Entorno de ejecución para el Backend Spring Boot |
+| **Java Development Kit (JDK)** | JDK 17 o JDK 21 | Backend Spring Boot y compilación Android (Gradle 9.6) |
 | **Apache Maven** | 3.9+ (o usar `mvnw` / `mvnw.cmd` incluido) | Gestión de dependencias y construcción del Backend |
 | **Docker & Docker Compose** | Docker 24+ / Compose v2.20+ | Contenerización y despliegue local de PostgreSQL 15 |
 | **PostgreSQL** | 15-alpine (vía Docker) | Base de datos relacional para persistencia de datos turísticos |
-| **Android Studio** | Ladybug (2024.2+) o superior | IDE para compilación y ejecución de la app Android |
-| **Android SDK / Emulator** | API Level 35 (mínimo API 26 / Android 8.0) | Entorno de ejecución móvil |
+| **Android Studio** | Versión compatible con AGP 9.4 | IDE para compilación y ejecución de la app Android |
+| **Android SDK / Emulator** | Plataforma API 37 (mínimo API 26 / Android 8.0) | Entorno de ejecución móvil |
 
 ---
 
@@ -158,14 +158,16 @@ curl "http://localhost:8080/api/v1/places?category=monumento"
   ```bash
   ./gradlew testDebugUnitTest lintDebug
   ```
-- Las pruebas unitarias (19) cubren el filtrado por categorías (`FilterStateTest`), el cálculo de distancias (`GeoTest`), el mapeo de datos remotos (`PlaceMappingTest`) y el repositorio con la caché offline de Room (`PlaceRepositoryTest`).
+- Las pruebas unitarias (31) cubren el filtrado por categorías (`FilterStateTest`, `FilterOptionsTest`), el cálculo de distancias (`GeoTest`), el mapeo de datos remotos (`PlaceMappingTest`), el repositorio con la caché offline de Room (`PlaceRepositoryTest`), el correo de comentarios (`FeedbackComposerTest`) y el cálculo y borrado de almacenamiento (`StorageTest`).
+- Para que **Ajustes → Enviar comentarios** tenga destinatario, añade `feedback.email=tu@correo` a `local.properties` (ver `local.properties.example`). No se versiona.
 
 ### 3. Iniciar la App en el Emulador
 1. Abrir la carpeta raíz del proyecto `ExplorerSaga-Extremadura` en Android Studio.
 2. Sincronizar Gradle (`Gradle Sync`).
-3. Seleccionar un dispositivo AVD en el Device Manager (ej. *Pixel 8 - API 35*).
+3. Seleccionar un dispositivo AVD en el Device Manager (ej. *Pixel 10 Pro XL - API 37*).
 4. Pulsar **Run 'app'** (`Shift + F10`).
-5. Al abrir un listado de lugares la app solicita el permiso de ubicación. Si se concede, los lugares se ordenan por cercanía a la última ubicación conocida del dispositivo (en el emulador puede fijarse desde *Extended Controls → Location*); si se deniega, se usa el centro de Mérida como referencia.
+5. La primera vez se muestra la bienvenida. Después, la app se organiza en cuatro pestañas: **Inicio**, **Explorar**, **Mapa** y **Ajustes** (idioma, tema, imágenes sin conexión, borrar caché o datos y comentarios).
+6. Al abrir Explorar la app solicita el permiso de ubicación. Si se concede, los lugares se ordenan por cercanía a la última ubicación conocida del dispositivo (en el emulador puede fijarse desde *Extended Controls → Location*); si se deniega, se usa el centro de Mérida como referencia.
 
 ---
 

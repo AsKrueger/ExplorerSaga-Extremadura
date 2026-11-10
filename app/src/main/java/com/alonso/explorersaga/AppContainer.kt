@@ -1,20 +1,26 @@
 package com.alonso.explorersaga
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.alonso.explorersaga.data.AppDatabase
 import com.alonso.explorersaga.data.BundledPlacesLoader
 import com.alonso.explorersaga.data.PlaceRepository
+import com.alonso.explorersaga.data.SettingsStore
+import com.alonso.explorersaga.data.StorageManager
 import com.alonso.explorersaga.data.remote.RetrofitClient
 import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
+import com.alonso.explorersaga.ui.viewmodels.SettingsViewModel
 
 /**
  * Un contenedor simple para las dependencias de la aplicación.
  */
 interface AppContainer {
     val placesRepository: PlaceRepository
-    val placesViewModelFactory: ViewModelProvider.Factory
+    val settingsStore: SettingsStore
+    val storageManager: StorageManager
+    val viewModelFactory: ViewModelProvider.Factory
 }
 
 /**
@@ -22,24 +28,25 @@ interface AppContainer {
  */
 class DefaultAppContainer(private val context: Context) : AppContainer {
 
+    private val database: AppDatabase by lazy { AppDatabase.getDatabase(context) }
+
     override val placesRepository: PlaceRepository by lazy {
         PlaceRepository(
-            placeDao = AppDatabase.getDatabase(context).placeDao(),
+            placeDao = database.placeDao(),
             api = RetrofitClient.api,
             importApi = RetrofitClient.importApi,
             loadBundledPlaces = BundledPlacesLoader(context)::load
         )
     }
 
-    override val placesViewModelFactory: ViewModelProvider.Factory by lazy {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                if (modelClass.isAssignableFrom(PlacesViewModel::class.java)) {
-                    @Suppress("UNCHECKED_CAST")
-                    return PlacesViewModel(placesRepository) as T
-                }
-                throw IllegalArgumentException("Unknown ViewModel class")
-            }
-        }
+    override val settingsStore: SettingsStore by lazy { SettingsStore(context) }
+
+    override val storageManager: StorageManager by lazy {
+        StorageManager(context, database, placesRepository)
+    }
+
+    override val viewModelFactory: ViewModelProvider.Factory = viewModelFactory {
+        initializer { PlacesViewModel(placesRepository) }
+        initializer { SettingsViewModel(settingsStore, storageManager) }
     }
 }

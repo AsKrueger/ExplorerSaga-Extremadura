@@ -1,0 +1,153 @@
+<resources>
+    <string name="app_name">ExplorerSaga</string>
+
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_explore">Explore</string>
+    <string name="nav_map">Map</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Welcome -->
+    <string name="logo_content_description">ExplorerSaga logo</string>
+    <string name="welcome_title">Extremadura</string>
+    <string name="welcome_subtitle">Your next adventure starts here</string>
+    <string name="welcome_features">Monuments, food and hidden gems, in English and Spanish, and offline too.</string>
+    <string name="welcome_button">Start exploring</string>
+    <string name="welcome_copyright">© %1$d ExplorerSaga</string>
+
+    <!-- Home -->
+    <string name="home_hero_title">Discover Mérida</string>
+    <string name="home_hero_subtitle">The living history of Extremadura</string>
+    <string name="home_intro">Mérida, the ancient Emerita Augusta, was founded in 25 BC and is today one of the most important archaeological sites in Spain. Stroll through its streets and discover its remarkable Roman legacy.</string>
+    <string name="home_open_map">View on the map</string>
+    <string name="home_categories_title">What are you in the mood for?</string>
+    <string name="category_heritage">Monuments and history</string>
+    <string name="category_heritage_desc">Theatre, temples, churches and museums</string>
+    <string name="category_food">Food and drink</string>
+    <string name="category_food_desc">Restaurants, cafés, bars and ice cream</string>
+    <string name="category_shops">Shops and souvenirs</string>
+    <string name="category_shops_desc">Local products, souvenirs and shopping</string>
+    <string name="home_roadmap_title">Coming soon: all of Extremadura</string>
+    <string name="home_roadmap_text">Cáceres, Trujillo, Guadalupe, Monfragüe, the Jerte Valley and hundreds more places, with routes and a seasonal calendar.</string>
+
+    <!-- Explore -->
+    <string name="explore_title">Explore</string>
+    <string name="search_label">Search places</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="offline_notice">Offline: showing the places saved on your phone.</string>
+    <string name="empty_title">No matching places</string>
+    <string name="empty_text">Try another search or clear the filters.</string>
+    <string name="action_clear_filters">Clear filters</string>
+    <string name="action_retry">Retry</string>
+    <string name="distance_m">%1$d m away</string>
+    <string name="distance_km">%1$s km away</string>
+
+    <!-- Filters -->
+    <string name="group_all">All</string>
+    <string name="group_heritage">Heritage</string>
+    <string name="group_food">Food and drink</string>
+    <string name="group_shops">Shops</string>
+    <string name="filter_all">All</string>
+    <string name="filter_monuments">Monuments</string>
+    <string name="filter_churches">Churches</string>
+    <string name="filter_museums">Museums</string>
+    <string name="filter_restaurants">Restaurants</string>
+    <string name="filter_cafes">Cafés</string>
+    <string name="filter_bars">Bars</string>
+    <string name="filter_ice_cream">Ice cream</string>
+    <string name="filter_food_shops">Food shops</string>
+    <string name="filter_souvenirs">Souvenirs</string>
+    <string name="filter_supermarkets">Supermarkets</string>
+    <string name="filter_bookshops">Bookshops</string>
+    <string name="filter_clothes">Clothing</string>
+    <string name="filter_general">Other shops</string>
+    <string name="filters_title">Filters</string>
+    <string name="filters_select_all">Select all</string>
+    <string name="filters_apply">Apply filters</string>
+    <string name="cd_filters">Filters</string>
+
+    <!-- Map -->
+    <string name="map_search_label">Search the map</string>
+    <string name="map_attribution">© OpenStreetMap contributors</string>
+    <string name="map_open_detail">View full details</string>
+
+    <!-- Detail -->
+    <string name="cd_back">Back</string>
+    <string name="detail_hours">Opening hours</string>
+    <string name="detail_address">Address</string>
+    <string name="detail_website">Official website</string>
+    <string name="detail_directions">Directions</string>
+    <string name="detail_share">Share</string>
+    <string name="detail_share_text">%1$s, in Extremadura: %2$s</string>
+    <string name="detail_spanish_only">This description is only available in Spanish for now.</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_general">General</string>
+    <string name="settings_language">Language</string>
+    <string name="language_system">System language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+
+    <string name="settings_storage">Storage and offline use</string>
+    <string name="settings_offline_images">Save images for offline use</string>
+    <string name="settings_offline_images_desc">Photos you view are kept on your phone and stay available without signal. Turning this off deletes the saved ones.</string>
+    <string name="settings_usage">Storage used</string>
+    <string name="settings_usage_value">Cache: %1$s · Saved data: %2$s</string>
+    <string name="settings_clear_cache">Clear cache</string>
+    <string name="settings_clear_cache_desc">Deletes downloaded images and maps. They will download again when you use them.</string>
+    <string name="settings_clear_cache_confirm_title">Clear the cache?</string>
+    <string name="settings_clear_cache_confirm_text">Downloaded images and maps will be deleted. Offline, you will not see them until they download again.</string>
+    <string name="settings_clear_cache_done">Cache cleared: %1$s freed</string>
+    <string name="settings_clear_data">Delete saved data</string>
+    <string name="settings_clear_data_desc">Deletes the places saved for offline use and the cache. Your settings are kept.</string>
+    <string name="settings_clear_data_confirm_title">Delete saved data?</string>
+    <string name="settings_clear_data_confirm_text">Saved places, images and downloaded maps will be deleted. Language and theme are kept. The app will download the places again when you are online.</string>
+    <string name="settings_clear_data_done">Saved data deleted</string>
+    <string name="action_clear_cache">Clear cache</string>
+    <string name="action_clear_data">Delete data</string>
+    <string name="action_cancel">Cancel</string>
+
+    <string name="settings_support">Help and feedback</string>
+    <string name="settings_feedback">Send feedback</string>
+    <string name="settings_feedback_desc">An idea, a bug or wrong information: it helps us improve</string>
+    <string name="settings_rate">Rate the app</string>
+    <string name="settings_rate_desc">Your rating on Google Play helps more people discover Extremadura</string>
+    <string name="settings_share">Share the app</string>
+    <string name="settings_share_desc">Recommend it to anyone visiting Extremadura</string>
+    <string name="share_app_text">Discover Extremadura with ExplorerSaga: %1$s</string>
+
+    <string name="settings_about">About</string>
+    <string name="settings_licenses">Privacy, licences and credits</string>
+    <string name="settings_licenses_desc">What data the app uses and where its content comes from</string>
+    <string name="settings_version">Version %1$s</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Send feedback</string>
+    <string name="feedback_intro">We read every message. If opening hours or any detail are wrong, tell us which place it is and we will fix it.</string>
+    <string name="feedback_type">Type of feedback</string>
+    <string name="feedback_type_suggestion">Suggestion</string>
+    <string name="feedback_type_bug">Bug</string>
+    <string name="feedback_type_wrong_data">Wrong information</string>
+    <string name="feedback_type_other">Other</string>
+    <string name="feedback_message_label">Your message</string>
+    <string name="feedback_message_hint">E.g. the Roman Theatre opening hours have changed</string>
+    <string name="feedback_include_device">Include technical details (app version, Android version and phone model)</string>
+    <string name="feedback_send">Send by email</string>
+    <string name="feedback_note">Your email app will open with the message ready to send.</string>
+    <string name="feedback_no_email_app">No email app is installed.</string>
+
+    <!-- About -->
+    <string name="about_title">Privacy and licences</string>
+    <string name="privacy_title">Privacy</string>
+    <string name="privacy_text">ExplorerSaga has no user accounts and no advertising trackers. If you grant location access, it is only used on your phone to sort places by distance and is never sent to any server. Saved places, images and maps are stored on your phone and you can delete them from Settings. Maps are downloaded from OpenStreetMap servers.</string>
+    <string name="about_data_title">Data and maps</string>
+    <string name="about_data_text">Maps and some places: © OpenStreetMap contributors, available under the Open Database License (ODbL). Some descriptions come from Wikipedia and are published under the CC BY-SA 4.0 licence.</string>
+    <string name="about_open_osm">View the OpenStreetMap licence</string>
+    <string name="about_fonts_title">Fonts</string>
+    <string name="about_fonts_text">Montserrat and Playfair Display, under the SIL Open Font License 1.1.</string>
+    <string name="about_software_title">Open-source software</string>
+    <string name="about_software_text">Android Jetpack (Compose, Room, Navigation, DataStore), Kotlin, Coil, Retrofit, OkHttp and osmdroid, under the Apache 2.0 licence.</string>
+</resources>
