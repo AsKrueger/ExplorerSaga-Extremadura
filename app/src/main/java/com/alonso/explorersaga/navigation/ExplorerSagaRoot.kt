@@ -25,16 +25,25 @@ import androidx.navigation.toRoute
 import com.alonso.explorersaga.AppContainer
 import com.alonso.explorersaga.data.AppSettings
 import com.alonso.explorersaga.ui.screens.AboutScreen
+import com.alonso.explorersaga.ui.screens.AgendaScreen
 import com.alonso.explorersaga.ui.screens.ExploreScreen
 import com.alonso.explorersaga.ui.screens.FeedbackScreen
-import com.alonso.explorersaga.ui.screens.FilterScreen
 import com.alonso.explorersaga.ui.screens.HomeScreen
 import com.alonso.explorersaga.ui.screens.MapScreen
 import com.alonso.explorersaga.ui.screens.PlaceDetailScreen
+import com.alonso.explorersaga.ui.screens.RouteDetailScreen
+import com.alonso.explorersaga.ui.screens.RoutesScreen
+import com.alonso.explorersaga.ui.screens.ServicesScreen
 import com.alonso.explorersaga.ui.screens.SettingsScreen
+import com.alonso.explorersaga.ui.screens.TripScreen
 import com.alonso.explorersaga.ui.screens.WelcomeScreen
-import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
+import com.alonso.explorersaga.ui.viewmodels.ExploreViewModel
+import com.alonso.explorersaga.ui.viewmodels.HomeViewModel
+import com.alonso.explorersaga.ui.viewmodels.PlaceDetailViewModel
+import com.alonso.explorersaga.ui.viewmodels.RouteViewModel
+import com.alonso.explorersaga.ui.viewmodels.ServicesViewModel
 import com.alonso.explorersaga.ui.viewmodels.SettingsViewModel
+import com.alonso.explorersaga.ui.viewmodels.TripViewModel
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,12 +55,20 @@ fun ExplorerSagaRoot(container: AppContainer, settings: AppSettings) {
     }
 
     val navController = rememberNavController()
-    val placesViewModel: PlacesViewModel = viewModel(factory = container.viewModelFactory)
-    val settingsViewModel: SettingsViewModel = viewModel(factory = container.viewModelFactory)
+    val factory = container.viewModelFactory
+    // Explorar y el mapa comparten filtros y resultados; Inicio y la agenda, la temporada
+    val exploreViewModel: ExploreViewModel = viewModel(factory = factory)
+    val homeViewModel: HomeViewModel = viewModel(factory = factory)
     val backStackEntry by navController.currentBackStackEntryAsState()
     val destination = backStackEntry?.destination
     val currentTab = TopLevelTab.entries.firstOrNull { tab ->
         destination?.hierarchy?.any { it.hasRoute(tab.route::class) } == true
+    }
+
+    val openPlace: (String) -> Unit = { navController.navigate(PlaceDetailRoute(it)) }
+    val showOnMap: (String) -> Unit = { placeId ->
+        exploreViewModel.focusOnMap(placeId)
+        navController.navigateToTab(TopLevelTab.MAP)
     }
 
     Scaffold(
@@ -81,41 +98,80 @@ fun ExplorerSagaRoot(container: AppContainer, settings: AppSettings) {
         ) {
             composable<HomeRoute> {
                 HomeScreen(
-                    onCategorySelected = { filter ->
-                        placesViewModel.updateFilters(filter)
+                    viewModel = homeViewModel,
+                    onGroupSelected = { group ->
+                        exploreViewModel.showGroup(group)
                         navController.navigateToTab(TopLevelTab.EXPLORE)
                     },
+                    onOpenPlace = openPlace,
+                    onOpenRoute = { navController.navigate(RouteDetailRoute(it)) },
+                    onOpenRoutes = { navController.navigate(RoutesRoute) },
+                    onOpenAgenda = { navController.navigate(AgendaRoute) },
+                    onOpenServices = { navController.navigate(ServicesRoute) },
                     onOpenMap = { navController.navigateToTab(TopLevelTab.MAP) }
                 )
             }
             composable<ExploreRoute> {
-                ExploreScreen(
-                    viewModel = placesViewModel,
-                    onPlaceClicked = { navController.navigate(PlaceDetailRoute(it.id)) }
-                )
+                ExploreScreen(viewModel = exploreViewModel, onOpenPlace = openPlace)
             }
             composable<MapRoute> {
-                MapScreen(
-                    viewModel = placesViewModel,
-                    onFilterClicked = { navController.navigate(FiltersRoute) },
-                    onOpenDetail = { navController.navigate(PlaceDetailRoute(it.id)) }
+                MapScreen(viewModel = exploreViewModel, darkTheme = settings.isDark(), onOpenPlace = openPlace)
+            }
+            composable<TripRoute> {
+                val tripViewModel: TripViewModel = viewModel(factory = factory)
+                TripScreen(
+                    viewModel = tripViewModel,
+                    onOpenPlace = openPlace,
+                    onExplore = { navController.navigateToTab(TopLevelTab.EXPLORE) },
+                    onOpenRoutes = { navController.navigate(RoutesRoute) }
                 )
             }
             composable<SettingsRoute> {
+                val settingsViewModel: SettingsViewModel = viewModel(factory = factory)
                 SettingsScreen(
                     viewModel = settingsViewModel,
+                    darkTheme = settings.isDark(),
                     onOpenFeedback = { navController.navigate(FeedbackRoute) },
                     onOpenAbout = { navController.navigate(AboutRoute) }
                 )
             }
-            composable<FiltersRoute> {
-                FilterScreen(viewModel = placesViewModel, onApply = { navController.popBackStack() })
-            }
             composable<PlaceDetailRoute> { entry ->
+                val placeId = entry.toRoute<PlaceDetailRoute>().placeId
+                val detailViewModel: PlaceDetailViewModel =
+                    viewModel(key = "place-$placeId", factory = container.placeDetailFactory(placeId))
                 PlaceDetailScreen(
-                    placeId = entry.toRoute<PlaceDetailRoute>().placeId,
-                    viewModel = placesViewModel,
-                    onBack = { navController.popBackStack() }
+                    viewModel = detailViewModel,
+                    onBack = { navController.popBackStack() },
+                    onShowOnMap = showOnMap
+                )
+            }
+            composable<RoutesRoute> {
+                RoutesScreen(
+                    viewModel = homeViewModel,
+                    onBack = { navController.popBackStack() },
+                    onOpenRoute = { navController.navigate(RouteDetailRoute(it)) }
+                )
+            }
+            composable<RouteDetailRoute> { entry ->
+                val routeId = entry.toRoute<RouteDetailRoute>().routeId
+                val routeViewModel: RouteViewModel =
+                    viewModel(key = "route-$routeId", factory = container.routeFactory(routeId))
+                RouteDetailScreen(
+                    viewModel = routeViewModel,
+                    darkTheme = settings.isDark(),
+                    onBack = { navController.popBackStack() },
+                    onOpenPlace = openPlace
+                )
+            }
+            composable<AgendaRoute> {
+                AgendaScreen(viewModel = homeViewModel, onBack = { navController.popBackStack() })
+            }
+            composable<ServicesRoute> {
+                val servicesViewModel: ServicesViewModel = viewModel(factory = factory)
+                ServicesScreen(
+                    viewModel = servicesViewModel,
+                    onBack = { navController.popBackStack() },
+                    onOpenPlace = openPlace
                 )
             }
             composable<FeedbackRoute> {
@@ -126,6 +182,13 @@ fun ExplorerSagaRoot(container: AppContainer, settings: AppSettings) {
             }
         }
     }
+}
+
+@Composable
+private fun AppSettings.isDark(): Boolean = when (themeMode) {
+    com.alonso.explorersaga.data.ThemeMode.SYSTEM -> androidx.compose.foundation.isSystemInDarkTheme()
+    com.alonso.explorersaga.data.ThemeMode.LIGHT -> false
+    com.alonso.explorersaga.data.ThemeMode.DARK -> true
 }
 
 // Navegación estándar entre pestañas: conserva el estado de cada una y no apila pestañas repetidas

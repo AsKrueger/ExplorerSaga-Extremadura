@@ -1,217 +1,70 @@
-# Guía de Instalación, Configuración y Puesta en Marcha — ExplorerSaga Extremadura
+# Puesta en marcha de ExplorerSaga Extremadura (v2)
 
-Este documento proporciona las instrucciones paso a paso para desplegar, ejecutar, probar y demostrar la versión candidata del MVP de **ExplorerSaga Extremadura**, abarcando la base de datos PostgreSQL, el backend Spring Boot 3 y la aplicación Android nativa en Kotlin con Jetpack Compose.
+La app v2 no necesita servidor: el contenido va incluido en la app y se actualiza desde GitHub Releases. El backend Spring Boot de la versión 1 sigue en [backend/](../backend/README.md), pero la app ya no lo usa.
 
----
+## 1. Requisitos
 
-## 📋 1. Requisitos Previos y Herramientas
+| Herramienta | Versión | Para qué |
+| --- | --- | --- |
+| JDK | 17 (o 21) | Compilar con Gradle 9.6 |
+| Android Studio | Compatible con AGP 9.4 | Compilar y ejecutar la app |
+| Android SDK | Plataforma API 37 (mínimo API 26, Android 8.0) | Compilación y emulador |
+| Python | 3.12, sin paquetes extra | Fábrica de datos (opcional) |
 
-Para ejecutar el entorno completo de desarrollo de forma reproducible, se requieren las siguientes herramientas:
+## 2. Configuración local
 
-| Herramienta | Versión Recomendada | Propósito |
-| :--- | :--- | :--- |
-| **Java Development Kit (JDK)** | JDK 17 o JDK 21 | Backend Spring Boot y compilación Android (Gradle 9.6) |
-| **Apache Maven** | 3.9+ (o usar `mvnw` / `mvnw.cmd` incluido) | Gestión de dependencias y construcción del Backend |
-| **Docker & Docker Compose** | Docker 24+ / Compose v2.20+ | Contenerización y despliegue local de PostgreSQL 15 |
-| **PostgreSQL** | 15-alpine (vía Docker) | Base de datos relacional para persistencia de datos turísticos |
-| **Android Studio** | Versión compatible con AGP 9.4 | IDE para compilación y ejecución de la app Android |
-| **Android SDK / Emulator** | Plataforma API 37 (mínimo API 26 / Android 8.0) | Entorno de ejecución móvil |
+Copia `local.properties.example` a `local.properties` (no se versiona) y ajusta:
 
----
+- `sdk.dir`: ruta del Android SDK. Android Studio la rellena solo.
+- `feedback.email`: dirección que recibe **Ajustes › Enviar comentarios**.
+- `release.*`: keystore de publicación (solo para Google Play, ver [play-store/RELEASE.md](play-store/RELEASE.md)).
 
-## 🗄️ 2. Configuración y Arranque de la Base de Datos (PostgreSQL)
+## 3. Compilar, probar y ejecutar
 
-El proyecto incluye un archivo `docker-compose.yml` preconfigurado en la carpeta `backend/`.
-
-### Pasos para iniciar la base de datos:
-
-1. Navegar a la carpeta del backend:
-   ```bash
-   cd backend
-   ```
-
-2. Iniciar el contenedor de PostgreSQL en segundo plano:
-   ```bash
-   docker compose up -d
-   ```
-
-3. Verificar que el contenedor `explorersaga-db` se encuentra activo:
-   ```bash
-   docker compose ps
-   ```
-
-### Datos de Conexión Predeterminados:
-- **Host:** `localhost`
-- **Puerto:** `5432`
-- **Base de datos:** `explorersaga`
-- **Usuario:** `explorersaga_user` (configurable mediante variable `DB_USER`)
-- **Contraseña:** `explorersaga_password` (configurable mediante variable `DB_PASSWORD`)
-
-> ℹ️ **Migraciones de Base de Datos:** Las tablas y restricciones de la base de datos se crean automáticamente mediante **Flyway** al arrancar el backend (`V1__Initial_Schema.sql`).
-
----
-
-## ⚙️ 3. Configuración y Perfiles del Backend
-
-La configuración del backend está dividida en perfiles dentro de `backend/src/main/resources/`:
-
-- `application.yml`: Configuración general del servidor en el puerto `8080` (perfil activo por defecto: `dev`).
-- `application-dev.yml`: Configuración para desarrollo local conectando a PostgreSQL en `localhost:5432` y Overpass API (`https://overpass-api.de/api/interpreter`).
-- `application-test.yml`: Configuración para pruebas automatizadas utilizando la base de datos en memoria **H2** en modo PostgreSQL con Flyway habilitado.
-
----
-
-## 🚀 4. Compilación y Ejecución del Backend
-
-### Ejecutar las Pruebas Automatizadas del Backend
-Antes de iniciar el servidor, se puede validar la suite completa de pruebas unitarias e integración:
-
-- **Windows (PowerShell/CMD):**
-  ```cmd
-  cd backend
-  .\mvnw.cmd test
-  ```
-- **Linux/macOS:**
-  ```bash
-  cd backend
-  ./mvnw test
-  ```
-
-*Resultado esperado:* **48/48 tests pasando exitosamente (`BUILD SUCCESS`).**
-
-### Iniciar el Backend Spring Boot
-Para arrancar la aplicación backend:
-
-- **Windows:**
-  ```cmd
-  cd backend
-  .\mvnw.cmd spring-boot:run
-  ```
-- **Linux/macOS:**
-  ```bash
-  cd backend
-  ./mvnw spring-boot:run
-  ```
-
-### Verificación de Disponibilidad:
-1. **Endpoint de Salud (Health Check):**
-   ```bash
-   curl http://localhost:8080/api/v1/health
-   ```
-   *Respuesta esperada:* `{"status":"UP"}`
-
-2. **Documentación Swagger / OpenAPI Interactiva:**
-   Abrir en el navegador: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
-
----
-
-## 🔄 5. Procedimiento Manual de Importación de Datos (Overpass API)
-
-Para poblar la base de datos PostgreSQL con los lugares turísticos reales de Mérida provenientes de OpenStreetMap:
-
-### Ejecutar Importación vía cURL:
-```bash
-curl -X POST http://localhost:8080/api/v1/places/import
+```powershell
+./gradlew assembleDebug             # compilar
+./gradlew testDebugUnitTest         # 26 pruebas unitarias
+./gradlew lintDebug                 # análisis estático
+./gradlew installDebug              # instalar en el emulador o el móvil
+./gradlew connectedDebugAndroidTest # 3 pruebas de interfaz (emulador encendido)
+./gradlew bundleRelease             # AAB para Google Play
 ```
 
-*Respuesta esperada (JSON con métricas de la importación; los valores dependen del estado actual de OpenStreetMap):*
-```json
-{
-  "processed": 220,
-  "inserted": 202,
-  "updated": 0,
-  "skipped": 0,
-  "failed": 0,
-  "merged": 18
-}
-```
-`merged` cuenta los elementos de OSM que coinciden con un lugar ya registrado (por ejemplo, del seed) y se enlazan a él en lugar de duplicarlo. Ver [docs/api/API.md](api/API.md).
+Las pruebas unitarias cubren:
+- importación del paquete de contenido y verificación sha256 (`ContentImporterTest`);
+- búsqueda sin tildes (`TextTest`);
+- agenda de temporada (`SeasonWindowTest`);
+- filtros, orden y destacados de Explorar e Inicio (`ExploreAndSeasonTest`);
+- distancias (`GeoTest`);
+- correo de comentarios (`FeedbackComposerTest`);
+- almacenamiento (`StorageTest`).
 
-La importación puede tardar hasta un par de minutos: si la instancia pública principal de Overpass está saturada, el backend prueba la instancia alternativa y reintenta con espera progresiva. Si ninguna responde, devuelve `502 Bad Gateway`.
+Las pruebas de interfaz (`MainFlowsTest`) recorren la búsqueda, la ficha, Mi viaje, Inicio y Ajustes sobre la app real.
 
-### Probar Idempotencia:
-Si se vuelve a ejecutar la misma petición inmediatamente:
-```bash
-curl -X POST http://localhost:8080/api/v1/places/import
-```
-*Respuesta esperada:* `inserted: 0`, `updated: 0`, `merged: 0` y todos los elementos en `skipped`. Ningún registro se duplica gracias al identificador unívoco de fuente externa.
+## 4. Contenido (fábrica de datos)
 
-### Consultar Lugares Almacenados:
-```bash
-# Listado completo
-curl http://localhost:8080/api/v1/places
-
-# Filtrar por categoría (ej. Monumentos)
-curl "http://localhost:8080/api/v1/places?category=monumento"
+```powershell
+cd tools/datafactory
+python factory.py fetch          # descarga OSM, Wikidata, Wikipedia, Commons y Junta (unos 15 min)
+python factory.py build --app    # genera el paquete y lo copia a la app
+python -m unittest discover -s tests
 ```
 
----
+Más detalles en [tools/datafactory/README.md](../tools/datafactory/README.md). El workflow [content-pack.yml](../.github/workflows/content-pack.yml) publica cada lunes el paquete en la release `content-pack`, de donde lo descarga la app.
 
-## 📱 6. Configuración y Ejecución de la Aplicación Android
+## 5. Comprobaciones manuales antes de publicar
 
-### 1. Requisitos de Red y Emulador Local
-- La aplicación Android está preconfigurada en `RetrofitClient` para conectarse a `http://10.0.2.2:8080/`, que es la dirección especial reservada por el emulador de Android para acceder al `localhost` del equipo anfitrión.
-- Se ha incluido `network_security_config.xml` en la app para permitir explícitamente el tráfico HTTP no cifrado hacia `10.0.2.2` y `localhost` durante el desarrollo local.
+| Escenario | Pasos | Resultado esperado |
+| --- | --- | --- |
+| Primer arranque sin red | Instalar, activar el modo avión y abrir | Bienvenida y después Inicio con temporada, rutas e imprescindibles (contenido incluido) |
+| Búsqueda | Explorar › «caceres» | Lugares de Cáceres aunque no se escriba la tilde |
+| Mapa sin conexión | Ajustes › Descargar el mapa, después modo avión › Mapa | El mapa de Extremadura se ve completo, también en zonas no visitadas |
+| Favoritos | Ficha › corazón › Mi viaje › elegir día | Aparece en el día elegido; sigue ahí tras actualizar el contenido o borrar la caché |
+| Idioma | Ajustes › Idioma › English | Interfaz, nombres y descripciones en inglés (si existen) |
+| Borrar datos | Ajustes › Borrar datos guardados | Mi viaje vacío, mapa descargado borrado y contenido incluido reimportado |
 
-### 2. Ejecutar Pruebas Automatizadas de Android
-- Desde la raíz del repositorio o usando Gradle:
-  ```bash
-  ./gradlew testDebugUnitTest lintDebug
-  ```
-- Las pruebas unitarias (31) cubren el filtrado por categorías (`FilterStateTest`, `FilterOptionsTest`), el cálculo de distancias (`GeoTest`), el mapeo de datos remotos (`PlaceMappingTest`), el repositorio con la caché offline de Room (`PlaceRepositoryTest`), el correo de comentarios (`FeedbackComposerTest`) y el cálculo y borrado de almacenamiento (`StorageTest`).
-- Para que **Ajustes → Enviar comentarios** tenga destinatario, añade `feedback.email=tu@correo` a `local.properties` (ver `local.properties.example`). No se versiona.
+## 6. Problemas frecuentes
 
-### 3. Iniciar la App en el Emulador
-1. Abrir la carpeta raíz del proyecto `ExplorerSaga-Extremadura` en Android Studio.
-2. Sincronizar Gradle (`Gradle Sync`).
-3. Seleccionar un dispositivo AVD en el Device Manager (ej. *Pixel 10 Pro XL - API 37*).
-4. Pulsar **Run 'app'** (`Shift + F10`).
-5. La primera vez se muestra la bienvenida. Después, la app se organiza en cuatro pestañas: **Inicio**, **Explorar**, **Mapa** y **Ajustes** (idioma, tema, imágenes sin conexión, borrar caché o datos y comentarios).
-6. Al abrir Explorar la app solicita el permiso de ubicación. Si se concede, los lugares se ordenan por cercanía a la última ubicación conocida del dispositivo (en el emulador puede fijarse desde *Extended Controls → Location*); si se deniega, se usa el centro de Mérida como referencia.
-
----
-
-## 🧪 7. Pruebas de Aceptación E2E y Resiliencia
-
-| Escenario de Prueba | Procedimiento | Comportamiento Esperado |
-| :--- | :--- | :--- |
-| **Backend Activo + Datos Cargados** | Abrir la app Android con el backend Spring Boot corriendo. | Se muestran los lugares remotos importados de OSM. En la parte superior de los listados aparece el indicador verde `🟢 Conectado al Backend`. |
-| **Navegación y Filtrado** | Seleccionar la categoría "Monumentos" o aplicar un filtro. | La app muestra los monumentos filtrados recibidos del backend. |
-| **Caída del Backend / Modo Offline** | Detener el backend (`Ctrl+C` en la terminal del backend) o apagar la red en el emulador. | La app detecta el fallo de red sin cerrarse y muestra los lugares de la última sincronización guardados en Room. En el primer arranque sin conexión usa los datos incluidos en la app (`assets`). |
-| **Indicador de Origen de Datos** | Comprobar la UI en modo offline. | En la pantalla de listados se muestra el indicador amarillo `🟡 Modo Local (Respaldo)`. |
-| **Reintento de Conexión** | Volver a iniciar el backend y pulsar el botón **"Reintentar"** en la app. | La app realiza una nueva petición HTTP y restablece la conexión remota con el backend (`🟢 Conectado al Backend`). |
-| **Persistencia tras Reinicio** | Detener y reiniciar el contenedor de PostgreSQL (`docker compose restart db`). | Los datos previamente importados de OSM permanecen guardados intactos en la base de datos PostgreSQL. |
-
----
-
-## 🛠️ 8. Solución de Problemas Frecuentes
-
-1. **Error de conexión a PostgreSQL (`Connection refused` / `port 5432`):**
-   - Verificar que el contenedor de Docker está corriendo con `docker compose ps`.
-   - Asegurarse de que ningún otro servicio local (como una instancia local de PostgreSQL) está ocupando el puerto 5432.
-
-2. **Android no conecta al Backend (`Modo Local` persistente en emulador):**
-   - Asegurarse de que el backend Spring Boot está corriendo en el puerto 8080 (`http://localhost:8080/api/v1/health` responde UP).
-   - Recordar que en el emulador de Android debe usarse la IP `10.0.2.2` en lugar de `localhost`. Si se utiliza un dispositivo físico conectado por USB, se debe configurar `adb reverse tcp:8080 tcp:8080` o cambiar la URL base en `RetrofitClient` a la IP local de la red Wi-Fi.
-
-3. **Límite de peticiones de Overpass API (HTTP 429 / 504 Gateway Timeout):**
-   - Overpass API es una API pública compartida y se satura con frecuencia. El backend ya reintenta y prueba una instancia alternativa; si aun así responde `502 Bad Gateway` (en la app: aviso en rojo sobre el listado), reintentar pasados unos minutos. Un fallo no modifica la base de datos.
-   - Las instancias, el timeout y los reintentos se configuran en `application-dev.yml` (`explorersaga.providers.overpass`).
-
-4. **Error de compilación en Gradle (`SDK location not found`):**
-   - **Causa:** El archivo `local.properties` no existe o no define la ruta válida del SDK de Android en el sistema anfitrión (`sdk.dir`). Este archivo está excluido del control de versiones (`.gitignore`) por contener rutas específicas de cada desarrollador.
-   - **Solución A (Android Studio):** Abrir la carpeta raíz del proyecto en Android Studio; la IDE creará automáticamente el archivo `local.properties` con la ruta de tu SDK local.
-   - **Solución B (Terminal / CLI):** Copia la plantilla `local.properties.example` a `local.properties` en la raíz del proyecto y ajusta la propiedad `sdk.dir` a la ruta de tu SDK:
-     - **Windows:** `sdk.dir=C\:/Users/TU_USUARIO/AppData/Local/Android/Sdk`
-     - **Linux:** `sdk.dir=/home/TU_USUARIO/Android/Sdk`
-     - **macOS:** `sdk.dir=/Users/TU_USUARIO/Library/Android/sdk`
-   - **Solución C (Variable de entorno):** Configurar la variable de entorno del sistema `ANDROID_HOME` apuntando al directorio raíz de tu SDK de Android.
-
----
-
-## 📌 9. Limitaciones Conocidas del MVP
-
-- **Llamada manual de importación:** La sincronización con Overpass API se desencadena actualmente mediante una petición HTTP POST manual (`/api/v1/places/import`), reservando la automatización periódica en segundo plano para fases posteriores.
-- **Categorías:** Las etiquetas de OpenStreetMap se normalizan al mismo vocabulario en español que el seed y los datos locales (`monumento`, `museo`, `iglesia`, `restaurante`…). La migración `V3` adapta las bases de datos con categorías antiguas en inglés.
-- **Datos de OSM incompletos:** Muchos lugares importados carecen de descripción, dirección, horarios o foto, porque OpenStreetMap no siempre los incluye.
-- **Rutas turísticas:** La función de rutas en el mapa está planificada como una extensión futura.
+- **`SDK location not found`**: falta `local.properties` o su `sdk.dir`. Ábrelo con Android Studio o copia la plantilla.
+- **Overpass responde 429/504 al ejecutar `fetch`**: la instancia pública está saturada. La fábrica reintenta; si falla, vuelve a lanzarlo más tarde o usa otra instancia con `OVERPASS_URL`.
+- **«No se pudo comprobar» en Ajustes › Buscar actualizaciones**: aún no existe la release `content-pack`. Lanza el workflow *Content pack* en GitHub Actions.

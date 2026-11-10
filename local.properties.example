@@ -11,3 +11,11 @@ sdk.dir=C\:/Users/TU_USUARIO/AppData/Local/Android/Sdk
 # Dirección que recibe los comentarios enviados desde Ajustes > Enviar comentarios.
 # Si se deja vacía, la app abre el correo sin destinatario.
 feedback.email=
+
+# Firma de la versión de Google Play (opcional en desarrollo).
+# Crea el keystore una sola vez y guárdalo fuera del repositorio, con copia de seguridad:
+#   keytool -genkeypair -v -keystore explorersaga-release.jks -keyalg RSA -keysize 4096 -validity 10000 -alias explorersaga
+# release.storeFile=C:/ruta/segura/explorersaga-release.jks
+# release.storePassword=
+# release.keyAlias=explorersaga
+# release.keyPassword=
