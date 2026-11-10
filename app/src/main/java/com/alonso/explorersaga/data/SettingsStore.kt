@@ -14,7 +14,9 @@ data class AppSettings(
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     // Activado por defecto: quien viaja por Extremadura pasa por zonas sin cobertura
     val offlineImages: Boolean = true,
-    val welcomeSeen: Boolean = false
+    val welcomeSeen: Boolean = false,
+    // Las actualizaciones del contenido ocupan unos pocos MB: por defecto también con datos móviles
+    val syncWifiOnly: Boolean = false
 )
 
 private val Context.dataStore by preferencesDataStore("settings")
@@ -27,7 +29,8 @@ class SettingsStore(context: Context) {
         AppSettings(
             themeMode = ThemeMode.entries.firstOrNull { it.name == preferences[THEME_MODE] } ?: ThemeMode.SYSTEM,
             offlineImages = preferences[OFFLINE_IMAGES] ?: true,
-            welcomeSeen = preferences[WELCOME_SEEN] ?: false
+            welcomeSeen = preferences[WELCOME_SEEN] ?: false,
+            syncWifiOnly = preferences[SYNC_WIFI_ONLY] ?: false
         )
     }
 
@@ -43,9 +46,14 @@ class SettingsStore(context: Context) {
         store.edit { it[WELCOME_SEEN] = value }
     }
 
+    suspend fun setSyncWifiOnly(value: Boolean) {
+        store.edit { it[SYNC_WIFI_ONLY] = value }
+    }
+
     private companion object {
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val OFFLINE_IMAGES = booleanPreferencesKey("offline_images")
         val WELCOME_SEEN = booleanPreferencesKey("welcome_seen")
+        val SYNC_WIFI_ONLY = booleanPreferencesKey("sync_wifi_only")
     }
 }

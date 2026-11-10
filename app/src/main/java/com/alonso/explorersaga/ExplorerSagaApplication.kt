@@ -1,6 +1,7 @@
 package com.alonso.explorersaga
 
 import android.app.Application
+import android.util.Log
 import coil3.ImageLoader
 import coil3.PlatformContext
 import coil3.SingletonImageLoader
@@ -13,19 +14,18 @@ import coil3.request.ImageResult
 import coil3.request.crossfade
 import com.alonso.explorersaga.data.AppSettings
 import com.alonso.explorersaga.data.StorageManager
+import com.alonso.explorersaga.data.content.ContentSyncWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
-import okhttp3.OkHttpClient
-import org.osmdroid.config.Configuration
+import kotlinx.coroutines.launch
+import org.maplibre.android.MapLibre
 import java.io.File
 
-/**
- * Custom Application class para inicializar y mantener el AppContainer.
- */
 class ExplorerSagaApplication : Application(), SingletonImageLoader.Factory {
 
     lateinit var container: AppContainer
@@ -40,16 +40,27 @@ class ExplorerSagaApplication : Application(), SingletonImageLoader.Factory {
         container = DefaultAppContainer(this)
         settings = container.settingsStore.settings
             .stateIn(scope, SharingStarted.Eagerly, AppSettings())
-        configureMap()
-        // Caché JSON de versiones anteriores, sustituida por Room
+        MapLibre.getInstance(this)
+        // Restos de versiones anteriores: caché JSON y teselas de osmdroid
         File(filesDir, "saved_places.json").delete()
+        File(cacheDir, "osmdroid").deleteRecursively()
+
+        scope.launch {
+            try {
+                // Primer arranque (o app actualizada): el contenido incluido está disponible al momento
+                container.contentRepository.ensureContent()
+            } catch (e: Exception) {
+                Log.e("ExplorerSaga", "No se pudo importar el contenido incluido", e)
+            }
+            ContentSyncWorker.schedule(this@ExplorerSagaApplication, container.settingsStore.settings.first().syncWifiOnly)
+        }
     }
 
     override fun newImageLoader(context: PlatformContext): ImageLoader =
         ImageLoader.Builder(context)
             .components {
                 add(OfflineImagesInterceptor { settings.value.offlineImages })
-                add(OkHttpNetworkFetcherFactory(callFactory = { OkHttpClient() }))
+                add(OkHttpNetworkFetcherFactory(callFactory = { container.httpClient }))
             }
             .diskCache {
                 DiskCache.Builder()
@@ -59,15 +70,6 @@ class ExplorerSagaApplication : Application(), SingletonImageLoader.Factory {
             }
             .crossfade(true)
             .build()
-
-    // Los mapas descargados van a la caché de la app para que "Borrar caché" también los elimine
-    private fun configureMap() {
-        Configuration.getInstance().apply {
-            userAgentValue = "ExplorerSaga/${BuildConfig.VERSION_NAME} (Android)"
-            osmdroidBasePath = File(cacheDir, StorageManager.MAP_CACHE_DIRECTORY)
-            osmdroidTileCache = File(osmdroidBasePath, "tiles")
-        }
-    }
 
     private companion object {
         const val IMAGE_CACHE_BYTES = 300L * 1024 * 1024

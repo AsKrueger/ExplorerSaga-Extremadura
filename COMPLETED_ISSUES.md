@@ -105,3 +105,13 @@ Este documento sirve como un registro del trabajo de desarrollo completado, docu
 -   **Issue #29: [Base Técnica v2: Actualización, Español/Inglés, Ajustes, Almacenamiento y Comentarios] - CERRADO ✅**
     -   **Descripción:** Preparar la base de la v2 (guía de toda Extremadura) y cubrir los requisitos de usuario que no dependen del contenido: interfaz bilingüe con selector de idioma, ajustes, control del almacenamiento sin conexión y envío de comentarios. Las herramientas (Kotlin 1.9, AGP 8.4, Compose 2024.04) estaban desfasadas para los requisitos actuales de Google Play.
     -   **Resultado:** Gradle 9.6, AGP 9.4.1, Kotlin 2.4.21, KSP 2.3.13, Room 2.8.5, Navigation 2.10.2 con rutas tipadas, Coil 3 y `targetSdk` 37. Nueva navegación con barra inferior (Inicio, Explorar, Mapa, Ajustes) y bienvenida solo en el primer arranque. Todos los textos de la interfaz pasan a `strings.xml` en español e inglés con idioma por app (`AppCompatDelegate` + `generateLocaleConfig`). Ajustes con DataStore: idioma, tema, guardar imágenes sin conexión (interceptor de Coil), espacio usado, borrar caché y borrar datos con confirmación, comentarios por correo (`FeedbackComposer`, destinatario en `local.properties`), valorar y compartir la app, y pantalla de privacidad y licencias (OSM ODbL, Wikipedia CC BY-SA, tipografías OFL). La caché del mapa se mueve a `cacheDir` para que también se pueda borrar. El detalle añade "Cómo llegar" y "Compartir". Se retira de la interfaz la importación manual desde OSM, que era una acción de administración. 31 pruebas unitarias Android.
+
+-   **Issues #30–#35: [Catálogo regional, contenido sin conexión, mapa MapLibre, Mi viaje, rutas y publicación] - CERRADO ✅**
+    -   **Descripción:** Convertir la guía de Mérida en la guía de toda Extremadura sin coste de servidor y dejar el MVP v2 listo para Google Play.
+    -   **Resultado:**
+        -   **Datos:** fábrica de datos abiertos con 5.706 lugares, 661 fotos con licencia libre y textos de Wikipedia en español e inglés.
+        -   **Contenido:** paquete versionado en GitHub Releases, con Room + FTS y sincronización con WorkManager.
+        -   **Mapa:** mapa vectorial MapLibre con modo sin conexión.
+        -   **Pantallas:** Inicio con temporada, Mi viaje, rutas, agenda y servicios útiles.
+        -   **Licencias:** se eliminaron las 77 fotos sin licencia y el cliente del backend.
+        -   **Pruebas:** 26 unitarias Android, 3 de interfaz y 16 de la fábrica.

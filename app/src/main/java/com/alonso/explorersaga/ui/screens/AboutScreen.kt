@@ -56,11 +56,22 @@ fun AboutScreen(onBack: () -> Unit) {
                     // Sin navegador no hay nada útil que hacer
                 }
             }) { Text(stringResource(R.string.about_open_osm)) }
+            Section(R.string.about_photo_title, R.string.about_photo_text)
+            TextButton(onClick = {
+                try {
+                    context.startActivity(Intent(Intent.ACTION_VIEW, PRIVACY_URL.toUri()))
+                } catch (_: ActivityNotFoundException) {
+                    // Sin navegador no hay nada útil que hacer
+                }
+            }) { Text(stringResource(R.string.about_open_privacy)) }
             Section(R.string.about_fonts_title, R.string.about_fonts_text)
             Section(R.string.about_software_title, R.string.about_software_text)
         }
     }
 }
+
+private const val PRIVACY_URL =
+    "https://github.com/AsKrueger/ExplorerSaga-Extremadura/blob/main/docs/privacy-policy.md"
 
 @Composable
 private fun Section(@StringRes title: Int, @StringRes text: Int) {

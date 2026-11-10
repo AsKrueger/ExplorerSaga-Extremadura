@@ -35,7 +35,7 @@ import java.time.Year
 fun WelcomeScreen(onStart: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
-            painter = painterResource(id = R.drawable.fondo_campo),
+            painter = painterResource(id = R.drawable.hero_merida),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

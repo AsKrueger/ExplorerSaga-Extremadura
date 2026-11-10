@@ -23,8 +23,8 @@ android {
         applicationId = "com.alonso.explorersaga"
         minSdk = 26
         targetSdk = 37
-        versionCode = 2
-        versionName = "2.0.0-alpha01"
+        versionCode = 3
+        versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField(
@@ -34,8 +34,23 @@ android {
         )
     }
 
+    // Firma de publicación: los datos del keystore viven en local.properties (no se versiona).
+    // Sin ellos la release se firma con la clave de depuración, válida solo para probar en local
+    val releaseKeystore = localProperties.getProperty("release.storeFile")?.let(::file)
+    signingConfigs {
+        if (releaseKeystore != null && releaseKeystore.exists()) {
+            create("release") {
+                storeFile = releaseKeystore
+                storePassword = localProperties.getProperty("release.storePassword")
+                keyAlias = localProperties.getProperty("release.keyAlias")
+                keyPassword = localProperties.getProperty("release.keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
             optimization {
                 enable = true
             }
@@ -86,14 +101,13 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // Red e imágenes
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlinx.serialization.converter)
     implementation(libs.okhttp)
+    implementation(libs.androidx.work.runtime)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
 
     // Mapa
-    implementation(libs.osmdroid.android)
+    implementation(libs.maplibre.android)
 
     // Test
     testImplementation(libs.junit)

@@ -1,375 +1,316 @@
 package com.alonso.explorersaga.ui.screens
 
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.RectF
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Directions
+import androidx.compose.material.icons.filled.MyLocation
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SheetValue
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.SmallFloatingActionButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.rememberBottomSheetScaffoldState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil3.compose.AsyncImage
 import com.alonso.explorersaga.R
-import com.alonso.explorersaga.model.Place
-import com.alonso.explorersaga.ui.composables.rememberPlaceImageModel
-import com.alonso.explorersaga.ui.viewmodels.PlacesViewModel
-import kotlinx.coroutines.launch
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory
-import org.osmdroid.util.GeoPoint
-import org.osmdroid.views.MapView
-import org.osmdroid.views.overlay.Marker
+import com.alonso.explorersaga.data.LocationProvider
+import com.alonso.explorersaga.data.OfflineMapManager
+import com.alonso.explorersaga.data.db.Place
+import com.alonso.explorersaga.ui.composables.MapLibreView
+import com.alonso.explorersaga.ui.composables.PlaceThumbnail
+import com.alonso.explorersaga.ui.composables.directions
+import com.alonso.explorersaga.ui.composables.isEnglish
+import com.alonso.explorersaga.ui.composables.mapStyleUrl
+import com.alonso.explorersaga.ui.model.PlaceGroup
+import com.alonso.explorersaga.ui.model.categoryInfo
+import com.alonso.explorersaga.ui.viewmodels.ExploreViewModel
+import com.alonso.explorersaga.ui.viewmodels.PlaceItem
+import org.maplibre.android.camera.CameraPosition
+import org.maplibre.android.camera.CameraUpdateFactory
+import org.maplibre.android.geometry.LatLng
+import org.maplibre.android.location.LocationComponentActivationOptions
+import org.maplibre.android.location.modes.RenderMode
+import org.maplibre.android.maps.MapLibreMap
+import org.maplibre.android.maps.Style
+import org.maplibre.android.style.expressions.Expression
+import org.maplibre.android.style.layers.CircleLayer
+import org.maplibre.android.style.layers.PropertyFactory
+import org.maplibre.android.style.layers.SymbolLayer
+import org.maplibre.android.style.sources.GeoJsonOptions
+import org.maplibre.android.style.sources.GeoJsonSource
+import org.maplibre.geojson.Feature
+import org.maplibre.geojson.FeatureCollection
+import org.maplibre.geojson.Point
 
-@OptIn(ExperimentalMaterial3Api::class)
+private const val SOURCE = "places"
+private const val CLUSTERS = "clusters"
+private const val CLUSTER_COUNT = "cluster-count"
+private const val POINTS = "points"
+private const val SELECTED = "selected"
+
 @Composable
-fun MapScreen(
-    viewModel: PlacesViewModel,
-    onFilterClicked: () -> Unit,
-    onOpenDetail: (Place) -> Unit
-) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var selectedPlace by remember { mutableStateOf<Place?>(null) }
-    val bottomSheetScaffoldState = rememberBottomSheetScaffoldState(
-        bottomSheetState = rememberStandardBottomSheetState(
-            initialValue = SheetValue.Hidden,
-            skipHiddenState = false
+fun MapScreen(viewModel: ExploreViewModel, darkTheme: Boolean, onOpenPlace: (String) -> Unit) {
+    val context = LocalContext.current
+    val filters by viewModel.filters.collectAsStateWithLifecycle()
+    val results by viewModel.results.collectAsStateWithLifecycle()
+    val focused by viewModel.focusedPlace.collectAsStateWithLifecycle()
+    var map by remember { mutableStateOf<MapLibreMap?>(null) }
+    var style by remember { mutableStateOf<Style?>(null) }
+    var selected by remember { mutableStateOf<Place?>(null) }
+    val itemsById = remember(results) { results.items.associateBy { it.place.id } }
+    // El listener del mapa se registra una vez: así lee siempre los últimos resultados
+    val currentItems by rememberUpdatedState(itemsById)
+    val permission = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        viewModel.refreshLocation()
+        map?.let { m -> style?.let { s -> enableLocation(context, m, s) } }
+        centerOnUser(viewModel, map)
+    }
+
+    Box(Modifier.fillMaxSize()) {
+        MapLibreView(mapStyleUrl(darkTheme), Modifier.fillMaxSize()) { loadedMap, loadedStyle ->
+            addPlaceLayers(loadedStyle, darkTheme)
+            enableLocation(context, loadedMap, loadedStyle)
+            if (map == null) {
+                val camera = viewModel.mapCamera
+                if (camera != null) {
+                    loadedMap.cameraPosition = CameraPosition.Builder()
+                        .target(LatLng(camera.first, camera.second)).zoom(camera.third).build()
+                } else {
+                    loadedMap.moveCamera(CameraUpdateFactory.newLatLngBounds(OfflineMapManager.EXTREMADURA_BOUNDS, 48))
+                }
+                loadedMap.addOnCameraIdleListener {
+                    val position = loadedMap.cameraPosition
+                    position.target?.let { viewModel.mapCamera = Triple(it.latitude, it.longitude, position.zoom) }
+                }
+                loadedMap.addOnMapClickListener { point ->
+                    val screen = loadedMap.projection.toScreenLocation(point)
+                    val area = RectF(screen.x - 24, screen.y - 24, screen.x + 24, screen.y + 24)
+                    val cluster = loadedMap.queryRenderedFeatures(area, CLUSTERS).firstOrNull()
+                    if (cluster != null) {
+                        loadedMap.animateCamera(CameraUpdateFactory.newLatLngZoom(point, loadedMap.cameraPosition.zoom + 2))
+                        return@addOnMapClickListener true
+                    }
+                    val id = loadedMap.queryRenderedFeatures(area, POINTS).firstOrNull()?.getStringProperty("id")
+                    selected = id?.let { currentItems[it]?.place }
+                    true
+                }
+            }
+            map = loadedMap
+            style = loadedStyle
+        }
+
+        GroupChips(
+            selected = filters.group,
+            onSelect = viewModel::setGroup,
+            modifier = Modifier.align(Alignment.TopCenter)
+        )
+
+        SmallFloatingActionButton(
+            onClick = {
+                if (LocationProvider(context).hasPermission()) centerOnUser(viewModel, map)
+                else permission.launch(LocationProvider.PERMISSIONS)
+            },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(end = 16.dp, bottom = if (selected != null) 180.dp else 16.dp)
+        ) {
+            Icon(Icons.Filled.MyLocation, contentDescription = stringResource(R.string.cd_my_location))
+        }
+
+        selected?.let { place ->
+            SelectedPlaceCard(
+                place = place,
+                onOpen = { onOpenPlace(place.id) },
+                onClose = { selected = null },
+                modifier = Modifier.align(Alignment.BottomCenter).padding(12.dp)
+            )
+        }
+    }
+
+    // Datos del mapa: se actualizan con cada cambio de filtros o búsqueda
+    LaunchedEffect(style, results) {
+        style?.getSourceAs<GeoJsonSource>(SOURCE)?.setGeoJson(toFeatures(results.items))
+    }
+    LaunchedEffect(style, selected) {
+        (style?.getLayer(SELECTED) as? CircleLayer)?.setFilter(
+            Expression.eq(Expression.get("id"), Expression.literal(selected?.id ?: ""))
+        )
+    }
+    // Lugar pedido desde una ficha: se centra y se selecciona aunque no pase los filtros
+    LaunchedEffect(map, focused) {
+        val place = focused ?: return@LaunchedEffect
+        val target = map ?: return@LaunchedEffect
+        target.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(place.latitude, place.longitude), 15.0))
+        selected = place
+        viewModel.focusOnMap(null)
+    }
+}
+
+@Composable
+private fun SelectedPlaceCard(place: Place, onOpen: () -> Unit, onClose: () -> Unit, modifier: Modifier) {
+    val context = LocalContext.current
+    val english = isEnglish()
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
+    ) {
+        Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                PlaceThumbnail(place, size = 64.dp)
+                Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
+                    Text(
+                        place.displayName(english),
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Text(
+                        "${stringResource(categoryInfo(place.category).label)} · ${place.municipality}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = onClose) {
+                    Icon(Icons.Filled.Close, contentDescription = stringResource(R.string.cd_close))
+                }
+            }
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                OutlinedButton(
+                    onClick = { context.directions(place.latitude, place.longitude, place.name) },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Icon(Icons.Filled.Directions, null)
+                    Text(stringResource(R.string.detail_directions), Modifier.padding(start = 6.dp), maxLines = 1)
+                }
+                Button(onClick = onOpen, modifier = Modifier.weight(1f)) {
+                    Text(stringResource(R.string.map_open_detail), maxLines = 1)
+                    Icon(Icons.AutoMirrored.Filled.ArrowForward, null, Modifier.padding(start = 6.dp))
+                }
+            }
+        }
+    }
+}
+
+private fun toFeatures(items: List<PlaceItem>): FeatureCollection =
+    FeatureCollection.fromFeatures(items.map { item ->
+        Feature.fromGeometry(Point.fromLngLat(item.place.longitude, item.place.latitude)).apply {
+            addStringProperty("id", item.place.id)
+            addStringProperty("group", item.place.groupKey)
+        }
+    })
+
+/** Capas de lugares agrupados (clusters) y sueltos, coloreados por grupo. */
+private fun addPlaceLayers(style: Style, darkTheme: Boolean) {
+    if (style.getSource(SOURCE) != null) return
+    style.addSource(
+        GeoJsonSource(
+            SOURCE,
+            FeatureCollection.fromFeatures(emptyList()),
+            GeoJsonOptions().withCluster(true).withClusterMaxZoom(13).withClusterRadius(45)
         )
     )
-    val scope = rememberCoroutineScope()
-    var searchQuery by remember { mutableStateOf("") }
-    var showSuggestions by remember { mutableStateOf(true) }
-    val keyboardController = LocalSoftwareKeyboardController.current
-
-
-    BottomSheetScaffold(
-        scaffoldState = bottomSheetScaffoldState,
-        sheetContent = {
-            selectedPlace?.let { place ->
-                PlaceDetailSheet(place = place, onOpenDetail = { onOpenDetail(place) })
-            }
-        },
-        sheetPeekHeight = 0.dp // Oculta el panel por defecto
-    ) { innerPadding ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            val mapView = rememberMapViewWithLifecycle()
-
-            // osmdroid pinta fuera de su vista si no se recorta (p. ej. bajo la barra de estado)
-            AndroidView({ mapView }, modifier = Modifier.fillMaxSize().clipToBounds())
-
-            val filteredPlaces = uiState.places.filter {
-                it.name.contains(searchQuery, ignoreCase = true)
-            }
-
-            LaunchedEffect(filteredPlaces, uiState.selectedPlace, showSuggestions) {
-                // Solo actualiza los marcadores si la búsqueda está vacía o si las sugerencias no están visibles
-                if (searchQuery.isBlank() || !showSuggestions) {
-                    mapView.updateMarkers(filteredPlaces) { place ->
-                        selectedPlace = place
-                        scope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
-                    }
-                }
-
-                // Centrar en el lugar seleccionado si viene de otra pantalla
-                uiState.selectedPlace?.let { place ->
-                    if (filteredPlaces.contains(place)) {
-                        mapView.controller.animateTo(GeoPoint(place.latitude, place.longitude), 18.5, 1000L)
-                        selectedPlace = place
-                        scope.launch {
-                            bottomSheetScaffoldState.bottomSheetState.expand()
-                        }
-                        viewModel.clearSelectedPlace() // Limpiar para no volver a centrar
-                    }
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .align(Alignment.TopCenter)
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(top = 16.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    TextField(
-                        value = searchQuery,
-                        onValueChange = {
-                            searchQuery = it
-                            showSuggestions = true
-                        },
-                        label = { Text(stringResource(R.string.map_search_label)) },
-                        leadingIcon = { Icon(Icons.Filled.Search, contentDescription = null) },
-                        singleLine = true,
-                        modifier = Modifier.weight(1f)
+    val stroke = if (darkTheme) android.graphics.Color.BLACK else android.graphics.Color.WHITE
+    val clusterColor = PlaceGroup.NATURE.color.toArgb()
+    style.addLayer(
+        CircleLayer(CLUSTERS, SOURCE)
+            .withFilter(Expression.has("point_count"))
+            .withProperties(
+                PropertyFactory.circleColor(clusterColor),
+                PropertyFactory.circleRadius(
+                    Expression.step(
+                        Expression.get("point_count"), Expression.literal(16f),
+                        Expression.stop(25, 20f), Expression.stop(100, 26f), Expression.stop(500, 32f)
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    FloatingActionButton(
-                        onClick = onFilterClicked,
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ) {
-                        Icon(
-                            Icons.Filled.FilterList,
-                            contentDescription = stringResource(R.string.cd_filters),
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                }
-                if (searchQuery.isNotBlank() && showSuggestions) {
-                    val placesToShow = filteredPlaces.take(5)
-                    if(placesToShow.isNotEmpty()){
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(
-                                    color = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f),
-                                    shape = RoundedCornerShape(bottomStart = 8.dp, bottomEnd = 8.dp)
-                                )
-                        ) {
-                            items(placesToShow) { place ->
-                                Text(
-                                    text = place.name,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            keyboardController?.hide()
-                                            searchQuery = place.name
-                                            showSuggestions = false
-                                            selectedPlace = place
-                                            mapView.controller.animateTo(
-                                                GeoPoint(
-                                                    place.latitude,
-                                                    place.longitude
-                                                ), 18.5, 1000L
-                                            )
-                                            scope.launch {
-                                                bottomSheetScaffoldState.bottomSheetState.expand()
-                                            }
-                                        }
-                                        .padding(16.dp)
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Atribución obligatoria de los datos del mapa (licencia ODbL de OpenStreetMap)
-            Text(
-                text = stringResource(R.string.map_attribution),
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.DarkGray,
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .background(Color.White.copy(alpha = 0.8f))
-                    .padding(horizontal = 6.dp, vertical = 2.dp)
+                ),
+                PropertyFactory.circleStrokeWidth(2f),
+                PropertyFactory.circleStrokeColor(stroke)
             )
-        }
-    }
-}
-
-@Composable
-private fun PlaceDetailSheet(place: Place, onOpenDetail: () -> Unit) {
-    val scrollState = rememberScrollState()
-    val imageModel = rememberPlaceImageModel(place.photo)
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(scrollState)
-            .padding(bottom = 32.dp) // Espacio para el botón
-    ) {
-        // Imagen y Título
-        Box(contentAlignment = Alignment.BottomStart) {
-            imageModel?.let {
-                AsyncImage(
-                    model = it,
-                    contentDescription = place.name,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(250.dp),
-                    contentScale = ContentScale.Crop
-                )
-            }
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = place.name,
-                    style = MaterialTheme.typography.headlineLarge,
-                    color = Color.White
-                )
-            }
-        }
-
-        // Contenido
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(
-                text = place.description,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.fillMaxWidth()
+    )
+    style.addLayer(
+        SymbolLayer(CLUSTER_COUNT, SOURCE)
+            .withFilter(Expression.has("point_count"))
+            .withProperties(
+                PropertyFactory.textField(Expression.toString(Expression.get("point_count_abbreviated"))),
+                PropertyFactory.textFont(arrayOf("Noto Sans Regular")),
+                PropertyFactory.textSize(13f),
+                PropertyFactory.textColor(android.graphics.Color.WHITE),
+                PropertyFactory.textAllowOverlap(true),
+                PropertyFactory.textIgnorePlacement(true)
             )
+    )
+    val groupColor = Expression.match(
+        Expression.get("group"),
+        Expression.color(PlaceGroup.SERVICES.color.toArgb()),
+        *PlaceGroup.entries.map { Expression.stop(it.name, Expression.color(it.color.toArgb())) }.toTypedArray()
+    )
+    style.addLayer(
+        CircleLayer(SELECTED, SOURCE)
+            .withFilter(Expression.eq(Expression.get("id"), Expression.literal("")))
+            .withProperties(
+                PropertyFactory.circleRadius(14f),
+                PropertyFactory.circleColor(groupColor),
+                PropertyFactory.circleOpacity(0.35f)
+            )
+    )
+    style.addLayer(
+        CircleLayer(POINTS, SOURCE)
+            .withFilter(Expression.not(Expression.has("point_count")))
+            .withProperties(
+                PropertyFactory.circleColor(groupColor),
+                PropertyFactory.circleRadius(7f),
+                PropertyFactory.circleStrokeWidth(2f),
+                PropertyFactory.circleStrokeColor(stroke)
+            )
+    )
+}
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Detalles
-            Column(modifier = Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                place.horarios?.takeIf { it.isNotBlank() }?.let {
-                    Row {
-                        Text(stringResource(R.string.detail_hours), fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
-                        Text(it)
-                    }
-                }
-                place.direccion?.takeIf { it.isNotBlank() }?.let {
-                    Row {
-                        Text(stringResource(R.string.detail_address), fontWeight = FontWeight.Bold, modifier = Modifier.width(100.dp))
-                        Text(it)
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = onOpenDetail,
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Icon(Icons.Filled.Info, contentDescription = null)
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(text = stringResource(R.string.map_open_detail))
-            }
-        }
+@SuppressLint("MissingPermission")
+private fun enableLocation(context: Context, map: MapLibreMap, style: Style) {
+    if (!LocationProvider(context).hasPermission()) return
+    map.locationComponent.apply {
+        activateLocationComponent(LocationComponentActivationOptions.builder(context, style).build())
+        isLocationComponentEnabled = true
+        renderMode = RenderMode.NORMAL
     }
 }
 
-private fun MapView.updateMarkers(places: List<Place>, onMarkerClick: (Place) -> Unit) {
-    overlays.clear()
-
-    val colorHistorico = Color(0xFF556B2F).toArgb() // Verde Oliva Oscuro
-    val colorGastronomia = Color(0xFFFFC107).toArgb() // Amarillo Ámbar
-    val colorTiendas = Color(0xFF1976D2).toArgb()     // Azul
-
-    places.forEach { place ->
-        val geoPoint = GeoPoint(place.latitude, place.longitude)
-        val marker = Marker(this)
-        marker.position = geoPoint
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
-        marker.title = place.name
-
-        marker.setOnMarkerClickListener { _, _ ->
-            onMarkerClick(place)
-            true
-        }
-
-        val iconDrawable = ContextCompat.getDrawable(context, R.drawable.ic_map_pin)?.mutate()
-
-        val catLower = place.category.lowercase()
-        val color = when {
-            catLower.contains("monument") || catLower.contains("historic") || catLower.contains("iglesia") || catLower.contains("museo") || catLower.contains("religious") || catLower.contains("worship") || catLower.contains("attraction") -> colorHistorico
-            catLower.contains("restaurante") || catLower.contains("restaurant") || catLower.contains("cafeteria") || catLower.contains("cafe") || catLower.contains("bar") || catLower.contains("helado") -> colorGastronomia
-            catLower.contains("tienda") || catLower.contains("supermercado") || catLower.contains("souvenir") || catLower.contains("shop") || catLower.contains("store") -> colorTiendas
-            else -> colorHistorico
-        }
-
-        iconDrawable?.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-        marker.icon = iconDrawable
-
-        overlays.add(marker)
-    }
-    invalidate()
-}
-
-@Composable
-private fun rememberMapViewWithLifecycle(): MapView {
-    val context = LocalContext.current
-    val mapView = remember {
-        MapView(context).apply {
-            setTileSource(TileSourceFactory.MAPNIK)
-            // Los controles de zoom propios de osmdroid se solapan con la interfaz; se usa el pellizco
-            zoomController.setVisibility(org.osmdroid.views.CustomZoomButtonsController.Visibility.NEVER)
-            setMultiTouchControls(true)
-            controller.setZoom(17.0)
-            controller.setCenter(GeoPoint(38.915, -6.345))
-        }
-    }
-
-    val lifecycle = LocalLifecycleOwner.current.lifecycle
-    DisposableEffect(lifecycle, mapView) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_RESUME -> mapView.onResume()
-                Lifecycle.Event.ON_PAUSE -> mapView.onPause()
-                else -> {}
-            }
-        }
-        lifecycle.addObserver(observer)
-        onDispose {
-            lifecycle.removeObserver(observer)
-            mapView.onDetach()
-        }
-    }
-
-    return mapView
+@SuppressLint("MissingPermission")
+private fun centerOnUser(viewModel: ExploreViewModel, map: MapLibreMap?) {
+    viewModel.refreshLocation()
+    val target = map ?: return
+    val fromMap = runCatching { target.locationComponent.lastKnownLocation }.getOrNull()
+    val latLng = fromMap?.let { LatLng(it.latitude, it.longitude) }
+        ?: viewModel.location.value?.let { LatLng(it.latitude, it.longitude) }
+        ?: return
+    target.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14.0))
 }

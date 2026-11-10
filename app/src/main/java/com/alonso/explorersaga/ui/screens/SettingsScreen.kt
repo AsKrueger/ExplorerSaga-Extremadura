@@ -65,13 +65,21 @@ import com.alonso.explorersaga.BuildConfig
 import com.alonso.explorersaga.R
 import com.alonso.explorersaga.data.ThemeMode
 import com.alonso.explorersaga.ui.viewmodels.SettingsViewModel
-import com.alonso.explorersaga.ui.viewmodels.StorageEvent
+import com.alonso.explorersaga.ui.viewmodels.SettingsEvent
+import com.alonso.explorersaga.data.OfflineMapState
+import com.alonso.explorersaga.data.content.SyncResult
+import com.alonso.explorersaga.ui.composables.mapStyleUrl
+import androidx.compose.material.icons.filled.CloudDownload
+import androidx.compose.material.icons.filled.Sync
+import androidx.compose.material.icons.filled.Wifi
+import androidx.compose.material.icons.filled.Map
 
-private enum class PendingConfirmation { CLEAR_CACHE, CLEAR_DATA }
+private enum class PendingConfirmation { CLEAR_CACHE, CLEAR_DATA, DELETE_MAP }
 
 @Composable
 fun SettingsScreen(
     viewModel: SettingsViewModel,
+    darkTheme: Boolean,
     onOpenFeedback: () -> Unit,
     onOpenAbout: () -> Unit
 ) {
@@ -79,19 +87,30 @@ fun SettingsScreen(
     val usage by viewModel.storageUsage.collectAsStateWithLifecycle()
     val isWorking by viewModel.isWorking.collectAsStateWithLifecycle()
     val event by viewModel.event.collectAsStateWithLifecycle()
+    val contentMeta by viewModel.contentMeta.collectAsStateWithLifecycle()
+    val mapState by viewModel.offlineMapState.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val resources = LocalResources.current
     val snackbar = remember { SnackbarHostState() }
     var confirming by rememberSaveable { mutableStateOf<PendingConfirmation?>(null) }
 
-    LaunchedEffect(Unit) { viewModel.refreshStorage() }
+    LaunchedEffect(Unit) { viewModel.refresh() }
+    // El espacio usado cambia al terminar o borrar la descarga del mapa
+    LaunchedEffect(mapState is OfflineMapState.Downloaded) { viewModel.refreshStorage() }
     LaunchedEffect(event) {
         val message = when (val current = event) {
-            is StorageEvent.CacheCleared -> resources.getString(
+            is SettingsEvent.CacheCleared -> resources.getString(
                 R.string.settings_clear_cache_done,
                 Formatter.formatShortFileSize(context, current.freedBytes)
             )
-            StorageEvent.DataCleared -> resources.getString(R.string.settings_clear_data_done)
+            SettingsEvent.DataCleared -> resources.getString(R.string.settings_clear_data_done)
+            is SettingsEvent.Synced -> resources.getString(
+                when (current.result) {
+                    SyncResult.UPDATED -> R.string.settings_sync_updated
+                    SyncResult.UP_TO_DATE -> R.string.settings_sync_up_to_date
+                    SyncResult.FAILED -> R.string.settings_sync_failed
+                }
+            )
             null -> return@LaunchedEffect
         }
         // Se consume después de mostrarlo: consumirlo antes cambia la clave y cancela este efecto
@@ -128,6 +147,60 @@ fun SettingsScreen(
                 },
                 onSelect = viewModel::setThemeMode
             )
+
+            GroupDivider()
+            GroupTitle(R.string.settings_content)
+            SettingsRow(
+                icon = Icons.Filled.Sync,
+                title = stringResource(R.string.settings_sync_now),
+                description = contentMeta?.let {
+                    stringResource(R.string.settings_content_version, formatVersion(it.version))
+                } ?: stringResource(R.string.settings_content_none),
+                enabled = !isWorking,
+                onClick = viewModel::syncNow
+            )
+            SwitchRow(
+                icon = Icons.Filled.Wifi,
+                title = stringResource(R.string.settings_sync_wifi),
+                description = stringResource(R.string.settings_sync_wifi_desc),
+                checked = settings.syncWifiOnly,
+                onCheckedChange = viewModel::setSyncWifiOnly
+            )
+            val pixelRatio = LocalResources.current.displayMetrics.density
+            when (val state = mapState) {
+                is OfflineMapState.Downloading -> {
+                    SettingsRow(
+                        icon = Icons.Filled.CloudDownload,
+                        title = stringResource(R.string.settings_offline_map_downloading, (state.progress * 100).toInt()),
+                        description = stringResource(R.string.settings_offline_map_desc)
+                    )
+                    LinearProgressIndicator(
+                        progress = { state.progress },
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp)
+                    )
+                }
+                is OfflineMapState.Downloaded -> SettingsRow(
+                    icon = Icons.Filled.Map,
+                    title = stringResource(R.string.settings_offline_map_ready),
+                    description = stringResource(
+                        R.string.settings_offline_map_delete, Formatter.formatShortFileSize(context, state.bytes)
+                    ),
+                    onClick = { confirming = PendingConfirmation.DELETE_MAP }
+                )
+                else -> SettingsRow(
+                    icon = Icons.Filled.CloudDownload,
+                    title = stringResource(
+                        if (state == OfflineMapState.Failed) R.string.settings_offline_map_retry
+                        else R.string.settings_offline_map
+                    ),
+                    description = stringResource(R.string.settings_offline_map_desc),
+                    enabled = state != OfflineMapState.Unknown,
+                    // Primero el estilo en uso; después el otro, que reutiliza las teselas
+                    onClick = {
+                        viewModel.downloadOfflineMap(listOf(mapStyleUrl(darkTheme), mapStyleUrl(!darkTheme)), pixelRatio)
+                    }
+                )
+            }
 
             GroupDivider()
             GroupTitle(R.string.settings_storage)
@@ -211,6 +284,8 @@ fun SettingsScreen(
                 R.string.settings_clear_cache_confirm_title to R.string.settings_clear_cache_confirm_text
             PendingConfirmation.CLEAR_DATA ->
                 R.string.settings_clear_data_confirm_title to R.string.settings_clear_data_confirm_text
+            PendingConfirmation.DELETE_MAP ->
+                R.string.settings_offline_map_confirm_title to R.string.settings_offline_map_confirm_text
         }
         AlertDialog(
             onDismissRequest = { confirming = null },
@@ -222,12 +297,16 @@ fun SettingsScreen(
                     when (pending) {
                         PendingConfirmation.CLEAR_CACHE -> viewModel.clearCache()
                         PendingConfirmation.CLEAR_DATA -> viewModel.clearSavedData()
+                        PendingConfirmation.DELETE_MAP -> viewModel.deleteOfflineMap()
                     }
                 }) {
                     Text(
                         stringResource(
-                            if (pending == PendingConfirmation.CLEAR_CACHE) R.string.action_clear_cache
-                            else R.string.action_clear_data
+                            when (pending) {
+                                PendingConfirmation.CLEAR_CACHE -> R.string.action_clear_cache
+                                PendingConfirmation.CLEAR_DATA -> R.string.action_clear_data
+                                PendingConfirmation.DELETE_MAP -> R.string.action_delete
+                            }
                         ),
                         color = MaterialTheme.colorScheme.error
                     )
@@ -395,4 +474,10 @@ private fun shareApp(context: Context) {
         .setType("text/plain")
         .putExtra(Intent.EXTRA_TEXT, context.getString(R.string.share_app_text, storeUrl(context)))
     context.startActivity(Intent.createChooser(intent, null))
+}
+
+// 20261110 -> 10/11/2026
+private fun formatVersion(version: Long): String {
+    val text = version.toString()
+    return if (text.length == 8) "${text.substring(6)}/${text.substring(4, 6)}/${text.substring(0, 4)}" else text
 }

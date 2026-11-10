@@ -1,0 +1,121 @@
+[
+  {
+    "id": "merida-romana", "mode": "walk", "km": 6,
+    "titleEs": "Mérida romana en un día", "titleEn": "Roman Mérida in a day",
+    "durationEs": "1 día a pie", "durationEn": "1 day on foot",
+    "summaryEs": "El conjunto arqueológico de Emerita Augusta, Patrimonio de la Humanidad: del puente romano al teatro y el anfiteatro, con parada en el Museo Nacional de Arte Romano.",
+    "summaryEn": "The UNESCO World Heritage archaeological ensemble of Emerita Augusta: from the Roman bridge to the theatre and amphitheatre, with a stop at the National Museum of Roman Art.",
+    "stops": [
+      {"name": "Puente romano", "match": "Puente Romano", "muni": "Mérida", "lat": 38.9149, "lon": -6.3518},
+      {"name": "Alcazaba árabe", "match": "Alcazaba", "muni": "Mérida", "lat": 38.9157, "lon": -6.3495},
+      {"name": "Templo de Diana", "match": "Templo de Diana", "muni": "Mérida", "lat": 38.9182, "lon": -6.3439},
+      {"name": "Teatro romano", "match": "Teatro Romano", "muni": "Mérida", "lat": 38.9157, "lon": -6.3384},
+      {"name": "Anfiteatro romano", "match": "Anfiteatro", "muni": "Mérida", "lat": 38.9167, "lon": -6.3378},
+      {"name": "Museo Nacional de Arte Romano", "match": "Museo Nacional de Arte Romano", "muni": "Mérida", "lat": 38.9168, "lon": -6.3401},
+      {"name": "Casa del Mitreo", "match": "Casa del Mitreo", "muni": "Mérida", "lat": 38.9101, "lon": -6.3443},
+      {"name": "Circo romano", "match": "Circo Romano", "muni": "Mérida", "lat": 38.9233, "lon": -6.3330},
+      {"name": "Acueducto de los Milagros", "match": "Acueducto de los Milagros", "muni": "Mérida", "lat": 38.9268, "lon": -6.3495}
+    ]
+  },
+  {
+    "id": "caceres-monumental", "mode": "walk", "km": 3,
+    "titleEs": "Cáceres monumental", "titleEn": "Monumental Cáceres",
+    "durationEs": "Medio día a pie", "durationEn": "Half a day on foot",
+    "summaryEs": "La ciudad monumental de Cáceres, Patrimonio de la Humanidad: torres, palacios y adarves medievales casi intactos, y la antigua judería de San Antonio.",
+    "summaryEn": "Cáceres' UNESCO World Heritage old town: almost intact medieval towers, palaces and lanes, and the old Jewish quarter of San Antonio.",
+    "stops": [
+      {"name": "Plaza Mayor", "match": "Plaza Mayor", "muni": "Cáceres", "lat": 39.4753, "lon": -6.3716},
+      {"name": "Torre de Bujaco", "match": "Torre de Bujaco", "muni": "Cáceres", "lat": 39.4748, "lon": -6.3714},
+      {"name": "Arco de la Estrella", "match": "Arco de la Estrella", "muni": "Cáceres", "lat": 39.4747, "lon": -6.3709},
+      {"name": "Concatedral de Santa María", "match": "Santa María", "muni": "Cáceres", "lat": 39.4740, "lon": -6.3706},
+      {"name": "Palacio de los Golfines de Abajo", "match": "Golfines de Abajo", "muni": "Cáceres", "lat": 39.4737, "lon": -6.3712},
+      {"name": "Iglesia de San Francisco Javier", "match": "San Francisco Javier", "muni": "Cáceres", "lat": 39.4733, "lon": -6.3697},
+      {"name": "Museo de Cáceres", "match": "Museo de Cáceres", "muni": "Cáceres", "lat": 39.4727, "lon": -6.3693},
+      {"name": "Barrio de San Antonio (judería)", "match": "Ermita de San Antonio", "muni": "Cáceres", "lat": 39.4721, "lon": -6.3688}
+    ]
+  },
+  {
+    "id": "via-de-la-plata", "mode": "car", "km": 190,
+    "titleEs": "Vía de la Plata", "titleEn": "Vía de la Plata",
+    "durationEs": "2–3 días en coche", "durationEn": "2–3 days by car",
+    "summaryEs": "La antigua calzada romana que unía Emerita Augusta con Asturica Augusta, de sur a norte de Extremadura: Mérida, Cáceres, el arco de Cáparra y los baños de Montemayor.",
+    "summaryEn": "The old Roman road linking Emerita Augusta with Asturica Augusta, crossing Extremadura from south to north: Mérida, Cáceres, the arch of Cáparra and the baths of Montemayor.",
+    "stops": [
+      {"name": "Mérida", "match": "Teatro Romano", "muni": "Mérida", "lat": 38.9157, "lon": -6.3384},
+      {"name": "Basílica de Santa Lucía del Trampal", "match": "Santa Lucía del Trampal", "muni": "Alcuéscar", "lat": 39.2049, "lon": -6.2565},
+      {"name": "Cáceres", "match": "Plaza Mayor", "muni": "Cáceres", "lat": 39.4753, "lon": -6.3716},
+      {"name": "Casar de Cáceres", "lat": 39.5612, "lon": -6.4189},
+      {"name": "Arco de Cáparra", "match": "Arco", "muni": "Guijo de Granadilla", "lat": 40.1662, "lon": -6.0995},
+      {"name": "Hervás", "lat": 40.2734, "lon": -5.8615},
+      {"name": "Baños de Montemayor", "lat": 40.3165, "lon": -5.8597}
+    ]
+  },
+  {
+    "id": "conquistadores", "mode": "car", "km": 250,
+    "titleEs": "Ruta de los Conquistadores", "titleEn": "Conquistadors Route",
+    "durationEs": "2 días en coche", "durationEn": "2 days by car",
+    "summaryEs": "Las tierras de Pizarro, Orellana y Hernán Cortés: la Plaza Mayor de Trujillo, el Real Monasterio de Guadalupe, Patrimonio de la Humanidad, y el castillo y el teatro romano de Medellín.",
+    "summaryEn": "The homeland of Pizarro, Orellana and Hernán Cortés: Trujillo's Plaza Mayor, the World Heritage Royal Monastery of Guadalupe, and Medellín's castle and Roman theatre.",
+    "stops": [
+      {"name": "Plaza Mayor de Trujillo", "match": "Plaza Mayor", "muni": "Trujillo", "lat": 39.4596, "lon": -5.8822},
+      {"name": "Castillo de Trujillo", "match": "Castillo", "muni": "Trujillo", "lat": 39.4625, "lon": -5.8811},
+      {"name": "Real Monasterio de Santa María de Guadalupe", "match": "Monasterio", "muni": "Guadalupe", "lat": 39.4527, "lon": -5.3278},
+      {"name": "Castillo de Medellín", "match": "Castillo", "muni": "Medellín", "lat": 38.9654, "lon": -5.9562},
+      {"name": "Teatro romano de Medellín", "match": "Teatro", "muni": "Medellín", "lat": 38.9637, "lon": -5.9583}
+    ]
+  },
+  {
+    "id": "monfrague", "mode": "car", "km": 40,
+    "titleEs": "Parque Nacional de Monfragüe", "titleEn": "Monfragüe National Park",
+    "durationEs": "1 día", "durationEn": "1 day",
+    "summaryEs": "Buitres, águilas imperiales y cigüeñas negras sobre el Tajo. Del centro de visitantes de Villarreal de San Carlos al castillo y el Salto del Gitano.",
+    "summaryEn": "Vultures, imperial eagles and black storks over the Tagus. From the Villarreal de San Carlos visitor centre to the castle and the Salto del Gitano.",
+    "stops": [
+      {"name": "Villarreal de San Carlos", "lat": 39.8476, "lon": -6.0306},
+      {"name": "Castillo de Monfragüe", "match": "Castillo de Monfragüe", "muni": "Torrejón el Rubio", "lat": 39.8277, "lon": -6.0503},
+      {"name": "Salto del Gitano", "match": "Salto del Gitano", "muni": "Torrejón el Rubio", "lat": 39.8285, "lon": -6.0571},
+      {"name": "Portilla del Tiétar", "match": "Portilla del Tiétar", "muni": "Serradilla", "lat": 39.8836, "lon": -5.9926}
+    ]
+  },
+  {
+    "id": "valle-del-jerte", "mode": "car", "km": 45,
+    "titleEs": "Valle del Jerte", "titleEn": "Jerte Valley",
+    "durationEs": "1 día", "durationEn": "1 day",
+    "summaryEs": "Cerezos, gargantas y pozas de agua cristalina. Imprescindible en primavera por la floración y en verano para bañarse en Los Pilones.",
+    "summaryEn": "Cherry orchards, gorges and crystal-clear pools. A must in spring for the blossom and in summer for a swim at Los Pilones.",
+    "stops": [
+      {"name": "Plasencia", "lat": 40.0302, "lon": -6.0886},
+      {"name": "Cascada de las Nogaledas", "match": "Nogaledas", "muni": "Navaconcejo", "lat": 40.1716, "lon": -5.8396},
+      {"name": "Cabezuela del Valle", "lat": 40.1919, "lon": -5.8066},
+      {"name": "Los Pilones (Garganta de los Infiernos)", "match": "Pilones", "muni": "Jerte", "lat": 40.2083, "lon": -5.7449},
+      {"name": "Tornavacas", "lat": 40.2550, "lon": -5.6889}
+    ]
+  },
+  {
+    "id": "geoparque-villuercas", "mode": "car", "km": 120,
+    "titleEs": "Geoparque Villuercas-Ibores-Jara", "titleEn": "Villuercas-Ibores-Jara Geopark",
+    "durationEs": "1–2 días en coche", "durationEn": "1–2 days by car",
+    "summaryEs": "Un Geoparque Mundial de la UNESCO de sierras y valles plegados, cuevas y pinturas rupestres alrededor de Guadalupe.",
+    "summaryEn": "A UNESCO Global Geopark of folded ridges and valleys, caves and rock art around Guadalupe.",
+    "stops": [
+      {"name": "Guadalupe", "match": "Monasterio", "muni": "Guadalupe", "lat": 39.4527, "lon": -5.3278},
+      {"name": "Cañamero", "lat": 39.3806, "lon": -5.3884},
+      {"name": "Berzocana", "lat": 39.4284, "lon": -5.4675},
+      {"name": "Cueva de Castañar", "match": "Cueva", "muni": "Castañar de Ibor", "lat": 39.6195, "lon": -5.4175},
+      {"name": "Castañar de Ibor", "lat": 39.6279, "lon": -5.4171}
+    ]
+  },
+  {
+    "id": "hervas-juderia", "mode": "walk", "km": 2,
+    "titleEs": "Judería de Hervás", "titleEn": "Jewish quarter of Hervás",
+    "durationEs": "Medio día a pie", "durationEn": "Half a day on foot",
+    "summaryEs": "Uno de los barrios judíos mejor conservados de España: callejuelas de casas de adobe y entramado de castaño junto al río Ambroz.",
+    "summaryEn": "One of the best-preserved Jewish quarters in Spain: narrow lanes of adobe and chestnut-timbered houses by the river Ambroz.",
+    "stops": [
+      {"name": "Barrio judío", "match": "Barrio Judío", "muni": "Hervás", "lat": 40.2722, "lon": -5.8605},
+      {"name": "Puente de la Fuente Chiquita", "match": "Fuente Chiquita", "muni": "Hervás", "lat": 40.2712, "lon": -5.8597},
+      {"name": "Iglesia de Santa María de Aguas Vivas", "match": "Santa María", "muni": "Hervás", "lat": 40.2738, "lon": -5.8609},
+      {"name": "Museo Pérez Comendador-Leroux", "match": "Pérez Comendador", "muni": "Hervás", "lat": 40.2741, "lon": -5.8630}
+    ]
+  }
+]

@@ -1,0 +1,100 @@
+[
+  {
+    "id": "jarramplas", "kind": "festival", "from": "01-19", "to": "01-20",
+    "place": "Piornal", "lat": 40.1175, "lon": -5.8492,
+    "titleEs": "Jarramplas", "titleEn": "Jarramplas",
+    "textEs": "El personaje de Jarramplas recorre las calles de Piornal tocando el tambor mientras los vecinos le lanzan nabos. Una de las fiestas más singulares de España.",
+    "textEn": "Jarramplas roams the streets of Piornal beating a drum while locals pelt him with turnips. One of the most unusual festivals in Spain."
+  },
+  {
+    "id": "grullas", "kind": "nature", "from": "11-15", "to": "02-28",
+    "place": "Vegas Altas del Guadiana (Navalvillar de Pela)", "lat": 39.0950, "lon": -5.4660,
+    "titleEs": "Invernada de las grullas", "titleEn": "Wintering cranes",
+    "textEs": "Decenas de miles de grullas pasan el invierno en las dehesas y arrozales extremeños. Al amanecer y al atardecer los vuelos hacia los dormideros son espectaculares.",
+    "textEn": "Tens of thousands of common cranes spend the winter in Extremadura's dehesas and rice fields. Their flights to the roosts at dawn and dusk are spectacular."
+  },
+  {
+    "id": "carnaval-badajoz", "kind": "festival", "from": "02-01", "to": "03-10",
+    "place": "Badajoz", "lat": 38.8794, "lon": -6.9707,
+    "titleEs": "Carnaval de Badajoz", "titleEn": "Badajoz Carnival",
+    "textEs": "Murgas, comparsas y desfiles llenan Badajoz durante el carnaval más multitudinario del oeste de España. Consulta las fechas de cada año.",
+    "textEn": "Satirical choirs, troupes and parades fill Badajoz during the biggest carnival in western Spain. Check each year's dates."
+  },
+  {
+    "id": "cerezo-en-flor", "kind": "nature", "from": "03-15", "to": "04-20",
+    "place": "Valle del Jerte", "lat": 40.1950, "lon": -5.8120,
+    "titleEs": "Cerezo en flor del Valle del Jerte", "titleEn": "Cherry blossom in the Jerte Valley",
+    "textEs": "Más de un millón de cerezos florecen a la vez y tiñen de blanco el valle. La floración dura pocos días y depende del tiempo de cada primavera.",
+    "textEn": "Over a million cherry trees bloom at once and turn the valley white. The blossom lasts only a few days and depends on each spring's weather."
+  },
+  {
+    "id": "semana-santa", "kind": "festival", "from": "03-15", "to": "04-25",
+    "place": "Cáceres, Mérida, Valverde de la Vera", "lat": 39.4753, "lon": -6.3724,
+    "titleEs": "Semana Santa", "titleEn": "Holy Week",
+    "textEs": "Procesiones en el casco monumental de Cáceres y entre los monumentos romanos de Mérida, y los Empalaos de Valverde de la Vera la noche del Jueves Santo.",
+    "textEn": "Processions through Cáceres' old town and among Mérida's Roman monuments, and the Empalaos of Valverde de la Vera on the night of Maundy Thursday."
+  },
+  {
+    "id": "feria-queso-trujillo", "kind": "gastronomy", "from": "04-25", "to": "05-05",
+    "place": "Trujillo", "lat": 39.4596, "lon": -5.8822,
+    "titleEs": "Feria Nacional del Queso de Trujillo", "titleEn": "Trujillo National Cheese Fair",
+    "textEs": "La Plaza Mayor de Trujillo reúne cada primavera a queseros de toda España. Buena ocasión para probar la Torta del Casar y el queso de La Serena.",
+    "textEn": "Every spring Trujillo's Plaza Mayor gathers cheesemakers from all over Spain. A great chance to taste Torta del Casar and La Serena cheese."
+  },
+  {
+    "id": "san-juan-badajoz", "kind": "festival", "from": "06-18", "to": "06-28",
+    "place": "Badajoz", "lat": 38.8794, "lon": -6.9707,
+    "titleEs": "Feria de San Juan de Badajoz", "titleEn": "San Juan Fair in Badajoz",
+    "textEs": "Feria, conciertos y casetas para celebrar al patrón de Badajoz a finales de junio.",
+    "textEn": "Fairground, concerts and marquees to celebrate Badajoz's patron saint at the end of June."
+  },
+  {
+    "id": "festival-merida", "kind": "culture", "from": "07-01", "to": "08-31",
+    "place": "Teatro Romano de Mérida", "lat": 38.9157, "lon": -6.3384,
+    "titleEs": "Festival Internacional de Teatro Clásico de Mérida", "titleEn": "Mérida International Classical Theatre Festival",
+    "textEs": "Cada verano el Teatro Romano vuelve a llenarse con tragedias y comedias clásicas. Es el festival de teatro más antiguo de España.",
+    "textEn": "Every summer the Roman Theatre fills up again with classical tragedies and comedies. It is Spain's oldest theatre festival."
+  },
+  {
+    "id": "martes-mayor", "kind": "festival", "from": "07-31", "to": "08-08",
+    "place": "Plasencia", "lat": 40.0302, "lon": -6.0886,
+    "titleEs": "Martes Mayor de Plasencia", "titleEn": "Martes Mayor in Plasencia",
+    "textEs": "El primer martes de agosto la Plaza Mayor de Plasencia se convierte en un gran mercado tradicional, herencia de su antigua feria medieval.",
+    "textEn": "On the first Tuesday of August Plasencia's Plaza Mayor becomes a huge traditional market, heir to its medieval fair."
+  },
+  {
+    "id": "berrea-monfrague", "kind": "nature", "from": "09-10", "to": "10-20",
+    "place": "Parque Nacional de Monfragüe", "lat": 39.8470, "lon": -6.0420,
+    "titleEs": "Berrea del ciervo", "titleEn": "Red deer rut",
+    "textEs": "En otoño los bramidos de los ciervos en celo resuenan en Monfragüe y en las sierras extremeñas. Mejor al amanecer o al atardecer y sin salir de los caminos.",
+    "textEn": "In autumn the roars of rutting stags echo through Monfragüe and Extremadura's hills. Best at dawn or dusk, staying on the paths."
+  },
+  {
+    "id": "feria-zafra", "kind": "festival", "from": "09-28", "to": "10-08",
+    "place": "Zafra", "lat": 38.4253, "lon": -6.4174,
+    "titleEs": "Feria Internacional Ganadera de Zafra", "titleEn": "Zafra International Livestock Fair",
+    "textEs": "Una de las ferias ganaderas más antiguas de España, con exposiciones, gastronomía y fiestas en torno a San Miguel.",
+    "textEn": "One of Spain's oldest livestock fairs, with shows, food and festivities around Michaelmas."
+  },
+  {
+    "id": "otono-magico", "kind": "nature", "from": "10-20", "to": "11-30",
+    "place": "Valle del Ambroz", "lat": 40.2700, "lon": -5.8600,
+    "titleEs": "Otoño Mágico en el Valle del Ambroz", "titleEn": "Magical Autumn in the Ambroz Valley",
+    "textEs": "Castaños y robles se tiñen de ocre y el valle llena el otoño de rutas, gastronomía y actividades en Hervás y los pueblos vecinos.",
+    "textEn": "Chestnut and oak woods turn golden and the valley fills autumn with walks, food and activities in Hervás and nearby villages."
+  },
+  {
+    "id": "mercado-tres-culturas", "kind": "culture", "from": "11-05", "to": "11-15",
+    "place": "Cáceres", "lat": 39.4740, "lon": -6.3710,
+    "titleEs": "Mercado Medieval de las Tres Culturas", "titleEn": "Three Cultures Medieval Market",
+    "textEs": "El casco antiguo de Cáceres, Patrimonio de la Humanidad, se llena de puestos y espectáculos que recuerdan su pasado cristiano, judío y musulmán.",
+    "textEn": "Cáceres' UNESCO World Heritage old town fills with stalls and shows recalling its Christian, Jewish and Muslim past."
+  },
+  {
+    "id": "escobazos", "kind": "festival", "from": "12-06", "to": "12-08",
+    "place": "Jarandilla de la Vera", "lat": 40.1290, "lon": -5.6610,
+    "titleEs": "Los Escobazos", "titleEn": "Los Escobazos",
+    "textEs": "La víspera de la Inmaculada, Jarandilla de la Vera se ilumina con escobas de brezo encendidas en una fiesta de fuego única.",
+    "textEn": "On the eve of the Immaculate Conception, Jarandilla de la Vera lights up with burning heather brooms in a unique fire festival."
+  }
+]
