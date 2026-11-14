@@ -76,7 +76,7 @@ Se declara el **cierre formal del MVP de ExplorerSaga Extremadura** bajo la vers
     -   Gradle 9.6, AGP 9.4.1, Kotlin 2.4.21, Compose BOM 2026.09 y `targetSdk` 37. Navegación tipada con barra inferior (Inicio, Explorar, Mapa, Ajustes) y bienvenida solo en el primer arranque.
     -   Interfaz completa en español e inglés con idioma por app. Ajustes con tema, imágenes sin conexión, espacio usado, borrar caché, borrar datos, comentarios por correo, valorar, compartir, privacidad y licencias (31 tests Android).
 -   **Issue #30: [Catálogo de toda Extremadura y fábrica de datos abiertos] - COMPLETADO ✅**
-    -   Fábrica en Python (sin dependencias): OSM, Wikidata, Wikipedia en español e inglés, Commons (solo licencias libres) y registro de alojamientos de la Junta. 5.706 lugares en 388 municipios, generación reproducible, 16 pruebas y publicación semanal con GitHub Actions.
+    -   Fábrica en Python (sin dependencias): OSM, Wikidata, Wikipedia en español e inglés, Commons (solo licencias libres) y registro de alojamientos de la Junta. 5.706 lugares en 388 municipios, generación reproducible, 26 pruebas y publicación semanal con GitHub Actions.
 -   **Issue #31: [Paquete de contenido, sincronización y búsqueda] - COMPLETADO ✅**
     -   Paquete incluido en la app para el primer arranque sin red, actualización con WorkManager (sha256, opción solo wifi), Room v3 con FTS sin tildes y Explorar por grupo, provincia y municipio.
 -   **Issue #32: [Mapa vectorial MapLibre con clustering, ubicación y modo sin conexión] - COMPLETADO ✅**
