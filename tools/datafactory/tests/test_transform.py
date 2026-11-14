@@ -147,6 +147,23 @@ class EnrichmentTest(unittest.TestCase):
         transform.merge_wikidata(places, rows, {}, {}, images)
         self.assertNotIn("img", places["w5"])
 
+    def test_commons_file_decodes_url(self):
+        url = "http://commons.wikimedia.org/wiki/Special:FilePath/Puente_romano%20de%20M%C3%A9rida.jpg"
+        self.assertEqual(transform.commons_file(url), "Puente romano de Mérida.jpg")
+
+    def test_clean_artist_strips_html_and_limits_length(self):
+        raw = "<a href='//commons'>Jos&eacute;\n  P&eacute;rez</a> <span>(talk)</span>"
+        self.assertEqual(transform.clean_artist(raw), "José Pérez (talk)")
+        self.assertEqual(len(transform.clean_artist("x" * 300)), 120)
+        self.assertEqual(transform.clean_artist("<b></b>"), "")
+
+    def test_short_description_becomes_sentence(self):
+        sentence = transform._sentence
+        self.assertEqual(sentence("puente romano sobre el Guadiana"), "Puente romano sobre el Guadiana.")
+        self.assertEqual(sentence("Castillo."), "Castillo.")
+        self.assertIsNone(sentence(""))
+        self.assertIsNone(sentence(None))
+
     def test_junta_match_by_municipality_and_name(self):
         places, _ = sample_places()
         rows = [{"Municipio": "MERIDA", "Nombre establecimiento": "ILUNION MÉRIDA PALACE",
