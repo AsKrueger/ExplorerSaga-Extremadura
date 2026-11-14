@@ -158,6 +158,91 @@ class EnrichmentTest(unittest.TestCase):
         self.assertIn("junta", places["n6"]["src"])
 
 
+def point(lat, lon):
+    """Coordenada en el formato WKT que devuelve el SPARQL de Wikidata."""
+    return f"Point({lon} {lat})"
+
+
+def wd_row(qid, label, lat, lon, cls, **extra):
+    return {"item": f"http://www.wikidata.org/entity/{qid}", "labelEs": label,
+            "coord": point(lat, lon), "classLabel": cls, **extra}
+
+
+class WikidataSightsTest(unittest.TestCase):
+    def places_with_castle(self):
+        munis = transform.municipalities(MUNIS_OSM)
+        castle = {"type": "way", "id": 40, "center": {"lat": 39.4625, "lon": -5.8822},
+                  "tags": {"historic": "castle", "name": "Castillo de Trujillo"}}
+        osm = {"elements": POIS_OSM["elements"] + [castle]}
+        return transform.places_from_osm(osm, munis), munis
+
+    def test_links_osm_sight_with_same_name_nearby(self):
+        places, munis = self.places_with_castle()
+        rows = [wd_row("Q500", "Castillo de Trujillo", 39.4638, -5.8822, "castle")]
+        self.assertEqual(transform.add_wikidata_sights(places, rows, munis), (1, 0))
+        self.assertEqual(places["w40"]["qid"], "Q500")
+        self.assertNotIn("Q500", places)
+
+    def test_creates_sight_when_osm_one_is_too_far(self):
+        places, munis = self.places_with_castle()
+        rows = [wd_row("Q500", "Castillo de Trujillo", 39.4725, -5.8822, "castle")]
+        self.assertEqual(transform.add_wikidata_sights(places, rows, munis), (0, 1))
+        self.assertIsNone(places["w40"]["qid"])
+        self.assertEqual(places["Q500"]["cat"], "castle")
+
+    def test_new_sight_gets_municipality_group_and_rounded_coordinates(self):
+        places, munis = sample_places()
+        rows = [wd_row("Q600", "Casa del Mitreo", 38.90991234, -6.34811234, "building"),
+                wd_row("Q600", "Mithraeum House", 38.90991234, -6.34811234, "archaeological site")]
+        self.assertEqual(transform.add_wikidata_sights(places, rows, munis), (0, 1))
+        sight = places["Q600"]
+        self.assertEqual(sight["name"], "Casa del Mitreo")
+        self.assertEqual((sight["cat"], sight["group"]), ("archaeology", "HERITAGE"))
+        self.assertEqual((sight["muni"], sight["prov"]), ("Mérida", "BA"))
+        self.assertEqual((sight["lat"], sight["lon"]), (38.909912, -6.348112))
+        self.assertEqual((sight["id"], sight["qid"], sight["src"]), ("Q600", "Q600", []))
+
+    def test_uses_english_label_when_spanish_is_missing(self):
+        places, munis = sample_places()
+        row = wd_row("Q601", None, 38.92, -6.35, "museum", labelEn="Some Museum")
+        transform.add_wikidata_sights(places, [row], munis)
+        self.assertEqual(places["Q601"]["name"], "Some Museum")
+
+    def test_skips_known_towns_outside_and_incomplete_items(self):
+        places, munis = sample_places()
+        before = set(places)
+        rows = [
+            wd_row("Q1046374", "Teatro romano de Mérida", 38.9157, -6.3384, "theatre"),
+            wd_row("Q700", "Trujillo", 39.46, -5.88, "castle"),
+            wd_row("Q701", "Aldea", 39.45, -5.85, "village"),
+            wd_row("Q702", "Museo lejano", 40.05, -3.95, "museum"),
+            wd_row("Q703", "Museo en el hueco", 38.97, -6.42, "museum"),
+            wd_row("Q704", "Sin nombre", 38.92, -6.35, "museum", labelEs=None),
+            {"item": "http://www.wikidata.org/entity/Q705", "labelEs": "Sin coordenadas",
+             "classLabel": "museum"},
+        ]
+        self.assertEqual(transform.add_wikidata_sights(places, rows, munis), (0, 0))
+        self.assertEqual(set(places), before)
+
+    def test_classify_wikidata(self):
+        self.assertIsNone(transform.classify_wikidata(["village", "castle"]))
+        self.assertEqual(transform.classify_wikidata(["art museum"]), "museum")
+        self.assertEqual(transform.classify_wikidata(["Roman bridge"]), "bridge")
+        self.assertEqual(transform.classify_wikidata(["dolmen"]), "archaeology")
+        self.assertEqual(transform.classify_wikidata(["natural park"]), "protected_area")
+        self.assertEqual(transform.classify_wikidata(["fountain"]), "monument")
+        self.assertEqual(transform.classify_wikidata([]), "monument")
+
+    def test_same_name(self):
+        same = transform._same_name
+        self.assertTrue(same("Iglesia de Santa María", "IGLESIA DE SANTA MARIA LA MAYOR"))
+        self.assertTrue(same("Ermita de San Juan", "Ermita San Juan Bautista"))
+        self.assertTrue(same("Foro", "Foro romano"))
+        self.assertFalse(same("Iglesia de San Juan", "Iglesia de San Pedro"))
+        self.assertFalse(same("San", "Santa"))
+        self.assertFalse(same("", "Castillo"))
+
+
 class PackTest(unittest.TestCase):
     def test_routes_resolve_by_qid_and_fail_without_location(self):
         places, _ = sample_places()
