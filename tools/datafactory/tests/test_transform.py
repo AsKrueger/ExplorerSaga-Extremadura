@@ -119,6 +119,52 @@ class PlacesFromOsmTest(unittest.TestCase):
         self.assertEqual(places["n6"]["web"], "https://ilunion.com")
 
 
+class OsmHelpersTest(unittest.TestCase):
+    def test_element_id_uses_type_initial(self):
+        self.assertEqual(transform.element_id({"type": "node", "id": 42}), "n42")
+        self.assertEqual(transform.element_id({"type": "way", "id": 7}), "w7")
+        self.assertEqual(transform.element_id({"type": "relation", "id": 3}), "r3")
+
+    def test_coordinates_from_node_center_or_none(self):
+        self.assertEqual(transform.coordinates({"lat": 38.9, "lon": -6.3}), (38.9, -6.3))
+        self.assertEqual(transform.coordinates({"center": {"lat": 39.4, "lon": -5.8}}),
+                         (39.4, -5.8))
+        self.assertIsNone(transform.coordinates({"type": "relation", "id": 1}))
+
+    def test_address_needs_street_and_adds_number(self):
+        self.assertEqual(transform._address({"addr:street": "Calle Santa Eulalia",
+                                             "addr:housenumber": "12"}),
+                         "Calle Santa Eulalia, 12")
+        self.assertEqual(transform._address({"addr:street": "Plaza Mayor"}), "Plaza Mayor")
+        self.assertIsNone(transform._address({"addr:housenumber": "3"}))
+
+    def test_website_fallbacks_lists_and_invalid_urls(self):
+        web = transform._website
+        self.assertEqual(web({"contact:website": "HTTP://Example.org"}), "HTTP://Example.org")
+        self.assertEqual(web({"url": " museo.es ; otro.es "}), "https://museo.es")
+        self.assertEqual(web({"website": "https://a.es", "url": "https://b.es"}), "https://a.es")
+        self.assertIsNone(web({"website": "no es una web"}))
+        self.assertIsNone(web({}))
+
+
+class GeometryTest(unittest.TestCase):
+    def test_parse_point_swaps_wkt_order_to_lat_lon(self):
+        self.assertEqual(transform._parse_point("Point(-6.3384 38.9157)"), (38.9157, -6.3384))
+        self.assertEqual(transform._parse_point("Point(-6.3e0 3.89e1)"), (38.9, -6.3))
+        self.assertIsNone(transform._parse_point("Polygon((0 0, 1 1))"))
+        self.assertIsNone(transform._parse_point(None))
+
+    def test_distance_is_symmetric_and_shrinks_longitude_with_latitude(self):
+        dist = transform._distance_m
+        self.assertEqual(dist((38.9, -6.3), (38.9, -6.3)), 0)
+        north = dist((38.9, -6.3), (38.91, -6.3))
+        self.assertAlmostEqual(north, 1113.2, places=1)
+        self.assertAlmostEqual(dist((38.91, -6.3), (38.9, -6.3)), north)
+        east = dist((38.9, -6.3), (38.9, -6.29))
+        self.assertLess(east, north)  # un grado de longitud mide menos que uno de latitud
+        self.assertAlmostEqual(east, 866.6, delta=1)
+
+
 class EnrichmentTest(unittest.TestCase):
     def test_merge_wikidata_adds_texts_and_licensed_image(self):
         places, _ = sample_places()
@@ -258,6 +304,26 @@ class WikidataSightsTest(unittest.TestCase):
         self.assertFalse(same("Iglesia de San Juan", "Iglesia de San Pedro"))
         self.assertFalse(same("San", "Santa"))
         self.assertFalse(same("", "Castillo"))
+
+
+class ScoreTest(unittest.TestCase):
+    def test_bare_place_by_group(self):
+        def bare(group):
+            return transform.score({"group": group, "muni": "Almendralejo"})
+        self.assertEqual(bare("HERITAGE"), 3)
+        self.assertEqual(bare("BATHING"), 2)
+        self.assertEqual(bare("EAT"), 0)
+
+    def test_destination_weight_only_for_sights(self):
+        sight = {"group": "MUSEUMS", "muni": "Mérida"}
+        service = {"group": "SLEEP", "muni": "Mérida"}
+        self.assertEqual(transform.score(sight), 3 + 5)
+        self.assertEqual(transform.score(service), 0)
+
+    def test_enrichment_and_route_stops_add_up(self):
+        place = {"group": "NATURE", "muni": "Cáceres", "wpEn": "Monfragüe", "img": "a.jpg",
+                 "heritage": "BIC", "qid": "Q1", "routeStop": True}
+        self.assertEqual(transform.score(place), 3 + 3 + 3 + 2 + 2 + 1 + 4)
 
 
 class PackTest(unittest.TestCase):

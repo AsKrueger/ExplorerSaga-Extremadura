@@ -40,7 +40,7 @@ Ver [docs/SETUP.md](docs/SETUP.md). En resumen: JDK 17, Android SDK 37 y `./grad
 | --- | --- | --- |
 | Unitarias Android | `./gradlew testDebugUnitTest` | 26 |
 | Interfaz en emulador | `./gradlew connectedDebugAndroidTest` | 3 |
-| Fábrica de datos | `python -m unittest discover -s tests` (en `tools/datafactory`) | 26 |
+| Fábrica de datos | `python -m unittest discover -s tests` (en `tools/datafactory`) | 35 |
 | Backend v1 | `./mvnw test` (en `backend`) | 48 |
 
 ## Publicación
